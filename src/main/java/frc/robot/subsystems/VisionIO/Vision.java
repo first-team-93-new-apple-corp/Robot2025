@@ -1,24 +1,22 @@
-package frc.robot.Subsystems.Helpers;
+package frc.robot.subsystems.VisionIO;
 
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.ctre.phoenix6.hardware.Pigeon2;
+import com.pathplanner.lib.commands.PathfindingCommand;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.networktables.NetworkTableListener;
-import edu.wpi.first.networktables.NetworkTableValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
     private NetworkTableEntry limelight = NetworkTableInstance.getDefault().getTable("limelight-front")
             .getEntry("botpose_targetspace");
-    Pigeon2 pigeon2;
+    // Pigeon2 pigeon2;
     private Double[] values;
     private Double[] defaultValues;
     private double rotation;
@@ -26,14 +24,14 @@ public class Vision extends SubsystemBase {
     PhotonPipelineResult result;
     PhotonTrackedTarget target;
     double pitch;
-    double yaw;
+    double yaw = 0.0;
     double area;
     private PIDController pid = new PIDController(0.05, 0, 0);
     private PIDController rotate = new PIDController(0.05, 0, 0);
 
-    public Vision(Pigeon2 pigeon2) {
+    public Vision() {
 
-        this.pigeon2 = pigeon2;
+        // this.pigeon2 = pigeon2;
         defaultValues = new Double[6];
         defaultValues[0] = 0.;
         defaultValues[1] = 0.;
@@ -60,8 +58,6 @@ public class Vision extends SubsystemBase {
             target = result.getBestTarget();
             
             yaw = target.getYaw();
-            pitch = target.getPitch();
-            area = target.getArea();
         }
         values = limelight.getDoubleArray(defaultValues);
         rotation = values[4];

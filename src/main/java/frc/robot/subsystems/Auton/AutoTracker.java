@@ -44,7 +44,9 @@ public class AutoTracker {
                 commands.addCommands(Commands.print("Placing here"));
                 // commands.addCommands(Commands.waitSeconds(2));
 
-            } catch (Exception e) {}
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         try {
             commands.addCommands(AutoBuilder.followPath(PathPlannerPath.fromPathFile("Leave")));

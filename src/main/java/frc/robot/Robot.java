@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.PathfindingCommand;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -17,6 +19,7 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    PathfindingCommand.warmupCommand().schedule();
     // m_LED = new LED();
     // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen, Color.kBlack, 144, 25), 0.6, 0.005);
   }

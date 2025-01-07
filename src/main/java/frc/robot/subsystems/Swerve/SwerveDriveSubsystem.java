@@ -53,22 +53,24 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private boolean m_hasAppliedOperatorPerspective = false;
     private SysID sysID = new SysID();
     public SwerveCommands Commands = new SwerveCommands();
-    private SwerveRequest.ApplyRobotSpeeds autorequest2 = new SwerveRequest.ApplyRobotSpeeds();
-
+    private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
     public SwerveDriveSubsystem getSubsystem() {
         return this;
     }
 
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
     }
 
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants, double OdometryUpdateFrequency,
-            SwerveModuleConstants... modules) {
-        super(drivetrainConstants, OdometryUpdateFrequency, modules);
+    public SwerveDriveSubsystem(
+        SwerveDrivetrainConstants drivetrainConstants,
+        double odometryUpdateFrequency,
+        SwerveModuleConstants<?, ?, ?>... modules
+    ) {
+        super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -77,7 +79,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     public SwerveDriveSubsystem(
             SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
             Matrix<N3, N1> odometryStandardDeviation, Matrix<N3, N1> visionStandardDeviation,
-            SwerveModuleConstants... modules) {
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
         if (Utils.isSimulation()) {
@@ -99,8 +101,11 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 () -> getState().Pose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 () -> getState().Speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-                (speeds, feedforwards) -> setControl(autorequest2.withSpeeds(speeds)),
-                // RELATIVE ChassisSpeeds. Also optionally outputs
+                (speeds, feedforwards) -> setControl(
+                    autoRequest.withSpeeds(speeds)
+                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
+                ),                // RELATIVE ChassisSpeeds. Also optionally outputs
                 // individual module feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains

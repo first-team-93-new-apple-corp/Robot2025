@@ -19,15 +19,10 @@ import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controlles.ControllerSchemeIO;
-import frc.robot.subsystems.Controlles.DriverAssistTwoStick;
 import frc.robot.subsystems.Controlles.POVDriveV2;
-import frc.robot.subsystems.Controlles.POVDriveV1;
-import frc.robot.subsystems.Controlles.TwoStickDrive;
-import frc.robot.subsystems.Controlles.XboxDrive;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
-import frc.robot.subsystems.VisionIO.GamePiecePhoton;
 
 public class RobotContainer {
     // Drivetrain
@@ -108,8 +103,8 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return a.getSelected();
-        // return autoDirector.selection().command();
+        // return a.getSelected();
+        return autoDirector.selection().command();
     }
 
     public Command getIdleLEDs() {

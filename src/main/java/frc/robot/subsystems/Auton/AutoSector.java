@@ -5,5 +5,5 @@ package frc.robot.subsystems.Auton;
  */
 public record AutoSector(
 String intakingPath,
-String scoringPath
+String ShootingPath
 ) {}

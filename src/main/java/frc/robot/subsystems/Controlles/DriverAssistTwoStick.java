@@ -8,7 +8,7 @@ import frc.robot.subsystems.Auton.PositionConstants;
 
 public class DriverAssistTwoStick extends TwoStickDrive {
     private Supplier<Pose2d> robotSupplier;
-    private Pose2d goal = PositionConstants.Speaker();
+    private Pose2d goal = PositionConstants.startingPoses.top();
     private PIDController left = new PIDController(2.4, 0, 0.1);
     private PIDController up = new PIDController(2.4, 0, 0.1);
 

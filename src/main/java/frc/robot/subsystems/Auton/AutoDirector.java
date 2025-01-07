@@ -3,6 +3,8 @@ package frc.robot.subsystems.Auton;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,14 +15,7 @@ public class AutoDirector {
   AutoSubsystems subsystems;
   SendableChooser<Auto> autoChooser = new SendableChooser<Auto>();
   List<Auto> Autos = new ArrayList<>();
-  private AutoSector SG1 = new AutoSector("SG1", "SC");
-  private AutoSector SG2 = new AutoSector("SG2", "SC");
-  private AutoSector SG3 = new AutoSector("SG3", "SC");
-  private AutoSector CG1 = new AutoSector("CG1", "SC");
-  private AutoSector CG2 = new AutoSector("CG2", "SC");
-  private AutoSector CG3 = new AutoSector("CG3", "SC"); 
-  private AutoSector CG4 = new AutoSector("CG4", "SC");
-  private AutoSector CG5 = new AutoSector("CG5", "SC");
+
   public AutoDirector(AutoSubsystems subsystems) {
     this.subsystems = subsystems;
     AddAutos();
@@ -35,9 +30,9 @@ public class AutoDirector {
 
   public void AddAutos() {
     autoChooser.setDefaultOption(doNothing().name, doNothing());
-    Autos.add(Speaker3());
-    Autos.add(EightGP());
+    Autos.add(Coral());
     Autos.add(straight());
+    Autos.add(PathPlannerAuto());
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
     }
@@ -51,34 +46,22 @@ public class AutoDirector {
 
   public Auto straight(){
     List<AutoSector> paths = new ArrayList<>();
-    paths.add(new AutoSector("TestingPath", "SC"));
+    paths.add(new AutoSector("TestingPath", "Test 2"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.Speaker());
-    return new Auto("straight", tracker.asCommand(), PositionConstants.Speaker());
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> new Pose2d());
+    return new Auto("straight", tracker, new Pose2d());
   }
 
-  public Auto Speaker3() {
+  public Auto Coral() {
     List<AutoSector> paths = new ArrayList<>();
-    paths.add(SG1);
-    paths.add(SG2);
-    paths.add(SG3);
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.Speaker());
+    paths.add(new AutoSector("R6A", "SC1"));
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
 
-    return new Auto("Speaker3", tracker.asCommand(), PositionConstants.Speaker() );
+    return new Auto("Speaker3", tracker, PositionConstants.startingPoses.top() );
   }
-  public Auto EightGP() {
-    List<AutoSector> paths = new ArrayList<>();
-    paths.add(SG1);
-    paths.add(SG2);
-    paths.add(SG3);
-    paths.add(CG1);
-    paths.add(CG2);
-    paths.add(CG3);
-    paths.add(CG4);
-    paths.add(CG5);
-    
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.Speaker());
-    return new Auto("8GamePiece", tracker.asCommand(), PositionConstants.Speaker() );
+
+  public Auto PathPlannerAuto(){
+    return new Auto("PP Auto", AutoBuilder.buildAuto("New Auto"), new Pose2d());
   }
 
 }

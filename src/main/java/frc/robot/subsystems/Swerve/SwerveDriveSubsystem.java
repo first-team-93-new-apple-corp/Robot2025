@@ -138,12 +138,12 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             return sysID.m_sysIdRoutineToApply.dynamic(direction);
         }
 
-        public Command autoAlign() {
+        public Command autoAlign(String LR) {
             PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2, 9, 30);
-            String path;
+            int Side = 6;
 
             try {
-                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R6A"),constraints);
+                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R" + Side + LR),constraints);
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }

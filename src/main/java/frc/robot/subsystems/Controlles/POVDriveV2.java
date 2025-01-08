@@ -97,7 +97,11 @@ public class POVDriveV2 implements ControllerSchemeIO {
         return LeftStick.trigger();
     }
     @Override
-    public Trigger autoAlign() {
+    public Trigger autoAlignLeft() {
         return LeftStick.button(3);
+    }
+    @Override
+    public Trigger autoAlignRight() {
+        return LeftStick.button(4);
     }
 }

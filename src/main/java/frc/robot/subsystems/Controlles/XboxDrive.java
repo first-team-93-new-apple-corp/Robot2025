@@ -58,7 +58,11 @@ public class XboxDrive implements ControllerSchemeIO {
         return Xbox.a();
     }
     @Override
-    public Trigger autoAlign() {
+    public Trigger autoAlignLeft() {
         return Xbox.x();
+    }
+    @Override
+    public Trigger autoAlignRight() {
+        return Xbox.y();
     }
 }

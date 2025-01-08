@@ -85,7 +85,9 @@ public class RobotContainer {
         Driver.Seed().onTrue(m_DriveSubsystem.runOnce(() -> m_DriveSubsystem.seedFieldCentric()));
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> drive.withRotationalRate(vision.turnToNote()).withVelocityY(leftStick.getX()).withVelocityY(vision.orbitNote())));
-        Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
+        Driver.autoAlignLeft().whileTrue(m_DriveSubsystem.Commands.autoAlign("A"));
+        Driver.autoAlignRight().whileTrue(m_DriveSubsystem.Commands.autoAlign("B"));
+
         //LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25, 75).andThen(LEDCommand.off()));
         // Xbox.b().onTrue(LEDCommand.shoot().andThen(LEDCommand.off()));

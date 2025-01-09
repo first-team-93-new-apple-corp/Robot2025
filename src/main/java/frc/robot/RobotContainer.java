@@ -49,7 +49,6 @@ public class RobotContainer {
 
     // Auton
     AutoDirector autoDirector;
-    SendableChooser<Command> a;
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
@@ -61,8 +60,6 @@ public class RobotContainer {
         
         // AUTON
         m_DriveSubsystem.configureAuto();
-        a = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("a",a);
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
 

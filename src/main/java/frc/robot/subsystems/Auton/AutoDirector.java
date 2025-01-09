@@ -63,7 +63,7 @@ public class AutoDirector {
   }
 
   public Auto PathPlannerAuto(){
-    return new Auto("PP Auto", AutoBuilder.buildAuto("New Auto"), new Pose2d());
+    return new Auto("PP Auto", AutoBuilder.buildAuto("New New Auto"), new Pose2d());
   }
 
 }

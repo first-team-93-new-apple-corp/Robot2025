@@ -22,6 +22,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -49,11 +50,13 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private SysID sysID = new SysID();
     public SwerveCommands Commands = new SwerveCommands();
     private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
+
     public SwerveDriveSubsystem getSubsystem() {
         return this;
     }
 
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants,
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -61,10 +64,9 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     }
 
     public SwerveDriveSubsystem(
-        SwerveDrivetrainConstants drivetrainConstants,
-        double odometryUpdateFrequency,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+            SwerveDrivetrainConstants drivetrainConstants,
+            double odometryUpdateFrequency,
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -97,10 +99,13 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 () -> getState().Speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> setControl(
-                    autoRequest.withSpeeds(speeds)
-                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                ),                // RELATIVE ChassisSpeeds. Also optionally outputs
+                        autoRequest.withSpeeds(speeds)
+                                .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
+                                                                                                           // ChassisSpeeds.
+                                                                                                           // Also
+                                                                                                           // optionally
+                                                                                                           // outputs
                 // individual module feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
@@ -139,11 +144,67 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         }
 
         public Command autoAlign(String LR) {
-            PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2, 9, 30);
+            PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2,
+                    9, 30);
             int Side = 6;
+            var alliance = DriverStation.getAlliance();
+            if (alliance.isPresent()) {
+                if (alliance.get() == DriverStation.Alliance.Blue) {
+                    // blue
+                    if (getState().Pose.getX() > 4.478) {
+                        //right side of blue
+                        if(getState().Pose.getY() > (0.6*(getState().Pose.getX()-4.478))+3.987){
+                            //top right of blue
+                            Side = 10;
+                        } else if(getState().Pose.getY() < (-0.6*(getState().Pose.getX()-4.478))+3.987){
+                            //bottom Right of blue
+                            Side = 2;
+                        } else {
+                            Side = 12;
+                        }
+                    } else {
+                        //left side of blue
+                        if(getState().Pose.getY() > (-0.6*(getState().Pose.getX()-4.478))+3.987){
+                            //top left of blue
+                            Side = 8;
+                        } else if(getState().Pose.getY() < (0.6*(getState().Pose.getX()-4.478))+3.987){
+                            //bottom left of blue
+                            Side = 4;
+                        } else {
+                            Side = 6;
+                        }
+                    }
+                } else {
+                    //red
+                    if (getState().Pose.getX() < 13.102) {
+                        //left side of red
+                        if(getState().Pose.getY() > (-0.6*(getState().Pose.getX()-13.102))+3.987){
+                            //top right of blue
+                            Side = 10;
+                        } else if(getState().Pose.getY() < (0.6*(getState().Pose.getX()-13.102))+3.987){
+                            //bottom Right of blue
+                            Side = 2;
+                        } else {
+                            Side = 12;
+                        }
+                    } else {
+                        //left side of blue
+                        if(getState().Pose.getY() > (0.6*(getState().Pose.getX()-13.102))+3.987){
+                            //top left of blue
+                            Side = 8;
+                        } else if(getState().Pose.getY() < (-0.6*(getState().Pose.getX()-13.102))+3.987){
+                            //bottom left of blue
+                            Side = 4;
+                        } else {
+                            Side = 6;
+                        }
+                    }
 
+                }
+            }
+            SmartDashboard.putNumber("side", Side);
             try {
-                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R" + Side + LR),constraints);
+                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R" + Side + LR), constraints);
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }

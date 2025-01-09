@@ -54,9 +54,11 @@ public class AutoDirector {
 
   public Auto Coral() {
     List<AutoSector> paths = new ArrayList<>();
-    paths.add(new AutoSector("R6A", "SC1"));
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
+    paths.add(new AutoSector("R6A", "C1"));
+    paths.add(new AutoSector("R6B", "C2"));
 
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
+    
     return new Auto("Speaker3", tracker, PositionConstants.startingPoses.top() );
   }
 

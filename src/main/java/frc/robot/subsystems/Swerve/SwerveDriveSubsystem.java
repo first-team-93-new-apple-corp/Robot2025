@@ -50,6 +50,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private SysID sysID = new SysID();
     public SwerveCommands Commands = new SwerveCommands();
     private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
+    Alliance CurrentAlliance = Alliance.Blue;
 
     public SwerveDriveSubsystem getSubsystem() {
         return this;
@@ -101,12 +102,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 (speeds, feedforwards) -> setControl(
                         autoRequest.withSpeeds(speeds)
                                 .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
-                                                                                                           // ChassisSpeeds.
-                                                                                                           // Also
-                                                                                                           // optionally
-                                                                                                           // outputs
-                // individual module feedforwards11
+                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
@@ -147,61 +143,59 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2,
                     9, 30);
             int Side = 6;
-            var alliance = DriverStation.getAlliance();
-            if (alliance.isPresent()) {
-                if (alliance.get() == DriverStation.Alliance.Blue) {
-                    // blue
-                    if (getState().Pose.getX() > 4.478) {
-                        //right side of blue
-                        if(getState().Pose.getY() > (0.6*(getState().Pose.getX()-4.478))+3.987){
-                            //top right of blue
-                            Side = 10;
-                        } else if(getState().Pose.getY() < (-0.6*(getState().Pose.getX()-4.478))+3.987){
-                            //bottom Right of blue
-                            Side = 2;
-                        } else {
-                            Side = 12;
-                        }
+            if (CurrentAlliance == DriverStation.Alliance.Blue) {
+                // blue
+                if (getState().Pose.getX() > 4.478) {
+                    // right side of blue
+                    if (getState().Pose.getY() > (0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
+                        // top right of blue
+                        Side = 10;
+                    } else if (getState().Pose.getY() < (-0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
+                        // bottom Right of blue
+                        Side = 2;
                     } else {
-                        //left side of blue
-                        if(getState().Pose.getY() > (-0.6*(getState().Pose.getX()-4.478))+3.987){
-                            //top left of blue
-                            Side = 8;
-                        } else if(getState().Pose.getY() < (0.6*(getState().Pose.getX()-4.478))+3.987){
-                            //bottom left of blue
-                            Side = 4;
-                        } else {
-                            Side = 6;
-                        }
+                        Side = 12;
                     }
                 } else {
-                    //red
-                    if (getState().Pose.getX() < 13.102) {
-                        //left side of red
-                        if(getState().Pose.getY() > (-0.6*(getState().Pose.getX()-13.102))+3.987){
-                            //top right of blue
-                            Side = 10;
-                        } else if(getState().Pose.getY() < (0.6*(getState().Pose.getX()-13.102))+3.987){
-                            //bottom Right of blue
-                            Side = 2;
-                        } else {
-                            Side = 12;
-                        }
+                    // left side of blue
+                    if (getState().Pose.getY() > (-0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
+                        // top left of blue
+                        Side = 8;
+                    } else if (getState().Pose.getY() < (0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
+                        // bottom left of blue
+                        Side = 4;
                     } else {
-                        //left side of blue
-                        if(getState().Pose.getY() > (0.6*(getState().Pose.getX()-13.102))+3.987){
-                            //top left of blue
-                            Side = 8;
-                        } else if(getState().Pose.getY() < (-0.6*(getState().Pose.getX()-13.102))+3.987){
-                            //bottom left of blue
-                            Side = 4;
-                        } else {
-                            Side = 6;
-                        }
+                        Side = 6;
                     }
-
                 }
+            } else {
+                // red
+                if (getState().Pose.getX() < 13.102) {
+                    // left side of red
+                    if (getState().Pose.getY() > (-0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
+                        // top right of blue
+                        Side = 10;
+                    } else if (getState().Pose.getY() < (0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
+                        // bottom Right of blue
+                        Side = 2;
+                    } else {
+                        Side = 12;
+                    }
+                } else {
+                    // left side of blue
+                    if (getState().Pose.getY() > (0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
+                        // top left of blue
+                        Side = 8;
+                    } else if (getState().Pose.getY() < (-0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
+                        // bottom left of blue
+                        Side = 4;
+                    } else {
+                        Side = 6;
+                    }
+                }
+
             }
+
             SmartDashboard.putNumber("side", Side);
             try {
                 return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R" + Side + AB), constraints);
@@ -218,6 +212,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 setOperatorPerspectiveForward(Rotation2d.fromDegrees(90));
             } else {
                 DriverStation.getAlliance().ifPresent(allianceColor -> {
+                    CurrentAlliance = allianceColor;
                     setOperatorPerspectiveForward(
                             allianceColor == Alliance.Red
                                     ? kRedAlliancePerspectiveRotation

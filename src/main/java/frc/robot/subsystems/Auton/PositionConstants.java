@@ -2,11 +2,12 @@ package frc.robot.subsystems.Auton;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.util.FlippingUtil;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import frc.robot.Utilities.AllianceFlipUtil;
 
 public class PositionConstants {
     private static Rotation2d awayFromAlliance = new Rotation2d();
@@ -21,8 +22,8 @@ public class PositionConstants {
 
         public static final Pose2d leftBlue = new Pose2d(startingLineBlue, 7.624, towardAlliance);
         public static final Pose2d rightBlue = new Pose2d(startingLineBlue, .475, towardAlliance); 
-        public static final Pose2d leftRed = AllianceFlipUtil.flip(leftBlue);
-        public static final Pose2d rightRed = AllianceFlipUtil.flip(rightBlue);
+        public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
+        public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
 
         public static final Pose2d top() {
             Optional<Alliance> ally = DriverStation.getAlliance();

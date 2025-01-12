@@ -22,26 +22,26 @@ public class AutoTracker extends SequentialCommandGroup {
     public AutoTracker( AutoSubsystems subsystems, List<AutoSector> paths, Supplier<Pose2d> initalPose){
         addCommands(Commands.print("Auto Time"));
         addCommands(Commands.runOnce(() -> subsystems.driveSubsystem().resetPose(initalPose.get()), subsystems.driveSubsystem()));
-        // try {
-        //     scoringPath = PathPlannerPath.fromPathFile("R10B");
-        //     commands.addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
-        //     commands.addCommands(Commands.print("Scoring here"));
-        //     commands.addCommands(Commands.waitSeconds(2));
-        // } catch (Exception e) {}
+        try {
+            //preload
+        
+            scoringPath = PathPlannerPath.fromPathFile("R10B");
+            addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(Commands.print("Raising the Elevator")));
+            addCommands(Commands.print("Placing here"));
+            addCommands(Commands.waitSeconds(1));
+        } catch (Exception e) {}
         for (AutoSector autoSector : paths) {
             try {
                 intakingpath = PathPlannerPath.fromPathFile(autoSector.intakingPath());
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
-                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
+                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints).alongWith(Commands.print("Lowering the Elevator")));
                 addCommands(Commands.print("Grab da tube"));
-                // commands.addCommands(Commands.waitSeconds(2));
-                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
+                addCommands(Commands.waitSeconds(1));
+                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(Commands.print("Raising the Elevator")));
                 addCommands(Commands.print("Placing here"));
-                // commands.addCommands(Commands.waitSeconds(2));
+                addCommands(Commands.waitSeconds(1));
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception e) {}
         }
     }
 

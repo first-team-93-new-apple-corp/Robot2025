@@ -15,20 +15,19 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.subsystems.Auton.ReefChooser;
 import frc.robot.subsystems.Swerve.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -124,7 +123,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 this // Reference to this subsystem to set requirements
         );
     }
-
+    
     public class SwerveCommands {
 
         public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -139,66 +138,19 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             return sysID.m_sysIdRoutineToApply.dynamic(direction);
         }
 
-        public Command autoAlign(String AB) {
+        private String Path;
+
+        public Command autoAlign(Supplier<String> ABSupplier) {
             PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2,
                     9, 30);
-            int Side = 6;
-            if (CurrentAlliance == DriverStation.Alliance.Blue) {
-                // blue
-                if (getState().Pose.getX() > 4.478) {
-                    // right side of blue
-                    if (getState().Pose.getY() > (0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
-                        // top right of blue
-                        Side = 10;
-                    } else if (getState().Pose.getY() < (-0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
-                        // bottom Right of blue
-                        Side = 2;
-                    } else {
-                        Side = 12;
-                    }
-                } else {
-                    // left side of blue
-                    if (getState().Pose.getY() > (-0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
-                        // top left of blue
-                        Side = 8;
-                    } else if (getState().Pose.getY() < (0.6 * (getState().Pose.getX() - 4.478)) + 3.987) {
-                        // bottom left of blue
-                        Side = 4;
-                    } else {
-                        Side = 6;
-                    }
-                }
-            } else {
-                // red
-                if (getState().Pose.getX() < 13.102) {
-                    // left side of red
-                    if (getState().Pose.getY() > (-0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
-                        // top right of blue
-                        Side = 10;
-                    } else if (getState().Pose.getY() < (0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
-                        // bottom Right of blue
-                        Side = 2;
-                    } else {
-                        Side = 12;
-                    }
-                } else {
-                    // left side of blue
-                    if (getState().Pose.getY() > (0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
-                        // top left of blue
-                        Side = 8;
-                    } else if (getState().Pose.getY() < (-0.6 * (getState().Pose.getX() - 13.102)) + 3.987) {
-                        // bottom left of blue
-                        Side = 4;
-                    } else {
-                        Side = 6;
-                    }
-                }
-
-            }
-
-            SmartDashboard.putNumber("side", Side);
             try {
-                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R" + Side + AB), constraints);
+                return runOnce(() -> {
+                    Path = ReefChooser.Choose(ABSupplier.get(), () -> getState().Pose, () -> getAlliance());
+                }).andThen(runOnce(() -> {
+                    try {
+                        AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints).schedule();
+                    } catch (Exception e) {}
+                }) );
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }
@@ -222,7 +174,9 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             }
         }
     }
-
+    public DriverStation.Alliance getAlliance(){
+        return CurrentAlliance;
+    }
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 

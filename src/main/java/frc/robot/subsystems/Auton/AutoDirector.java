@@ -54,12 +54,13 @@ public class AutoDirector {
 
   public Auto Coral() {
     List<AutoSector> paths = new ArrayList<>();
-    paths.add(new AutoSector("R6A", "C1"));
-    paths.add(new AutoSector("R6B", "C2"));
+    paths.add(new AutoSector("C1", "R6B"));
+    paths.add(new AutoSector("C2", "R4A"));
+    paths.add(new AutoSector("C3", "R6A"));
 
     AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
     
-    return new Auto("Speaker3", tracker, PositionConstants.startingPoses.top() );
+    return new Auto("Coral", tracker, PositionConstants.startingPoses.top() );
   }
 
   public Auto PathPlannerAuto(){

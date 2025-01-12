@@ -19,6 +19,10 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
@@ -38,8 +42,11 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+    private LinearVelocity MaxSpeed = TunerConstants.kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
+    private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
+    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(14.715);
+    private AngularAcceleration MaxAngularAcceleration = RadiansPerSecondPerSecond.of(68.931);
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -101,7 +108,14 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 (speeds, feedforwards) -> setControl(
                         autoRequest.withSpeeds(speeds)
                                 .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards11
+                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
+                                                                                                           // ChassisSpeeds.
+                                                                                                           // Also
+                                                                                                           // optionally
+                                                                                                           // outputs
+                                                                                                           // individual
+                                                                                                           // module
+                                                                                                           // feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
                         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
@@ -123,7 +137,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 this // Reference to this subsystem to set requirements
         );
     }
-    
+
     public class SwerveCommands {
 
         public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
@@ -141,16 +155,17 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         private String Path;
 
         public Command autoAlign(Supplier<String> ABSupplier) {
-            PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2,
-                    9, 30);
+            PathConstraints constraints = new PathConstraints(MaxSpeed, MaxAcceleration,
+                    MaxAngularRate, MaxAngularAcceleration);
             try {
                 return runOnce(() -> {
                     Path = ReefChooser.Choose(ABSupplier.get(), () -> getState().Pose, () -> getAlliance());
                 }).andThen(runOnce(() -> {
                     try {
                         AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints).schedule();
-                    } catch (Exception e) {}
-                }) );
+                    } catch (Exception e) {
+                    }
+                }));
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }
@@ -160,23 +175,24 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     @Override
     public void periodic() {
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-            if (Utils.isSimulation()) {
-                setOperatorPerspectiveForward(Rotation2d.fromDegrees(90));
-            } else {
-                DriverStation.getAlliance().ifPresent(allianceColor -> {
-                    CurrentAlliance = allianceColor;
-                    setOperatorPerspectiveForward(
-                            allianceColor == Alliance.Red
-                                    ? kRedAlliancePerspectiveRotation
-                                    : kBlueAlliancePerspectiveRotation);
-                    m_hasAppliedOperatorPerspective = true;
-                });
-            }
+            DriverStation.getAlliance().ifPresent(allianceColor -> {
+                CurrentAlliance = allianceColor;
+                setOperatorPerspectiveForward(
+                        allianceColor == Alliance.Red
+                                ? kRedAlliancePerspectiveRotation
+                                : kBlueAlliancePerspectiveRotation);
+                m_hasAppliedOperatorPerspective = true;
+                if (Utils.isSimulation()) {
+                    setOperatorPerspectiveForward(Rotation2d.fromDegrees(90));
+                }
+            });
         }
     }
-    public DriverStation.Alliance getAlliance(){
+
+    public DriverStation.Alliance getAlliance() {
         return CurrentAlliance;
     }
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 

@@ -41,10 +41,10 @@ public class ReefChooser {
                     // left side of red
                     if (poseSupplier.get().getY() > (-0.6 * (poseSupplier.get().getX() - 13.102)) + 3.987) {
                         // top right of blue
-                        Side = 10;
+                        Side = 2;
                     } else if (poseSupplier.get().getY() < (0.6 * (poseSupplier.get().getX() - 13.102)) + 3.987) {
                         // bottom Right of blue
-                        Side = 2;
+                        Side = 10;
                     } else {
                         Side = 12;
                     }
@@ -52,10 +52,10 @@ public class ReefChooser {
                     // left side of blue
                     if (poseSupplier.get().getY() > (0.6 * (poseSupplier.get().getX() - 13.102)) + 3.987) {
                         // top left of blue
-                        Side = 8;
+                        Side = 4;
                     } else if (poseSupplier.get().getY() < (-0.6 * (poseSupplier.get().getX() - 13.102)) + 3.987) {
                         // bottom left of blue
-                        Side = 4;
+                        Side = 8;
                     } else {
                         Side = 6;
                     }

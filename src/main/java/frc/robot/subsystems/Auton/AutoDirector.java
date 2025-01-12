@@ -33,6 +33,8 @@ public class AutoDirector {
     Autos.add(Coral());
     Autos.add(straight());
     Autos.add(PathPlannerAuto());
+    Autos.add(HPintake());
+
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
     }
@@ -62,7 +64,19 @@ public class AutoDirector {
     
     return new Auto("Coral", tracker, PositionConstants.startingPoses.top() );
   }
+  public Auto HPintake() {
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("TSC", "R8B"));
+    paths.add(new AutoSector("TSC", "R8A"));
+    paths.add(new AutoSector("TSC", "R6B"));
+    paths.add(new AutoSector("BSC", "R6A"));
+    paths.add(new AutoSector("BSC", "R4A"));
+    paths.add(new AutoSector("BSC", "R4B"));
 
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
+    
+    return new Auto("Human Player Intake", tracker, PositionConstants.startingPoses.top() );
+  }
   public Auto PathPlannerAuto(){
     return new Auto("PP Auto", AutoBuilder.buildAuto("New New Auto"), new Pose2d());
   }

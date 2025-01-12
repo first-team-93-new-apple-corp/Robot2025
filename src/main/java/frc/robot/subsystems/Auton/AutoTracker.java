@@ -9,6 +9,10 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Swerve.TunerConstants;
@@ -16,32 +20,43 @@ import frc.robot.subsystems.Swerve.TunerConstants;
 public class AutoTracker extends SequentialCommandGroup {
     PathPlannerPath intakingpath;
     PathPlannerPath scoringPath;
-    PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 9.8   , 4, 27.92527);
-    // Vision m_Vision = new Vision();
+    private LinearVelocity MaxSpeed = TunerConstants.kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
+    private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
+    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(14.715);
+    private AngularAcceleration MaxAngularAcceleration = RadiansPerSecondPerSecond.of(68.931);
 
-    public AutoTracker( AutoSubsystems subsystems, List<AutoSector> paths, Supplier<Pose2d> initalPose){
+    PathConstraints constraints = new PathConstraints(MaxSpeed, MaxAcceleration,
+            MaxAngularRate, MaxAngularAcceleration); // Vision m_Vision = new Vision();
+
+    public AutoTracker(AutoSubsystems subsystems, List<AutoSector> paths, Supplier<Pose2d> initalPose) {
         addCommands(Commands.print("Auto Time"));
-        addCommands(Commands.runOnce(() -> subsystems.driveSubsystem().resetPose(initalPose.get()), subsystems.driveSubsystem()));
+        addCommands(Commands.runOnce(() -> subsystems.driveSubsystem().resetPose(initalPose.get()),
+                subsystems.driveSubsystem()));
         try {
-            //preload
-        
+            // preload
+
             scoringPath = PathPlannerPath.fromPathFile("R10B");
-            addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(Commands.print("Raising the Elevator")));
+            addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                    .alongWith(Commands.print("Raising the Elevator" /* Probably subsystems.Elevator.Commands.L4 */)));
             addCommands(Commands.print("Placing here"));
-            addCommands(Commands.waitSeconds(1));
-        } catch (Exception e) {}
+            addCommands(Commands.waitSeconds(.5));
+        } catch (Exception e) {
+        }
         for (AutoSector autoSector : paths) {
             try {
                 intakingpath = PathPlannerPath.fromPathFile(autoSector.intakingPath());
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
-                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints).alongWith(Commands.print("Lowering the Elevator")));
+                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints)
+                        .alongWith(Commands.print("Lowering the Elevator")));
                 addCommands(Commands.print("Grab da tube"));
-                addCommands(Commands.waitSeconds(1));
-                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(Commands.print("Raising the Elevator")));
+                addCommands(Commands.waitSeconds(.5));
+                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                        .alongWith(Commands.print("Raising the Elevator")));
                 addCommands(Commands.print("Placing here"));
-                addCommands(Commands.waitSeconds(1));
+                addCommands(Commands.waitSeconds(.5));
 
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 

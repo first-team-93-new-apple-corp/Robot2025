@@ -9,6 +9,11 @@ import static edu.wpi.first.units.Units.*;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -112,5 +117,8 @@ public class RobotContainer {
     }
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);
+    }
+    public void updatePosition(Pose2d pose, double timestamp, Matrix<N3, N1> visionMeasurementStdDevs) {
+        m_DriveSubsystem.addVisionMeasurement(pose, timestamp, visionMeasurementStdDevs);
     }
 }

@@ -1,7 +1,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
 
 public class Constants {
     public class Inputs {
@@ -10,14 +12,16 @@ public class Constants {
                 // TODO when cameras arive replace with name.
                 public static final String CamName = "PlaceholderName";
                 // TODO when position finalized, replace with actual pose from center of bot
-                public static final Pose3d CamPose = new Pose3d(0, 0, 0, null);
+                public static final Transform3d CamPose = new Transform3d(new Translation3d(0, 0, 0),
+                        new Rotation3d(0, 0, 0));
             }
 
             public class rearCam {
                 // TODO when cameras arive replace with name.
                 public static final String CamName = "PlaceholderName";
                 // TODO when position finalized, replace with actual pose from center of bot
-                public static final Pose3d CamPose = new Pose3d(0, 0, 0, null);
+                public static final Transform3d CamPose = new Transform3d(new Translation3d(0, 0, 0),
+                         new Rotation3d(0,0,0));
             }
 
         }

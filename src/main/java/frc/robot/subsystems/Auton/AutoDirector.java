@@ -34,6 +34,7 @@ public class AutoDirector {
     Autos.add(straight());
     Autos.add(PathPlannerAuto());
     Autos.add(HPintake());
+    Autos.add(newAuto());
 
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -44,6 +45,15 @@ public class AutoDirector {
   // ------------------------------------------Autos------------------------------------------
   public Auto doNothing() {
     return new Auto("doNothing", new InstantCommand(), new Pose2d());
+  }
+
+  public Auto newAuto(){
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("TSC", "R6B"));
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> new Pose2d());
+
+    return new Auto("new Auto", tracker, new Pose2d());
   }
 
   public Auto straight(){

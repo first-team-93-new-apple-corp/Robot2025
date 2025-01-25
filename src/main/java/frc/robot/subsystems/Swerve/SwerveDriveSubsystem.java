@@ -21,6 +21,7 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -256,5 +257,4 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
     }
-
 }

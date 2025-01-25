@@ -120,7 +120,7 @@ public class Vision extends SubsystemBase {
     // return rearPoseEstimator.update();
     // }
     public VisionResults getResults() {
-        double timeStamp = com.ctre.phoenix6.Utils.getCurrentTimeSeconds();
-        return new VisionResults(getEstimatedGlobalPose(Camera, PoseEstimator).get().estimatedPose.toPose2d(), timeStamp, curStdDevs);
+        EstimatedRobotPose estimate = getEstimatedGlobalPose(Camera, PoseEstimator).get();
+        return new VisionResults(estimate.estimatedPose.toPose2d(), estimate.timestampSeconds, curStdDevs);
     }
 }

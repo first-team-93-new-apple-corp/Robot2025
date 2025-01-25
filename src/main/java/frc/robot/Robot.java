@@ -5,25 +5,21 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
-  // private final LED m_LED;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    // m_LED = new LED();
-    // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen, Color.kBlack, 144, 25), 0.6, 0.005);
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    m_robotContainer.updateValues();
   }
 
   @Override

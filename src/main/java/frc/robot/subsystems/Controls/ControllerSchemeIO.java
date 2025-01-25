@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;

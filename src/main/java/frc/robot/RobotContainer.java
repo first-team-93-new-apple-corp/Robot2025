@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -25,7 +27,7 @@ public class RobotContainer {
     // Drivetrain
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
                                                                                   // speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+    public double MaxAngularRate = RadiansPerSecond.of(11.887).in(RadiansPerSecond); // 3/4 of a rotation per second
                                                                                       // max angular velocity
     public final SwerveDriveSubsystem m_DriveSubsystem = TunerConstants.createDrivetrain();
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()

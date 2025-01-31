@@ -70,4 +70,9 @@ public class POVDriveV1 implements ControllerSchemeIO {
         return LeftStick.button(3);
     }
 
+    @Override
+    public double InputSlider() {
+        return LeftStick.getThrottle();
+    }
+
 }

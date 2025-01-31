@@ -100,4 +100,9 @@ public class POVDriveV2 implements ControllerSchemeIO {
     public Trigger autoAlign() {
         return LeftStick.button(3);
     }
+
+    @Override
+    public double InputSlider() {
+        return 1-LeftStick.getThrottle();
+    }
 }

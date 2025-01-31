@@ -30,6 +30,11 @@ public class TwoStickDrive implements ControllerSchemeIO {
     public double InputTheta() {
         return -RightStick.getX();
     }
+    
+    @Override
+    public double InputSlider() {
+        return RightStick.getThrottle();
+    }
 
     @Override
     public Translation2d POV() {

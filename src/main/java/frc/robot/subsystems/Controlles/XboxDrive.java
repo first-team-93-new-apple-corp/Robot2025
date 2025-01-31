@@ -23,6 +23,11 @@ public class XboxDrive implements ControllerSchemeIO {
     }
 
     @Override
+    public double InputSlider() {
+        return 0;
+    }
+
+    @Override
     public double InputTheta() {
         return -Xbox.getRightX();
     }

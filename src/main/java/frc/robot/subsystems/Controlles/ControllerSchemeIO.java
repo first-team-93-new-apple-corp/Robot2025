@@ -35,6 +35,8 @@ public interface ControllerSchemeIO {
     public double InputUp();
 
     public double InputTheta();
+    
+    public double InputSlider();
 
     public Translation2d POV();
 

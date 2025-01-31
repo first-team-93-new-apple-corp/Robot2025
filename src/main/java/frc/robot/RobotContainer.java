@@ -27,7 +27,7 @@ import frc.robot.subsystems.Swerve.TunerConstants;
 public class RobotContainer {
     // Drivetrain
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
-                                                                                        // speed
+                                                                                  // speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
                                                                                       // max angular velocity
     public final SwerveDriveSubsystem m_DriveSubsystem = TunerConstants.createDrivetrain();
@@ -43,8 +43,10 @@ public class RobotContainer {
     private final CommandXboxController Xbox = new CommandXboxController(2);
     private final CommandJoystick leftStick = new CommandJoystick(0);
     private final CommandJoystick RightStick = new CommandJoystick(1);
-    private final ControllerSchemeIO Driver = new POVDriveV2(0, 1, () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
-    // private final ControllerSchemeIO Driver = new DriverAssistTwoStick(0, 1, () -> m_DriveSubsystem.getState().Pose);
+    private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
+            () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+    // private final ControllerSchemeIO Driver = new DriverAssistTwoStick(0, 1, ()
+    // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
 
     // Auton
@@ -58,11 +60,11 @@ public class RobotContainer {
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
-        
+
         // AUTON
         m_DriveSubsystem.configureAuto();
         a = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("a",a);
+        SmartDashboard.putData("a", a);
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
 
@@ -71,23 +73,25 @@ public class RobotContainer {
     // private GamePiecePhoton vision = new GamePiecePhoton();
     private void configureBindings() {
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
-            .withVelocityX(Driver.DriveLeft())
-            .withVelocityY(Driver.DriveUp())
-            .withRotationalRate(Driver.DriveTheta())
-            .withCenterOfRotation(Driver.POV())));
+                .withVelocityX(Driver.DriveLeft() * Driver.InputSlider())
+                .withVelocityY(Driver.DriveUp() * Driver.InputSlider())
+                .withRotationalRate(Driver.DriveTheta() * Driver.InputSlider())
+                .withCenterOfRotation(Driver.POV())));
 
         Driver.robotRel().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> driveRobot
-            .withVelocityX(Driver.DriveLeft())
-            .withVelocityY(Driver.DriveUp())
-            .withRotationalRate(Driver.DriveTheta())
-            .withCenterOfRotation(Driver.POV())));
+                .withVelocityX(Driver.DriveLeft())
+                .withVelocityY(Driver.DriveUp())
+                .withRotationalRate(Driver.DriveTheta())
+                .withCenterOfRotation(Driver.POV())));
 
         Driver.Seed().onTrue(m_DriveSubsystem.runOnce(() -> m_DriveSubsystem.seedFieldCentric()));
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
-        // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> drive.withRotationalRate(vision.turnToNote()).withVelocityY(leftStick.getX()).withVelocityY(vision.orbitNote())));
+        // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
+        // drive.withRotationalRate(vision.turnToNote()).withVelocityY(leftStick.getX()).withVelocityY(vision.orbitNote())));
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
-        //LEDS
-        // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25, 75).andThen(LEDCommand.off()));
+        // LEDS
+        // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
+        // 75).andThen(LEDCommand.off()));
         // Xbox.b().onTrue(LEDCommand.shoot().andThen(LEDCommand.off()));
         // Xbox.y().onTrue(LEDCommand.test2().andThen(LEDCommand.off()));
         // Xbox.a().onTrue(getIdleLEDs());
@@ -110,6 +114,7 @@ public class RobotContainer {
     public Command getIdleLEDs() {
         return m_LED.Commands.applyColorCycle(4, Color.kBlue, Color.kRed);
     }
+
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);
     }

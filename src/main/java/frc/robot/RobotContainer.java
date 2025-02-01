@@ -66,8 +66,7 @@ public class RobotContainer {
 
         // AUTON
         m_DriveSubsystem.configureAuto();
-        a = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("a", a);
+
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
 

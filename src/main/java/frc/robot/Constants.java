@@ -1,6 +1,9 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -10,8 +13,8 @@ public class Constants {
         public class Cameras {
             public record Camera(String CamName,Transform3d camTransform) {}
             
-            public static Camera FrontCam = new Camera("PlaceholderName", new Transform3d(new Translation3d(0, 0, 0),
-                        new Rotation3d(0, 0, 0)));
+            public static Camera FrontCam = new Camera("Arducam_OV9281_USB_Camera", new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
+                        new Rotation3d(Degrees.of(0), Degrees.of(110), Degrees.of(0))));
             public static Camera RearCam = new Camera("PlaceholderName", new Transform3d(new Translation3d(0, 0, 0),
                         new Rotation3d(0, 0, 0)));
         }

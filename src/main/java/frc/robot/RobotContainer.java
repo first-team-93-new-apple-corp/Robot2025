@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.Set;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -14,6 +16,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -66,8 +69,6 @@ public class RobotContainer {
 
         // AUTON
         m_DriveSubsystem.configureAuto();
-        a = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("a", a);
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
 
@@ -95,8 +96,8 @@ public class RobotContainer {
         // Driver.autoAlignRight().whileTrue(m_DriveSubsystem.Commands.autoAlign(() ->
         // ReefChooser.Choose("B", () -> m_DriveSubsystem.getState().Pose, () ->
         // m_DriveSubsystem.getAlliance())));
-        Driver.autoAlignLeft().whileTrue(m_DriveSubsystem.Commands.autoAlign(() -> "A"));
-        Driver.autoAlignRight().whileTrue(m_DriveSubsystem.Commands.autoAlign(() -> "B"));
+        Driver.autoAlignLeft().whileTrue(new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlign("B"), Set.of(m_DriveSubsystem)));
+        Driver.autoAlignLeft().whileTrue(new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlign("A"), Set.of(m_DriveSubsystem)));
         Driver.autoAlignLeft().onFalse(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())
                 .withVelocityY(Driver.DriveUp())

@@ -15,6 +15,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
@@ -154,18 +156,18 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
 
         private String Path;
 
-        public Command autoAlign(Supplier<String> ABSupplier) {
-            PathConstraints constraints = new PathConstraints(MaxSpeed, MaxAcceleration,
-                    MaxAngularRate, MaxAngularAcceleration);
+        public Command autoAlign(String ABSupplier) {
             try {
-                return runOnce(() -> {
-                    Path = ReefChooser.Choose(ABSupplier.get(), () -> getState().Pose, () -> getAlliance());
-                }).andThen(runOnce(() -> {
-                    try {
-                        AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints).schedule();
-                    } catch (Exception e) {
+                if (getAlliance().equals(Alliance.Red)) {
+                    if (ABSupplier.equals("A")) {
+                        ABSupplier = "B";
+                    } else{
+                        ABSupplier = "A";
                     }
-                }));
+                }
+                PathConstraints constraints = new PathConstraints(MaxSpeed, MaxAcceleration, MaxAngularRate, MaxAngularAcceleration);
+                Path = ReefChooser.Choose(ABSupplier, getState().Pose, getAlliance());
+                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints);
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }

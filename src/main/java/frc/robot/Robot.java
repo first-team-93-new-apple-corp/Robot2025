@@ -20,8 +20,8 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    PathfindingCommand.warmupCommand().schedule();
-    Pathfinding.setPathfinder(new LocalADStar());
+    // PathfindingCommand.warmupCommand().schedule();
+    // Pathfinding.setPathfinder(new LocalADStar());
     // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen, Color.kBlack, 144, 25), 0.6, 0.005);
   }
 

@@ -20,6 +20,7 @@ import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controlles.ControllerSchemeIO;
 import frc.robot.subsystems.Controlles.POVDriveV2;
+import frc.robot.subsystems.Controlles.ThrottleableDrive;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
@@ -43,9 +44,9 @@ public class RobotContainer {
     private final CommandXboxController Xbox = new CommandXboxController(2);
     private final CommandJoystick leftStick = new CommandJoystick(0);
     private final CommandJoystick RightStick = new CommandJoystick(1);
-    private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
-            () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
-    // private final ControllerSchemeIO Driver = new DriverAssistTwoStick(0, 1, ()
+    // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
+    //         () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1);
     // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
 
@@ -73,9 +74,9 @@ public class RobotContainer {
     // private GamePiecePhoton vision = new GamePiecePhoton();
     private void configureBindings() {
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
-                .withVelocityX(Driver.DriveLeft() * Driver.InputSlider())
-                .withVelocityY(Driver.DriveUp() * Driver.InputSlider())
-                .withRotationalRate(Driver.DriveTheta() * Driver.InputSlider())
+                .withVelocityX(Driver.DriveLeft())
+                .withVelocityY(Driver.DriveUp())
+                .withRotationalRate(Driver.DriveTheta())
                 .withCenterOfRotation(Driver.POV())));
 
         Driver.robotRel().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> driveRobot

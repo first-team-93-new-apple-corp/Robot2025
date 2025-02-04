@@ -1,6 +1,5 @@
 package frc.robot.subsystems.VisionIO;
 
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -9,6 +8,10 @@ import org.photonvision.EstimatedRobotPose;
 import org.photonvision.PhotonCamera;
 import org.photonvision.PhotonPoseEstimator;
 import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.estimation.TargetModel;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
@@ -16,17 +19,22 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
     Supplier<Pose2d> poseSupplier;
     private PhotonCamera Camera;
+    // Sim
+    private VisionSystemSim systemSim;
+    private TargetModel simTargetModel;
+    private AprilTagFieldLayout simTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    private SimCameraProperties simCameraProperties;
+    private PhotonCameraSim cameraSim;
+    // End Sim
     private PhotonPoseEstimator PoseEstimator;
     private Matrix<N3, N1> curStdDevs;
     private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
@@ -42,6 +50,31 @@ public class Vision extends SubsystemBase {
                 PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camTransform);
         PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
+        // Sim
+        systemSim = new VisionSystemSim(camName + "Sim");
+        simTargetModel = TargetModel.kAprilTag36h11;
+        systemSim.addAprilTags(simTagLayout);
+        simCameraProperties = new SimCameraProperties();
+        simCameraProperties.setCalibration(1280, 720, Rotation2d.fromDegrees(70)); // Close to our arducam
+        simCameraProperties.setCalibError(0.125, 0.04); // Unsure how accurate this is
+        simCameraProperties.setFPS(40); // Should be close enough
+        simCameraProperties.setAvgLatencyMs(40); // Should be close enough
+        simCameraProperties.setLatencyStdDevMs(5); // Should be close enough
+        cameraSim = new PhotonCameraSim(Camera, simCameraProperties);
+        systemSim.addCamera(cameraSim, camTransform);
+
+        // Enable the raw and processed streams. These are enabled by default.
+        cameraSim.enableRawStream(true);
+        cameraSim.enableProcessedStream(true);
+
+        // Enable drawing a wireframe visualization of the field to the camera streams.
+        // This is extremely resource-intensive and is disabled by default.
+        cameraSim.enableDrawWireframe(true);
+        cameraSim.setMaxSightRange(5);
+    }
+
+    public void updateSim(Pose2d currentRobotPose) {
+        systemSim.update(currentRobotPose);
     }
 
     private void updateEstimationStdDevs(
@@ -56,7 +89,7 @@ public class Vision extends SubsystemBase {
             Matrix<N3, N1> estStdDevs = kSingleTagStdDevs;
             int numTags = 0;
             double avgDist = 0;
-            
+
             // Precalculation - see how many tags we found, and calculate an
             // average-distance metric
             for (PhotonTrackedTarget tgt : targets) {

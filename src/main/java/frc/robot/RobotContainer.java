@@ -6,33 +6,26 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
-import java.lang.System.Logger;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.Timestamp;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
-import frc.robot.subsystems.Controls.POVDriveV2;
+import frc.robot.subsystems.Controls.XboxDrive;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
 import frc.robot.subsystems.VisionIO.CameraFactory;
 import frc.robot.subsystems.VisionIO.Vision;
-import frc.robot.subsystems.VisionIO.Vision.VisionResults;
 
 public class RobotContainer {
     // Drivetrain
@@ -49,14 +42,14 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-    private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
-            () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+    // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
+    //         () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
     // private final ControllerSchemeIO Driver = new DriverAssistTwoStick(0, 1, ()
     // -> m_DriveSubsystem.getState().Pose);
-    // private final ControllerIO Driver = new XboxDrive(2);
+    private final ControllerSchemeIO Driver = new XboxDrive(0);
     private final Vision frontCamera;
-    private double initialTimestamp = 0;
     // private final Vision rearCamera;
+    
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -113,6 +106,9 @@ public class RobotContainer {
         feedVision(frontCamera);
         // feedVision(rearCamera);
 
+    }
+    public void updateSimValues() {
+        frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
     }
     // public void syncTime() {
     // initialTimestamp = Utils.getCurrentTimeSeconds();

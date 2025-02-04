@@ -65,5 +65,6 @@
     "latex",
     "plaintext"
   ],
-  "wpilib.autoStartRioLog": false
+  "wpilib.autoStartRioLog": false,
+  "wpilib.selectDefaultSimulateExtension": false
 }

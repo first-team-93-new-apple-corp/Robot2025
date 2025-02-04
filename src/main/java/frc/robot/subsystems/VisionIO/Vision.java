@@ -1,5 +1,6 @@
 package frc.robot.subsystems.VisionIO;
 
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -15,9 +16,12 @@ import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Vision extends SubsystemBase {
@@ -28,7 +32,8 @@ public class Vision extends SubsystemBase {
     private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
     private Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
 
-    public record VisionResults(Pose2d pose, double Time, Matrix<N3, N1> StdDevs){};
+    public record VisionResults(Pose2d pose, double Time, Matrix<N3, N1> StdDevs) {
+    };
 
     public Vision(Supplier<Pose2d> PoseSupplier, String camName, Transform3d camTransform) {
         poseSupplier = PoseSupplier;
@@ -106,7 +111,14 @@ public class Vision extends SubsystemBase {
             // });
             // }
         }
+        if (visionEst.isEmpty()) {
+            visionEst = null;
+        }
         return visionEst;
+    }
+
+    public Optional<EstimatedRobotPose> getResults() {
+        return getEstimatedGlobalPose(Camera, PoseEstimator);
     }
 
     // public Optional<EstimatedRobotPose> getEstimatedGlobalPoseFront(Pose2d
@@ -119,8 +131,5 @@ public class Vision extends SubsystemBase {
     // rearPoseEstimator.setReferencePose(prevEstimatedRobotPose);
     // return rearPoseEstimator.update();
     // }
-    public VisionResults getResults() {
-        EstimatedRobotPose estimate = getEstimatedGlobalPose(Camera, PoseEstimator).get();
-        return new VisionResults(estimate.estimatedPose.toPose2d(), estimate.timestampSeconds, curStdDevs);
-    }
+
 }

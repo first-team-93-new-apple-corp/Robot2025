@@ -49,7 +49,7 @@ public class RobotContainer {
     // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
     private final Vision frontCamera;
-    private final Vision rearCamera;
+    // private final Vision rearCamera;
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -61,7 +61,7 @@ public class RobotContainer {
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         frontCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.FrontCam);
-        rearCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.RearCam);
+        // rearCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.RearCam);
 
         // AUTON
         m_DriveSubsystem.configureAuto();
@@ -103,8 +103,8 @@ public class RobotContainer {
     }
 
     public void updateValues() {
-        feedVision(frontCamera.getResults());
-        feedVision(rearCamera.getResults());
+        feedVision(frontCamera);
+        // feedVision(rearCamera);
 
     }
 
@@ -117,7 +117,16 @@ public class RobotContainer {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);
     }
 
-    public void feedVision(VisionResults results) {
-        m_DriveSubsystem.addVisionMeasurement(results.pose(), results.Time(), results.StdDevs());
-    }
+    public void feedVision(Vision vision) {
+        var visionEst = vision.getResults();
+        if (visionEst != null){
+        visionEst.ifPresent(
+                est -> {
+                    // Change our trust in the measurement based on the tags we can see
+                    var estStdDevs = vision.getEstimationStdDevs();
+                    // System.out.println("Added vision measurement");
+                    m_DriveSubsystem.addVisionMeasurement(
+                            est.estimatedPose.toPose2d(), est.timestampSeconds, estStdDevs);
+                });
+    }}
 }

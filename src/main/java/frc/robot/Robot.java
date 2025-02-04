@@ -14,11 +14,13 @@ public class Robot extends TimedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    // m_robotContainer.syncTime();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+    
     m_robotContainer.updateValues();
   }
 

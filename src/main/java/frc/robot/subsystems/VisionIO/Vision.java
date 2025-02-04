@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase {
             Matrix<N3, N1> estStdDevs = kSingleTagStdDevs;
             int numTags = 0;
             double avgDist = 0;
-
+            
             // Precalculation - see how many tags we found, and calculate an
             // average-distance metric
             for (PhotonTrackedTarget tgt : targets) {
@@ -100,16 +100,6 @@ public class Vision extends SubsystemBase {
         for (var change : camera.getAllUnreadResults()) {
             visionEst = photonEstimator.update(change);
             updateEstimationStdDevs(visionEst, change.getTargets(), photonEstimator);
-            // if (Robot.isSimulation()) {
-            // visionEst.ifPresentOrElse(
-            // est ->
-            // getSimDebugField()
-            // .getObject("VisionEstimation")
-            // .setPose(est.estimatedPose.toPose2d()),
-            // () -> {
-            // getSimDebugField().getObject("VisionEstimation").setPoses();
-            // });
-            // }
         }
         if (visionEst.isEmpty()) {
             visionEst = null;

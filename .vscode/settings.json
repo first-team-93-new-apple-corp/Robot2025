@@ -64,5 +64,6 @@
     "markdown",
     "latex",
     "plaintext"
-  ]
+  ],
+  "wpilib.autoStartRioLog": false
 }

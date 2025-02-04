@@ -14,7 +14,7 @@ public class Constants {
             public record Camera(String CamName,Transform3d camTransform) {}
             
             public static Camera FrontCam = new Camera("MainCamera", new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
-                        new Rotation3d(Degrees.of(0), Degrees.of(110), Degrees.of(0))));
+                        new Rotation3d(Degrees.of(0), Degrees.of(110), Degrees.of(180))));
             public static Camera RearCam = new Camera("PlaceholderName", new Transform3d(new Translation3d(0, 0, 0),
                         new Rotation3d(0, 0, 0)));
         }

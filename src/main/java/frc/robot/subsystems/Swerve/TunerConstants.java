@@ -197,7 +197,7 @@ public class TunerConstants {
      */
     public static SwerveDriveSubsystem createDrivetrain() {
         return new SwerveDriveSubsystem(
-            DrivetrainConstants, FrontLeft, FrontRight, BackLeft, BackRight
+            DrivetrainConstants,250, FrontLeft, FrontRight, BackLeft, BackRight
         );
     }
 

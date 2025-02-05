@@ -31,4 +31,4 @@ These are the criteria that every Pull Request should meet, please check them of
 
 ## One of these People must review your code
 
-@Captagonal @jsmmr2 @LavaWolf911 `software`
+@Captagonal @jsmmr2 @LavaWolf911 `Software`

@@ -4,15 +4,20 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
+import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
+  private final ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
   // private final LED m_LED;
 
   public Robot() {
@@ -67,7 +72,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-
+    
   }
 
   @Override
@@ -91,5 +96,11 @@ public class Robot extends TimedRobot {
 
   @Override
   public void simulationPeriodic() {
+    m_ElevatorSubsystem.m_elevatorSim.setInput(m_ElevatorSubsystem.elevatorMotor.getMotorVoltage().getValueAsDouble() * RobotController.getBatteryVoltage());
+    m_ElevatorSubsystem.m_elevatorSim.update(0.020);
+    
+    
+    RoboRioSim.setVInVoltage(
+        BatterySim.calculateDefaultBatteryLoadedVoltage(m_ElevatorSubsystem.m_elevatorSim.getCurrentDrawAmps()));
   }
 }

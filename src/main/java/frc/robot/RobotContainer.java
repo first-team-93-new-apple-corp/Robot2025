@@ -10,6 +10,9 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
@@ -18,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LED;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
@@ -53,6 +58,9 @@ public class RobotContainer {
     // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
 
+    // Simulating Elevator
+    public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -109,6 +117,9 @@ public class RobotContainer {
         Xbox.start().and(Xbox.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
         Xbox.leftStick().onTrue((Commands.runOnce(() -> SignalLogger.stop())));
         Xbox.rightStick().onTrue((Commands.runOnce(() -> SignalLogger.start())));
+
+        // Elevator sim
+        Xbox.leftTrigger().whileTrue(m_ElevatorSubsystem.elevatorCommands.l1());
 
     }
 

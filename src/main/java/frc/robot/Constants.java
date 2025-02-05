@@ -1,6 +1,11 @@
 
 package frc.robot;
 
+import static edu.wpi.first.units.Units.Inches;
+
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Distance;
+
 public final class Constants {
     public class Sensors {
         public class DIO {
@@ -13,6 +18,22 @@ public final class Constants {
             public static final int TOF = 21;
         }
 
+    }
+
+    public class ElevatorConstants {
+        public static final int elevatorMotorID = 20;
+        public static final Distance l1Setpoint = Inches.of(3);
+        public static final Distance l2Setpoint = Inches.of(3);
+        public static final Distance l3Setpoint = Inches.of(3);
+        public static final Distance l4Setpoint = Inches.of(3);
+        public static final Distance wheelRadius = Inches.of(0);
+        public static final double ticksPerRevolution = 500;
+        public static final double revolutionsPerInch =  10;
+        public static final double kElevatorGearing = 1;
+        public static final double kCarriageMass = 50;
+        public static final double kElevatorDrumRadius = 1;
+        public static final double kMinElevatorHeightMeters = 0;
+        public static final double kMaxElevatorHeightMeters = Units.Meter.convertFrom(32.9, Inches);
     }
 
     public class CTRE {

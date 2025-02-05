@@ -15,7 +15,7 @@ public class Constants {
             
             public static Camera FrontCam = new Camera("MainCamera", new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
                         new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
-            public static Camera RearCam = new Camera("PlaceholderName", new Transform3d(new Translation3d(0, 0, 0),
+            public static Camera RearCam = new Camera("SecondaryCamera", new Transform3d(new Translation3d(0, 0, 0),
                         new Rotation3d(0, 0, 0)));
         }
 
@@ -163,6 +163,7 @@ public class Constants {
 
     public class AprilTags {
         public class RedTags {
+            public static final int Proccessor = 16;
             public static final int L_Source = 1;
             public static final int R_Source = 2;
             public static final int BlueSide_Climb = 15;
@@ -178,6 +179,7 @@ public class Constants {
         }
 
         public class BlueTags {
+            public static final int Proccessor = 3;
             public static final int L_Source = 13;
             public static final int R_Source = 12;
             public static final int BlueSide_Climb = 14;

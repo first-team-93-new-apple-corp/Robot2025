@@ -24,13 +24,15 @@ import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 
 public class Vision extends SubsystemBase {
     Supplier<Pose2d> poseSupplier;
     private PhotonCamera Camera;
+    private String camName;
+    private Transform3d camTransform;
     // Sim
     private VisionSystemSim systemSim;
-    private TargetModel simTargetModel;
     private AprilTagFieldLayout simTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
     private SimCameraProperties simCameraProperties;
     private PhotonCameraSim cameraSim;
@@ -44,6 +46,8 @@ public class Vision extends SubsystemBase {
     };
 
     public Vision(Supplier<Pose2d> PoseSupplier, String camName, Transform3d camTransform) {
+        this.camName = camName;
+        this.camTransform = camTransform;
         poseSupplier = PoseSupplier;
         Camera = new PhotonCamera(camName);
         PoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape),
@@ -51,8 +55,12 @@ public class Vision extends SubsystemBase {
         PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
 
         // Sim
+        if (Robot.isSimulation()){
+            defineSim();}
+    }
+
+    public void defineSim(){
         systemSim = new VisionSystemSim(camName + "Sim");
-        simTargetModel = TargetModel.kAprilTag36h11;
         systemSim.addAprilTags(simTagLayout);
         simCameraProperties = new SimCameraProperties();
         simCameraProperties.setCalibration(1280, 720, Rotation2d.fromDegrees(70)); // Close to our arducam
@@ -76,7 +84,6 @@ public class Vision extends SubsystemBase {
     public void updateSim(Pose2d currentRobotPose) {
         systemSim.update(currentRobotPose);
     }
-
     private void updateEstimationStdDevs(
             Optional<EstimatedRobotPose> estimatedPose, List<PhotonTrackedTarget> targets,
             PhotonPoseEstimator photonEstimator) {
@@ -126,7 +133,7 @@ public class Vision extends SubsystemBase {
     public Matrix<N3, N1> getEstimationStdDevs() {
         return curStdDevs;
     }
-
+    
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose(PhotonCamera camera,
             PhotonPoseEstimator photonEstimator) {
         Optional<EstimatedRobotPose> visionEst = Optional.empty();

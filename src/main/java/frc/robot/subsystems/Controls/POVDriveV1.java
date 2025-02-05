@@ -1,29 +1,39 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class TwoStickDrive implements ControllerSchemeIO {
+public class POVDriveV1 implements ControllerSchemeIO {
 
-    public CommandJoystick LeftStick;
-    public CommandJoystick RightStick;
+    private CommandJoystick LeftStick;
+    private CommandJoystick RightStick;
 
-
-    public TwoStickDrive(int LeftPort, int RightPort) {
+  /**
+   * An implementation of  {@link #the (ControllerSchemeIO)}
+   * <p> Uses left stick to generate center of rotations
+   */
+    public POVDriveV1(int LeftPort, int RightPort) {
         LeftStick = new CommandJoystick(LeftPort);
         RightStick = new CommandJoystick(RightPort);
-
     }
 
     @Override
     public double InputLeft() {
-        return -LeftStick.getY();
+        if (LeftStick.button(2).getAsBoolean()) {
+            return 0;
+        } else {
+            return -LeftStick.getY();
+        }
     }
 
     @Override
     public double InputUp() {
-        return -LeftStick.getX();
+        if (LeftStick.button(2).getAsBoolean()) {
+            return 0;
+        } else {
+            return -LeftStick.getX();
+        }
     }
 
     @Override
@@ -31,10 +41,13 @@ public class TwoStickDrive implements ControllerSchemeIO {
         return -RightStick.getX();
     }
 
-
     @Override
     public Translation2d POV() {
-        return AngleToPOV(LeftStick.getHID().getPOV());
+        if (LeftStick.button(2).getAsBoolean()) {
+            return new Translation2d(-LeftStick.getY() ,-LeftStick.getX());
+        } else {
+            return new Translation2d(0,0);
+        }
     }
 
     @Override
@@ -51,8 +64,11 @@ public class TwoStickDrive implements ControllerSchemeIO {
     public Trigger robotRel() {
         return LeftStick.trigger();
     }
+
     @Override
     public Trigger autoAlign() {
         return LeftStick.button(3);
     }
+
+
 }

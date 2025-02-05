@@ -6,31 +6,36 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.util.function.Supplier;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.SignalLogger;
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.subsystems.LED;
+import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
-import frc.robot.subsystems.Controlles.ControllerSchemeIO;
-import frc.robot.subsystems.Controlles.POVDriveV2;
-import frc.robot.subsystems.Controlles.ThrottleableDrive;
+import frc.robot.subsystems.Controls.ControllerSchemeIO;
+import frc.robot.subsystems.Controls.POVDriveV2;
+import frc.robot.subsystems.Controls.XboxDrive;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
+import frc.robot.subsystems.VisionIO.CameraFactory;
+import frc.robot.subsystems.VisionIO.Vision;
 
 public class RobotContainer {
     // Drivetrain
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top
+                                                                                  // speed
                                                                                   // speed
     private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
                                                                                       // max angular velocity
@@ -59,15 +64,21 @@ public class RobotContainer {
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    // LEDs
-    LED m_LED = new LED();
+    private final Vision frontCamera;
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
+        // VISION
+        Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
+        frontCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.FrontCam);
+        // rearCamera = new CameraFactory().build(PoseSupplier,
+        // Constants.Inputs.Cameras.RearCam);
+
 
         // AUTON
         m_DriveSubsystem.configureAuto();
         a = AutoBuilder.buildAutoChooser();
+        SmartDashboard.putData("a", a);
         SmartDashboard.putData("a", a);
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
@@ -91,7 +102,6 @@ public class RobotContainer {
         Driver.Seed().onTrue(m_DriveSubsystem.runOnce(() -> m_DriveSubsystem.seedFieldCentric()));
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
-        // drive.withRotationalRate(vision.turnToNote()).withVelocityY(leftStick.getX()).withVelocityY(vision.orbitNote())));
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
         // LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
@@ -103,25 +113,50 @@ public class RobotContainer {
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        Xbox.back().and(Xbox.y()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kForward));
-        Xbox.back().and(Xbox.x()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kReverse));
-        Xbox.start().and(Xbox.y()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kForward));
-        Xbox.start().and(Xbox.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
-        Xbox.leftStick().onTrue((Commands.runOnce(() -> SignalLogger.stop())));
-        Xbox.rightStick().onTrue((Commands.runOnce(() -> SignalLogger.start())));
+        // joystick.back().and(joystick.y()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kForward));
+        // joystick.back().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kReverse));
+        // joystick.start().and(joystick.y()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kForward));
+        // joystick.start().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
 
     }
+
+    public void updateValues() {
+        // Comment out this line if feild relitive becomes an issue.
+        feedVision(frontCamera);
+        // feedVision(rearCamera);
+
+    }
+    public void updateSimValues() {
+        frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
+    }
+    // public void syncTime() {
+    // initialTimestamp = Utils.getCurrentTimeSeconds();
+    // }
 
     public Command getAutonomousCommand() {
         // return a.getSelected();
         return autoDirector.selection().command();
     }
 
-    public Command getIdleLEDs() {
-        return m_LED.Commands.applyColorCycle(4, Color.kBlue, Color.kRed);
-    }
-
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);
+    }
+
+    public void feedVision(Vision vision) {
+        var visionEst = vision.getResults();
+        if (visionEst != null) {
+            visionEst.ifPresent(
+                    est -> {
+                        // Change our trust in the measurement based on the tags we can see
+                        var estStdDevs = vision.getEstimationStdDevs();
+
+                        m_DriveSubsystem.addVisionMeasurement(
+                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds), estStdDevs);
+                                
+                                
+                        // m_DriveSubsystem.addVisionMeasurement(
+                        // est.estimatedPose.toPose2d(), est.timestampSeconds);
+                    });
+        }
     }
 }

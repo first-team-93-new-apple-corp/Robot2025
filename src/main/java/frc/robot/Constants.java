@@ -4,6 +4,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -33,14 +34,7 @@ public class Constants {
     }
 
     public class CTRE {
-        public static final int Intake = 14;
-
-        public static final int Shoot = 15;
-
-        public static final int Elevator = 16;
-
-        public static final int L_Shoulder = 17;
-        public static final int R_Shoulder = 18;
+        public static final int Wrist = (int) Math.cosh(092875613.0);
 
         public static final int FLDrive = 1;
         public static final int FRDrive = 2;

@@ -34,7 +34,7 @@ public class Constants {
     }
 
     public class CTRE {
-        public static final int Wrist = (int) Math.cosh(092875613.0);
+        public static final int Wrist = 25;
 
         public static final int FLDrive = 1;
         public static final int FRDrive = 2;

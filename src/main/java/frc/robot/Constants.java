@@ -22,13 +22,13 @@ public final class Constants {
 
     public class ElevatorConstants {
         public static final int elevatorMotorID = 20;
-        public static final Distance l1Setpoint = Inches.of(3);
-        public static final Distance l2Setpoint = Inches.of(3);
-        public static final Distance l3Setpoint = Inches.of(3);
-        public static final Distance l4Setpoint = Inches.of(3);
+        public static final Distance l1Setpoint = Inches.of(10);
+        public static final Distance l2Setpoint = Inches.of(20);
+        public static final Distance l3Setpoint = Inches.of(30);
+        public static final Distance l4Setpoint = Inches.of(40);
         public static final Distance wheelRadius = Inches.of(0);
-        public static final double ticksPerRevolution = 500;
-        public static final double revolutionsPerInch =  10;
+        public static final double ticksPerRevolution = 2048;
+        public static final double revolutionsPerInch =  1;
         public static final double kElevatorGearing = 1;
         public static final double kCarriageMass = 50;
         public static final double kElevatorDrumRadius = 1;

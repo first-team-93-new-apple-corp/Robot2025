@@ -119,7 +119,10 @@ public class RobotContainer {
         Xbox.rightStick().onTrue((Commands.runOnce(() -> SignalLogger.start())));
 
         // Elevator sim
-        Xbox.leftTrigger().whileTrue(m_ElevatorSubsystem.elevatorCommands.l1());
+        Xbox.x().whileTrue(m_ElevatorSubsystem.elevatorCommands.l1());
+        // Xbox.x().onFalse(m_ElevatorSubsystem.elevatorCommands.stopElevator());
+
+        
 
     }
 

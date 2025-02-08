@@ -21,19 +21,30 @@ public final class Constants {
     }
 
     public class ElevatorConstants {
-        public static final int elevatorMotorID = 20;
-        public static final Distance l1Setpoint = Inches.of(10);
-        public static final Distance l2Setpoint = Inches.of(20);
-        public static final Distance l3Setpoint = Inches.of(30);
-        public static final Distance l4Setpoint = Inches.of(40);
-        public static final Distance wheelRadius = Inches.of(0);
-        public static final double ticksPerRevolution = 2048;
-        public static final double revolutionsPerInch =  1;
-        public static final double kElevatorGearing = 1;
-        public static final double kCarriageMass = 50;
-        public static final double kElevatorDrumRadius = 1;
-        public static final double kMinElevatorHeightMeters = 0;
-        public static final double kMaxElevatorHeightMeters = Units.Meter.convertFrom(32.9, Inches);
+        public static final int outerElevatorMotorID = 20;
+        public static final int innerElevatorMotorID = 21;
+        public static final int bottomOuterLimitSwitchID = 22;
+        public static final int bottomInnerLimitSwitchID = 23;
+        
+        public static final Distance outerl1Setpoint = Inches.of(19);
+        public static final Distance outerl2Setpoint = Inches.of(33);
+        public static final Distance outerl3Setpoint = Inches.of(49);
+        public static final Distance outerl4Setpoint = Inches.of(40);
+        public static final Distance innerl1Setpoint = Inches.of(19);
+        public static final Distance innerl2Setpoint = Inches.of(33);
+        public static final Distance innerl3Setpoint = Inches.of(49);
+        public static final Distance innerl4Setpoint = Inches.of(40);
+        
+        public static final Distance wheelRadius = Inches.of(1);
+        public static final double OuterRotationsToInches =  1;
+        public static final double InnerRotationsToInches =  1;
+
+        
+        // public static final double kElevatorGearing = 1;
+        // public static final double kCarriageMass = 50;
+        // public static final double kElevatorDrumRadius = 1;
+        // public static final double kMinElevatorHeightMeters = 0;
+        // public static final double kMaxElevatorHeightMeters = Units.Meter.convertFrom(32.9, Inches);
     }
 
     public class CTRE {

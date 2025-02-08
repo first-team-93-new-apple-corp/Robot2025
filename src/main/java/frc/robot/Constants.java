@@ -34,6 +34,7 @@ public class Constants {
     }
 
     public class CTRE {
+        public static final int Grabber = 24;
         public static final int Wrist = 25;
 
         public static final int FLDrive = 1;

@@ -14,7 +14,7 @@ public class GrabberSubsystem implements Subsystem{
 
     private double intakeSpeed;
     private double outtakeSpeed;
-
+    public GrabberCommands Commands = new GrabberCommands();
     public GrabberSubsystem(){
         motor = new SparkMax(CTRE.Grabber, MotorType.kBrushless);
         //GrabberSubsystem Constructor
@@ -31,13 +31,13 @@ public class GrabberSubsystem implements Subsystem{
     }
     public class GrabberCommands{
         public Command intake(){
-            return Commands.runOnce(() -> setSpeed(intakeSpeed));
+            return runOnce(() -> setSpeed(intakeSpeed));
         }
         public Command outtake() {
-            return Commands.runOnce(() -> setSpeed(outtakeSpeed));
+            return runOnce(() -> setSpeed(outtakeSpeed));
         }
         public Command brake(){
-            return Commands.runOnce(() -> setSpeed(0));
+            return runOnce(() -> setSpeed(0));
         }
     }
 

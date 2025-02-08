@@ -21,38 +21,37 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ArmSubsystem extends SubsystemBase {
     private TalonFX wrist;
     private TalonFXConfiguration wristConfig;
-    
+
     private MotionMagicVoltage mmVolt;
     private MotionMagicConfigs mmConfig;
 
     private DutyCycleEncoder m_Encoder;
-    public Commands Commands;
-    //Setpoints
-    private double restIntake, Low, Mid, High; 
-    //Limts
+    public ArmCommands Commands;
+    // Setpoints
+    private double restIntake, Low, Mid, High;
+    // Limts
     private double lowLimit, highLimit;
 
-    public ArmSubsystem(){
-        Commands = new Commands();
+    public ArmSubsystem() {
+        Commands = new ArmCommands();
         m_Encoder = new DutyCycleEncoder(Inputs.DIO.ThroughBoreEncoder);
-        wrist = new TalonFX(CTRE.Wrist);    
+        wrist = new TalonFX(CTRE.Wrist);
         wristConfig = new TalonFXConfiguration();
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
         mmConfig = wristConfig.MotionMagic;
         mmConfig.MotionMagicCruiseVelocity = 80;
         mmConfig.MotionMagicAcceleration = 160;
-        
-           
+
         var slot0 = wristConfig.Slot0;
-        slot0.kA = 0.0; //TODO find values
+        slot0.kA = 0.0; // TODO find values
         slot0.kG = 0.0;
         slot0.kV = 0.0;
-        slot0.kP = 1.0; //TODO tune values
+        slot0.kP = 1.0; // TODO tune values
         slot0.kI = 0.0;
         slot0.kD = 0.0;
         slot0.kS = 0.0;
-       
+        wrist.getConfigurator().apply(wristConfig);
         lowLimit = 0.0;
         highLimit = 0.0;
 
@@ -62,7 +61,7 @@ public class ArmSubsystem extends SubsystemBase {
         restIntake = 0.0; // -90 degree from ground
     }
 
-    public double getPosition(){
+    public double getPosition() {
         return m_Encoder.get();
     }
 
@@ -75,7 +74,7 @@ public class ArmSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("WristAngle", m_Encoder.getFrequency());
     }
 
-    public class Commands {
+    public class ArmCommands {
         public Command runHigh() {
             return run(() -> runAngle(High));
         }

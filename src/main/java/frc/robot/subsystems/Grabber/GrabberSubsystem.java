@@ -27,26 +27,17 @@ public class GrabberSubsystem implements Subsystem{
     }
     public void setSpeed(double speed){
         motor.set(speed);
-    }
-    public void intake(){
-        setSpeed(intakeSpeed);
-    }
-    public void outtake(){
-        setSpeed(outtakeSpeed);
-    }
-    public void brake(){
-        setSpeed(0);
-        motor.stopMotor();
+        if(speed == 0) motor.stopMotor();
     }
     public class GrabberCommands{
         public Command intake(){
-            return Commands.runOnce(() -> intake());
+            return Commands.runOnce(() -> setSpeed(intakeSpeed));
         }
         public Command outtake() {
-            return Commands.runOnce(() -> outtake());
+            return Commands.runOnce(() -> setSpeed(outtakeSpeed));
         }
         public Command brake(){
-            return Commands.runOnce(() -> brake());
+            return Commands.runOnce(() -> setSpeed(0));
         }
     }
 

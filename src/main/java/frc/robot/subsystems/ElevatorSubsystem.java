@@ -65,8 +65,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         innerSlot0.kV = 3.11;
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
-        InnerTopSwitch.Tripped().onTrue(null);
-        outerElevatorMotor.setPosition(0);
+        OuterBottomSwitch.Tripped().onTrue(elevatorCommands.zeroOuterMotor());
+        InnerBottomSwitch.Tripped().onTrue(elevatorCommands.zeroInnerMotor());
     }
 
     private Angle DistanceToAngle(Distance D, double Ratio) {

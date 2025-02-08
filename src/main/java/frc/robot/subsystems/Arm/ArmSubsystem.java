@@ -1,13 +1,18 @@
 package frc.robot.subsystems.Arm;
 
 import frc.robot.Constants.CTRE;
+import frc.robot.Constants.Inputs;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -16,16 +21,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class ArmSubsystem extends SubsystemBase {
     private TalonFX wrist;
     private TalonFXConfiguration wristConfig;
-    public SingleJointedArmSim wristSim;
-    private MotionMagicConfigs wristMM;
-    public Commands Commands = new Commands();
+    
+    private MotionMagicVoltage mmVolt;
+    private MotionMagicConfigs mmConfig;
 
-    private double setpointHigh, setpointMedium, setpointLow, setpointIntake, setpointStow, lowLimit, highLimit;
+    private DutyCycleEncoder m_Encoder;
+    public Commands Commands;
+    //Setpoints
+    private double restIntake, Low, Mid, High; 
+    //Limts
+    private double lowLimit, highLimit;
 
     public ArmSubsystem(){
+        Commands = new Commands();
+        m_Encoder = new DutyCycleEncoder(Inputs.DIO.ThroughBoreEncoder);
         wrist = new TalonFX(CTRE.Wrist);    
         wristConfig = new TalonFXConfiguration();
-        wristSim = new SingleJointedArmSim(new DCMotor(setpointLow, setpointIntake, setpointHigh, lowLimit, highLimit, 0))
+        mmVolt = new MotionMagicVoltage(0);
+        mmConfig = new MotionMagicConfigs();
+        mmConfig = wristConfig.MotionMagic;
+        mmConfig.MotionMagicCruiseVelocity = 80;
+        mmConfig.MotionMagicAcceleration = 160;
+        
+           
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; //TODO find values
         slot0.kG = 0.0;
@@ -38,50 +56,41 @@ public class ArmSubsystem extends SubsystemBase {
         lowLimit = 0.0;
         highLimit = 0.0;
 
-        setpointHigh = 10.0;
-        setpointMedium = 0.0;
-        setpointLow = 0.0;
-        setpointIntake = 0.0;
-        setpointStow = 0.0;
+        High = 10.0; //
+        Mid = 0.0; //
+        Low = 0.0; //
+        restIntake = 0.0; // -90 degree from ground
     }
 
-    public void defineSim() {
-
-    }
-
-    public void updateSim() {
+    public double getPosition(){
+        return m_Encoder.get();
     }
 
     public void runAngle(double angle) {
-        // double runAngle = 0;
-        // wrist.set(MathUtil.clamp(runAngle, lowLimit, highLimit));
-        wrist.set(angle);
+        wrist.setControl(mmVolt.withPosition(angle));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("WristAngle", wrist.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("WristAngle", m_Encoder.getFrequency());
     }
 
     public class Commands {
-        public Command runPoseHigh() {
-            return run(() -> runAngle(setpointHigh));
+        public Command runHigh() {
+            return run(() -> runAngle(High));
         }
 
-        public Command runPoseMedium() {
-            return run(() -> runAngle(setpointMedium));
+        public Command runMid() {
+            return run(() -> runAngle(Mid));
         }
 
-        public Command runPoseLow() {
-            return run(() -> runAngle(setpointLow));
+        public Command runLow() {
+            return run(() -> runAngle(Low));
         }
 
-        public Command runPoseStow() {
-            return run(() -> runAngle(setpointStow));
+        public Command runRestIntake() {
+            return run(() -> runAngle(restIntake));
         }
 
-        public Command runPoseIntake() {
-            return run(() -> runAngle(setpointIntake));
-        }
     }
 }

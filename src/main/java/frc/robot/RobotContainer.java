@@ -15,12 +15,14 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
@@ -49,22 +51,18 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     // Controls
-    private final CommandXboxController Xbox = new CommandXboxController(2);
-    private final CommandJoystick leftStick = new CommandJoystick(0);
-    private final CommandJoystick RightStick = new CommandJoystick(1);
-    // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
-    //         () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
-    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1);
-    // -> m_DriveSubsystem.getState().Pose);
-    // private final ControllerIO Driver = new XboxDrive(2);
-
+    private final ControllerSchemeIO Driver = new XboxDrive(0);
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
+    // Arm subsystem
+    private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
 
     private final Vision frontCamera;
+
+    private CommandXboxController xbox;
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
@@ -74,7 +72,7 @@ public class RobotContainer {
         // rearCamera = new CameraFactory().build(PoseSupplier,
         // Constants.Inputs.Cameras.RearCam);
 
-
+        xbox = new CommandXboxController(0);
         // AUTON
         m_DriveSubsystem.configureAuto();
         a = AutoBuilder.buildAutoChooser();
@@ -117,15 +115,17 @@ public class RobotContainer {
         // joystick.back().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kReverse));
         // joystick.start().and(joystick.y()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kForward));
         // joystick.start().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
-
+        // xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
+        // xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
     }
 
     public void updateValues() {
         // Comment out this line if feild relitive becomes an issue.
-        feedVision(frontCamera);
+        // feedVision(frontCamera);
         // feedVision(rearCamera);
 
     }
+
     public void updateSimValues() {
         frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
     }
@@ -151,9 +151,9 @@ public class RobotContainer {
                         var estStdDevs = vision.getEstimationStdDevs();
 
                         m_DriveSubsystem.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds), estStdDevs);
-                                
-                                
+                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
+                                estStdDevs);
+
                         // m_DriveSubsystem.addVisionMeasurement(
                         // est.estimatedPose.toPose2d(), est.timestampSeconds);
                     });

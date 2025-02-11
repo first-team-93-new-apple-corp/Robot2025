@@ -11,12 +11,14 @@ import edu.wpi.first.math.geometry.Translation3d;
 public class Constants {
     public class Inputs {
         public class Cameras {
-            public record Camera(String CamName,Transform3d camTransform) {}
-            
-            public static Camera FrontCam = new Camera("MainCamera", new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
-                        new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
+            public record Camera(String CamName, Transform3d camTransform) {
+            }
+
+            public static Camera FrontCam = new Camera("MainCamera",
+                    new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
             public static Camera RearCam = new Camera("SecondaryCamera", new Transform3d(new Translation3d(0, 0, 0),
-                        new Rotation3d(0, 0, 0)));
+                    new Rotation3d(0, 0, 0)));
         }
 
         public class DIO {
@@ -33,14 +35,8 @@ public class Constants {
     }
 
     public class CTRE {
-        public static final int Intake = 14;
-
-        public static final int Shoot = 15;
-
-        public static final int Elevator = 16;
-
-        public static final int L_Shoulder = 17;
-        public static final int R_Shoulder = 18;
+        public static final int Grabber = 24;
+        public static final int Wrist = 25;
 
         public static final int FLDrive = 1;
         public static final int FRDrive = 2;

@@ -90,9 +90,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerl1Setpoint, ElevatorConstants.OuterRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.outerL1Setpoint, ElevatorConstants.OuterRotationsToInches)));
                 innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerl1Setpoint, ElevatorConstants.InnerRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.innerL1Setpoint, ElevatorConstants.InnerRotationsToInches)));
 
             });
             // return runOnce(() -> setSpeed(1));
@@ -102,9 +102,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command L2() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerl2Setpoint, ElevatorConstants.OuterRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.outerL2Setpoint, ElevatorConstants.OuterRotationsToInches)));
                 innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerl2Setpoint, ElevatorConstants.InnerRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.innerL2Setpoint, ElevatorConstants.InnerRotationsToInches)));
 
             });
         }
@@ -112,9 +112,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command L3() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerl3Setpoint, ElevatorConstants.OuterRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.outerL3Setpoint, ElevatorConstants.OuterRotationsToInches)));
                 innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerl3Setpoint, ElevatorConstants.InnerRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.innerL3Setpoint, ElevatorConstants.InnerRotationsToInches)));
 
             });
         }
@@ -122,9 +122,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command L4() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerl4Setpoint, ElevatorConstants.OuterRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.outerL4Setpoint, ElevatorConstants.OuterRotationsToInches)));
                 innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerl4Setpoint, ElevatorConstants.InnerRotationsToInches)));
+                        DistanceToAngle(ElevatorConstants.innerL4Setpoint, ElevatorConstants.InnerRotationsToInches)));
 
             });
         }

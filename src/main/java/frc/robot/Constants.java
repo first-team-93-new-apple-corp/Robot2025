@@ -26,14 +26,14 @@ public final class Constants {
         public static final int bottomOuterLimitSwitchID = 22;
         public static final int bottomInnerLimitSwitchID = 23;
         
-        public static final Distance outerl1Setpoint = Inches.of(19);
-        public static final Distance outerl2Setpoint = Inches.of(33);
-        public static final Distance outerl3Setpoint = Inches.of(49);
-        public static final Distance outerl4Setpoint = Inches.of(40);
-        public static final Distance innerl1Setpoint = Inches.of(19);
-        public static final Distance innerl2Setpoint = Inches.of(33);
-        public static final Distance innerl3Setpoint = Inches.of(49);
-        public static final Distance innerl4Setpoint = Inches.of(40);
+        public static final Distance outerL1Setpoint = Inches.of(19);
+        public static final Distance outerL2Setpoint = Inches.of(33);
+        public static final Distance outerL3Setpoint = Inches.of(49);
+        public static final Distance outerL4Setpoint = Inches.of(40);
+        public static final Distance innerL1Setpoint = Inches.of(19);
+        public static final Distance innerL2Setpoint = Inches.of(33);
+        public static final Distance innerL3Setpoint = Inches.of(49);
+        public static final Distance innerL4Setpoint = Inches.of(40);
         
         public static final Distance wheelRadius = Inches.of(1);
         public static final double OuterRotationsToInches =  1;

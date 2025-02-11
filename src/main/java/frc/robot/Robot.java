@@ -23,6 +23,7 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     // m_LED = new LED();
+    // TODO remove lines related to the LEDs before competition
     // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen,
     // Color.kBlack, 144, 25), 0.6, 0.005);
   }

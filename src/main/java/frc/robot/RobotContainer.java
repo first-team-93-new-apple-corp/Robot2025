@@ -53,14 +53,14 @@ public class RobotContainer {
     private final CommandJoystick leftStick = new CommandJoystick(0);
     private final CommandJoystick RightStick = new CommandJoystick(1);
     // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
-    //         () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+    // () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
     private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1);
     // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
 
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-    
+
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -121,8 +121,6 @@ public class RobotContainer {
         // Elevator sim
         Xbox.x().whileTrue(m_ElevatorSubsystem.elevatorCommands.L1());
         // Xbox.x().onFalse(m_ElevatorSubsystem.elevatorCommands.stopElevator());
-
-        
 
     }
 

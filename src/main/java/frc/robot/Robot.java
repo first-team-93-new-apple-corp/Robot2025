@@ -17,13 +17,14 @@ import frc.robot.subsystems.LED;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
-  
+
   // private final LED m_LED;
 
   public Robot() {
     m_robotContainer = new RobotContainer();
     // m_LED = new LED();
-    // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen, Color.kBlack, 144, 25), 0.6, 0.005);
+    // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen,
+    // Color.kBlack, 144, 25), 0.6, 0.005);
   }
 
   @Override
@@ -46,7 +47,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-  
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -67,12 +68,12 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
+
   }
 
   @Override
   public void teleopPeriodic() {
-    
+
   }
 
   @Override
@@ -96,12 +97,12 @@ public class Robot extends TimedRobot {
 
   // @Override
   // public void simulationPeriodic() {
-  //   m_ElevatorSubsystem.m_elevatorSim.setInput(m_ElevatorSubsystem.elevatorMotor.getMotorVoltage().getValueAsDouble() * RobotController.getBatteryVoltage());
-  //   m_ElevatorSubsystem.m_elevatorSim.update(0.020);
-    
-    
-  //   RoboRioSim.setVInVoltage(
-  //       BatterySim.calculateDefaultBatteryLoadedVoltage(m_ElevatorSubsystem.m_elevatorSim.getCurrentDrawAmps()));
-    
+  // m_ElevatorSubsystem.m_elevatorSim.setInput(m_ElevatorSubsystem.elevatorMotor.getMotorVoltage().getValueAsDouble()
+  // * RobotController.getBatteryVoltage());
+  // m_ElevatorSubsystem.m_elevatorSim.update(0.020);
+
+  // RoboRioSim.setVInVoltage(
+  // BatterySim.calculateDefaultBatteryLoadedVoltage(m_ElevatorSubsystem.m_elevatorSim.getCurrentDrawAmps()));
+
   // }
 }

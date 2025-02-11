@@ -19,7 +19,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // Kraken x60 (Controlled by TalonFX) 12-1 gear
     // 18-toothed sprocket 1-1 chain
     // 32.9 in max extension
-    
+
     private TalonFX outerElevatorMotor;
     private TalonFX innerElevatorMotor;
 
@@ -131,18 +131,20 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command zeroHeight() {
             return Commands.print("Zeroed I guess");
-            
+
         }
+
         public Command zeroOuterMotor() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(0));
             });
         }
+
         public Command zeroInnerMotor() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(0));
             });
         }
-        
+
     }
 }

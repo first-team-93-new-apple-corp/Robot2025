@@ -6,13 +6,15 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class CommandLimitSwitch {
     private AnalogInput LimitSwitch;
 
-    public CommandLimitSwitch (int channel) {
+    public CommandLimitSwitch(int channel) {
         LimitSwitch = new AnalogInput(channel);
     }
-    public AnalogInput getInput(){
+
+    public AnalogInput getInput() {
         return LimitSwitch;
     }
-    public Trigger Tripped(){
+
+    public Trigger Tripped() {
         return new Trigger(() -> LimitSwitch.getValue() < 50);
     }
 }

@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.ElevatorSubsystem;
-import frc.robot.subsystems.LED;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -26,11 +25,14 @@ public class Robot extends TimedRobot {
     // TODO remove lines related to the LEDs before competition
     // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen,
     // Color.kBlack, 144, 25), 0.6, 0.005);
+    // m_robotContainer.syncTime();
   }
 
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
+
+    m_robotContainer.updateValues();
   }
 
   @Override
@@ -98,6 +100,7 @@ public class Robot extends TimedRobot {
 
   // @Override
   // public void simulationPeriodic() {
+  // m_robotContainer.updateSimValues();
   // m_ElevatorSubsystem.m_elevatorSim.setInput(m_ElevatorSubsystem.elevatorMotor.getMotorVoltage().getValueAsDouble()
   // * RobotController.getBatteryVoltage());
   // m_ElevatorSubsystem.m_elevatorSim.update(0.020);

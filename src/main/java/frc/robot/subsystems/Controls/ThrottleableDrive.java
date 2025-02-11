@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 public class ThrottleableDrive extends TwoStickDrive{
     public ThrottleableDrive(int LeftPort, int RightPort){

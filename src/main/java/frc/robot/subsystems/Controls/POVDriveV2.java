@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 import java.util.function.Supplier;
 

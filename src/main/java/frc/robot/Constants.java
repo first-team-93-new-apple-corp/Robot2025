@@ -50,17 +50,9 @@ public final class Constants {
     }
 
     public class CTRE {
-        public static final int Intake = 14;
 
-        public static final int Shoot = 15;
-
-        public static final int Elevator = 16;
-
-        public static final int L_Shoulder = 17;
-        public static final int R_Shoulder = 18;
-
-        public static final int FLDrive = 1;
-        public static final int FRDrive = 2;
+        public static final int FL_Drive = 1;
+        public static final int FR_Drive = 2;
         public static final int BR_Drive = 3;
         public static final int BL_Drive = 4;
 
@@ -72,7 +64,7 @@ public final class Constants {
         public static final int FL_Cancoder = 10;
         public static final int FR_Cancoder = 11;
         public static final int BR_Cancoder = 12;
-        public static final int BL_CanCoder = 13;
+        public static final int BL_Cancoder = 13;
 
     }
 

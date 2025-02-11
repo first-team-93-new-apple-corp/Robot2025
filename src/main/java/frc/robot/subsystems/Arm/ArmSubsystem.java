@@ -9,11 +9,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.system.plant.DCMotor;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -28,7 +24,7 @@ public class ArmSubsystem extends SubsystemBase {
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
     // Setpoints
-    private double restIntake, Low, Mid, High;
+    private double Stow, L1, L2, L3, L4;
     // Limts
     private double lowLimit, highLimit;
 
@@ -52,13 +48,16 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kD = 0.0;
         slot0.kS = 0.0;
         wrist.getConfigurator().apply(wristConfig);
+
+        // Limits
         lowLimit = 0.0;
         highLimit = 0.0;
-
-        High = 10.0; //
-        Mid = 0.0; //
-        Low = 0.0; //
-        restIntake = 0.0; // -90 degree from ground
+        // Setpoints
+        L1 = 0.0; // TODO find values
+        L2 = 0.0;
+        L3 = L2; //
+        L4 = 10.0; //
+        Stow = 0.0; // -90 degree from ground
     }
 
     public double getPosition() {
@@ -75,21 +74,24 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public class ArmCommands {
-        public Command runHigh() {
-            return run(() -> runAngle(High));
+        public Command L1() {
+            return run(() -> runAngle(L1));
         }
 
-        public Command runMid() {
-            return run(() -> runAngle(Mid));
+        public Command L2() {
+            return run(() -> runAngle(L2));
         }
 
-        public Command runLow() {
-            return run(() -> runAngle(Low));
+        public Command L3() {
+            return run(() -> runAngle(L3));
         }
 
-        public Command runRestIntake() {
-            return run(() -> runAngle(restIntake));
+        public Command L4() {
+            return run(() -> runAngle(L4));
         }
 
+        public Command Stow() {
+            return run(() -> runAngle(Stow));
+        }
     }
 }

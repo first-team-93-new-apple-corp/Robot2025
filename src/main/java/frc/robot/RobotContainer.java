@@ -115,8 +115,8 @@ public class RobotContainer {
         // joystick.back().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdDynamic(Direction.kReverse));
         // joystick.start().and(joystick.y()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kForward));
         // joystick.start().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
-        xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
-        xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
+        // xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
+        // xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
     }
 
     public void updateValues() {

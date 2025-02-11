@@ -86,7 +86,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public class ElevatorCommands {
-        public Command l1() {
+        public Command L1() {
 
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
@@ -99,7 +99,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         }
 
-        public Command l2() {
+        public Command L2() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
                         DistanceToAngle(ElevatorConstants.outerl2Setpoint, ElevatorConstants.OuterRotationsToInches)));
@@ -109,7 +109,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
-        public Command l3() {
+        public Command L3() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
                         DistanceToAngle(ElevatorConstants.outerl3Setpoint, ElevatorConstants.OuterRotationsToInches)));
@@ -119,7 +119,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
-        public Command l4() {
+        public Command L4() {
             return runOnce(() -> {
                 outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
                         DistanceToAngle(ElevatorConstants.outerl4Setpoint, ElevatorConstants.OuterRotationsToInches)));

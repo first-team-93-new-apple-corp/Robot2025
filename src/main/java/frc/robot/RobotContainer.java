@@ -125,6 +125,7 @@ public class RobotContainer {
         // feedVision(rearCamera);
 
     }
+
     public void updateSimValues() {
         frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
     }
@@ -150,9 +151,9 @@ public class RobotContainer {
                         var estStdDevs = vision.getEstimationStdDevs();
 
                         m_DriveSubsystem.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds), estStdDevs);
-                                
-                                
+                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
+                                estStdDevs);
+
                         // m_DriveSubsystem.addVisionMeasurement(
                         // est.estimatedPose.toPose2d(), est.timestampSeconds);
                     });

@@ -1,7 +1,7 @@
 package frc.robot.subsystems.Arm;
 
-import frc.robot.Constants.CTRE;
-import frc.robot.Constants.Inputs;
+import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -24,14 +24,14 @@ public class ArmSubsystem extends SubsystemBase {
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
     // Setpoints
-    private double Stow, L1, L2, L3, L4;
+    private double Intake, L1, L2, L3, L4;
     // Limts
     private double lowLimit, highLimit;
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
-        m_Encoder = new DutyCycleEncoder(Inputs.DIO.ThroughBoreEncoder);
-        wrist = new TalonFX(CTRE.Wrist);
+        m_Encoder = new DutyCycleEncoder(ArmConstants.IDs.Encoder);
+        wrist = new TalonFX(ArmConstants.IDs.Wrist);
         wristConfig = new TalonFXConfiguration();
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
@@ -57,7 +57,7 @@ public class ArmSubsystem extends SubsystemBase {
         L2 = 0.0;
         L3 = L2; //
         L4 = 10.0; //
-        Stow = 0.0; // -90 degree from ground
+        Intake = 0.0; // -90 degree from ground
     }
 
     public double getPosition() {
@@ -91,7 +91,7 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         public Command Stow() {
-            return run(() -> runAngle(Stow));
+            return run(() -> runAngle(Intake));
         }
     }
 }

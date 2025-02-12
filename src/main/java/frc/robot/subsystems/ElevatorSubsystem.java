@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Utilities.CommandLimitSwitch;
 
@@ -31,10 +32,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     private TalonFXConfiguration outerConfig;
     private TalonFXConfiguration innerConfig;
 
-    private CommandLimitSwitch InnerTopSwitch = new CommandLimitSwitch(0);
-    private CommandLimitSwitch InnerBottomSwitch = new CommandLimitSwitch(0);
-    private CommandLimitSwitch OuterTopSwitch = new CommandLimitSwitch(0);
-    private CommandLimitSwitch OuterBottomSwitch = new CommandLimitSwitch(0);
+    private CommandLimitSwitch InnerTopSwitch = new CommandLimitSwitch(ElevatorConstants.InnerTopChannel);
+    private CommandLimitSwitch InnerBottomSwitch = new CommandLimitSwitch(ElevatorConstants.InnerBottomChannel);
+    private CommandLimitSwitch OuterTopSwitch = new CommandLimitSwitch(ElevatorConstants.OuterTopChannel);
+    private CommandLimitSwitch OuterBottomSwitch = new CommandLimitSwitch(ElevatorConstants.OuterBottomChannel);
 
     // public static final ElevatorSim m_elevatorSim =
     // new ElevatorSim(DCMotor.getKrakenX60(1),

@@ -56,7 +56,7 @@ public class SuperStructure {
     public class SuperStructureCommands{
         
         public Command L1() {
-            return Commands.run(() -> calculate(Arm.Commands.L1(), /*Elev.elevatorCommands.L1()*/));
+            return Commands.run(() -> calculate(Arm.Commands.L1(), null/*Elev.elevatorCommands.L1()*/));
         }
         public Command L2(){
             return null;

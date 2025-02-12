@@ -59,6 +59,9 @@ public class Constants {
             public static final double L4 = 10.0;
             public static final double Intake = 0.0; // -90 degree from ground
         }
+
+        public static final Distance armLength = Inches.of(17);
+        public static final Distance armAbsLength = Inches.of(16.65);
     }
 
     public class GrabberConstants {
@@ -95,13 +98,16 @@ public class Constants {
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
 
-
         // public static final double kElevatorGearing = 1;
         // public static final double kCarriageMass = 50;
         // public static final double kElevatorDrumRadius = 1;
         // public static final double kMinElevatorHeightMeters = 0;
         // public static final double kMaxElevatorHeightMeters =
         // Units.Meter.convertFrom(32.9, Inches);
+    }
+
+    public class GeneralConstants {
+        public static final Distance bellypanToGround = Inches.of(1.763);
     }
 
     public class Drivetrain {

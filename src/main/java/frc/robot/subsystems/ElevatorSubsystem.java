@@ -86,49 +86,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public class ElevatorCommands {
-        public Command L1() {
-
-            return runOnce(() -> {
-                outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerL1Setpoint, ElevatorConstants.OuterRotationsToInches)));
-                innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerL1Setpoint, ElevatorConstants.InnerRotationsToInches)));
-
-            });
-            // TODO remove if not needed
-            // return runOnce(() -> setSpeed(1));
-
-        }
-
-        public Command L2() {
-            return runOnce(() -> {
-                outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerL2Setpoint, ElevatorConstants.OuterRotationsToInches)));
-                innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerL2Setpoint, ElevatorConstants.InnerRotationsToInches)));
-
-            });
-        }
-
-        public Command L3() {
-            return runOnce(() -> {
-                outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerL3Setpoint, ElevatorConstants.OuterRotationsToInches)));
-                innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerL3Setpoint, ElevatorConstants.InnerRotationsToInches)));
-
-            });
-        }
-
-        public Command L4() {
-            return runOnce(() -> {
-                outerElevatorMotor.setControl(outerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.outerL4Setpoint, ElevatorConstants.OuterRotationsToInches)));
-                innerElevatorMotor.setControl(innerElevatorMotorMagic.withPosition(
-                        DistanceToAngle(ElevatorConstants.innerL4Setpoint, ElevatorConstants.InnerRotationsToInches)));
-
-            });
-        }
 
         public Command zeroHeight() {
             return Commands.print("Zeroed I guess");

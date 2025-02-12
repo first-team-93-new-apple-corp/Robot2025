@@ -15,6 +15,6 @@ public class CommandLimitSwitch {
     }
 
     public Trigger Tripped() {
-        return new Trigger(() -> LimitSwitch.getValue() < 50);
+        return new Trigger(() -> LimitSwitch.getValue() > 3000);
     }
 }

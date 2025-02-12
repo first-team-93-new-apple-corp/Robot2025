@@ -83,7 +83,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         // RoboRioSim.setVInVoltage(
         // BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
-
     }
 
     public class ElevatorCommands {

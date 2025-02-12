@@ -2,18 +2,19 @@ package frc.robot.subsystems.Controls;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class TwoStickDrive implements ControllerSchemeIO {
+public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
     public CommandJoystick LeftStick;
     public CommandJoystick RightStick;
+    public CommandXboxController operatorController;
 
-
-    public TwoStickDrive(int LeftPort, int RightPort) {
+    public TwoStickDriveXboxOp(int LeftPort, int RightPort, int opPort) {
         LeftStick = new CommandJoystick(LeftPort);
         RightStick = new CommandJoystick(RightPort);
-
+        operatorController = new CommandXboxController(opPort);
     }
 
     @Override
@@ -55,4 +56,32 @@ public class TwoStickDrive implements ControllerSchemeIO {
     public Trigger autoAlign() {
         return LeftStick.button(3);
     }
+
+    @Override
+    public Trigger superStructureL1() {
+        return operatorController.a();
+    }
+
+    @Override
+    public Trigger superStructureL2() {
+return operatorController.x();    }
+
+    @Override
+    public Trigger superStructureL3() {
+return operatorController.b();    }
+
+    @Override
+    public Trigger superStructureL4() {
+return operatorController.y();    }
+
+    @Override
+    public Trigger superStructureIntake() {
+        return operatorController.leftTrigger();
+    }
+
+    @Override
+    public Trigger outTake() {
+        return operatorController.rightTrigger();
+    }
+
 }

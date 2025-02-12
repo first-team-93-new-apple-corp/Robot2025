@@ -58,7 +58,7 @@ public class RobotContainer {
     private final CommandJoystick RightStick = new CommandJoystick(1);
     // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
     // () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
-    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1);
+    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1, 2);
     // -> m_DriveSubsystem.getState().Pose);
     // private final ControllerIO Driver = new XboxDrive(2);
 
@@ -71,7 +71,7 @@ public class RobotContainer {
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
     // Arm subsystem
-    private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
+    // private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
 
     private final Vision frontCamera;
 
@@ -114,6 +114,12 @@ public class RobotContainer {
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
+
+
+        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1());
+        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2());
+        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3());
+        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4());
         // LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
         // 75).andThen(LEDCommand.off()));

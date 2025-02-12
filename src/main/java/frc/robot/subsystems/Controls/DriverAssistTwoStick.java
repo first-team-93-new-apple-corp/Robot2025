@@ -6,14 +6,14 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import frc.robot.subsystems.Auton.PositionConstants;
 
-public class DriverAssistTwoStick extends TwoStickDrive {
+public class DriverAssistTwoStick extends TwoStickDriveXboxOp {
     private Supplier<Pose2d> robotSupplier;
     private Pose2d goal = PositionConstants.startingPoses.leftBlue;
     private PIDController left = new PIDController(2.4, 0, 0.1);
     private PIDController up = new PIDController(2.4, 0, 0.1);
 
-    public DriverAssistTwoStick(int leftport, int rightport, Supplier<Pose2d> robotSupplier) {
-        super(leftport, rightport);
+    public DriverAssistTwoStick(int leftport, int rightport, int opPort,Supplier<Pose2d> robotSupplier) {
+        super(leftport, rightport, opPort);
         this.robotSupplier = robotSupplier;
         left.setSetpoint(goal.getX());
         up.setSetpoint(goal.getY());

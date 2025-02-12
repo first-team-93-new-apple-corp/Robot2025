@@ -36,9 +36,9 @@ public class SuperStructure {
         heightSetpoint = heightSetpoint.minus(GeneralConstants.bellypanToGround);
         Distance armLength = ArmConstants.armLength;
         if (armLength.gt(heightSetpoint)) {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
     // Overloaded method with also angle
     public boolean willArmCollide(Distance heightSetpoint, Angle armAngle) {
@@ -51,24 +51,25 @@ public class SuperStructure {
     }
      
     public Command calculate(Command armSet, Command elevSet) {
-        return Commands.parallel(calculateArm(armSet, null/*Elev.armPivotheight()*/), elevSet);
+        return Commands.parallel(calculateArm(armSet, Elev.armPivotHeight()), elevSet);
     }
     public class SuperStructureCommands{
         
         public Command L1() {
-            return Commands.run(() -> calculate(Arm.Commands.L1(), null/*Elev.elevatorCommands.L1()*/));
+            return calculate(Arm.Commands.L1(), Elev.Commands.L1());
         }
+
         public Command L2(){
-            return null;
+            return calculate(Arm.Commands.L2(), Elev.Commands.L2());
         }
         public Command L3(){
-            return L2();
+            return calculate(Arm.Commands.L3(), Elev.Commands.L3());
         }
         public Command L4(){
-            return null;
+            return calculate(Arm.Commands.L4(), Elev.Commands.L4());
         }
         public Command Intake(){
-            return null;
+            return calculate(Arm.Commands.Stow(), Elev.Commands.L2 /*TODO: ADD INTAKE HEIGHT */());
         }
     }
 }

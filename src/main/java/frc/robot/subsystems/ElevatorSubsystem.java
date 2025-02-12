@@ -71,7 +71,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
     }
 
-    private Distance armPivotHeight() {
+    public Distance armPivotHeight() {
         return Inches
                 .of(outerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.OuterRotationsToInches)
                         .in(Inches))

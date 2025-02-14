@@ -53,11 +53,11 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
-            public static final double L1 = 0.0; // TODO find angles
-            public static final double L2 = 0.0;
-            public static final double L3 = L2;
-            public static final double L4 = 10.0;
-            public static final double Intake = 0.0; // -90 degree from ground
+            public static final Angle L1 = Degrees.of(10); // TODO find angles
+            public static final Angle L2 = Degrees.of(25);
+            public static final Angle L3 = L2;
+            public static final Angle L4 = Degrees.of(0);
+            public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
         }
 
         public static final Distance armLength = Inches.of(17);
@@ -85,12 +85,14 @@ public class Constants {
         public static final int OuterTopChannel = 3;
         public static final int OuterBottomChannel = 4;
 
+        public static final Distance IntakeSetpoint = Centimeters.of(0);
         public static final Distance L1Setpoint = Centimeters.of(46);
         public static final Distance L2Setpoint = Centimeters.of(81);
         public static final Distance L3Setpoint = Centimeters.of(121);
         public static final Distance L4Setpoint = Centimeters.of(183);
 
         public static final double SprocketRadiusInches = 1.37 / 2;
+        public static final Distance elevatorHeight = Inches.of(0);
 
         public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(12));
@@ -104,6 +106,76 @@ public class Constants {
         // public static final double kMinElevatorHeightMeters = 0;
         // public static final double kMaxElevatorHeightMeters =
         // Units.Meter.convertFrom(32.9, Inches);
+        public static enum Elevator_Positions {
+            Intake,
+            L1,
+            L2,
+            L3,
+            L4
+        }
+
+        public static enum Elevator_Movements {
+            // Intake to
+            Intake_To_L1(new Elevator_Stages[] { Elevator_Stages.Elevator, Elevator_Stages.Arm, Elevator_Stages.End }),
+            // TODO: May need to be changed
+            Intake_To_L2(new Elevator_Stages[] { Elevator_Stages.Elevator, Elevator_Stages.Arm, Elevator_Stages.End }),
+            Intake_To_L3(new Elevator_Stages[] { Elevator_Stages.Elevator, Elevator_Stages.Arm, Elevator_Stages.End }),
+            Intake_To_L4(new Elevator_Stages[] { Elevator_Stages.Elevator, Elevator_Stages.Arm, Elevator_Stages.End }),
+            Intake_To_Intake(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            
+            // L1 to
+            L1_To_L1(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L1_To_L2(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L1_To_L3(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            // TODO: May need to be changed
+            L1_To_L4(new Elevator_Stages[] { Elevator_Stages.Elevator, Elevator_Stages.Arm, Elevator_Stages.End }),
+            L1_To_Intake(new Elevator_Stages[] { Elevator_Stages.Arm, Elevator_Stages.Elevator, Elevator_Stages.End }),
+            
+            // L2 to
+            L2_To_L1(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L2_To_L2(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L2_To_L3(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            // TODO: May need to be changed (Might have to move up before arm moves)
+            L2_To_L4(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L2_To_Intake(new Elevator_Stages[] { Elevator_Stages.Arm, Elevator_Stages.Elevator, Elevator_Stages.End }),
+            
+            // L3 to
+            L3_To_L1(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L3_To_L2(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L3_To_L3(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            // TODO: May need to be changed
+            L3_To_L4(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L3_To_Intake(new Elevator_Stages[] { Elevator_Stages.Arm, Elevator_Stages.Elevator, Elevator_Stages.End }),
+            
+            // L4 to
+            // TODO: May need to change this if the arm can't move like this
+            L4_To_L1(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L4_To_L2(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L4_To_L3(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L4_To_L4(new Elevator_Stages[] { Elevator_Stages.All, Elevator_Stages.End }),
+            L4_To_Intake(new Elevator_Stages[] { Elevator_Stages.Arm, Elevator_Stages.Elevator, Elevator_Stages.End }),
+
+            Do_Nothing(new Elevator_Stages[] { Elevator_Stages.End});
+
+            
+            public final Elevator_Stages[] events;
+
+            private Elevator_Movements(Elevator_Stages[] events) {
+                this.events = events;
+            }
+
+            public Elevator_Stages[] getEvents() {
+                return events;
+            }
+        }
+
+        public static enum Elevator_Stages {
+            All,
+            Elevator,
+            Arm,
+            End
+        }
+        public static final Distance elevatorTolerance = Inches.of(6);
     }
 
     public class GeneralConstants {

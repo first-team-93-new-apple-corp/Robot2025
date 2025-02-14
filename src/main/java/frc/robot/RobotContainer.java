@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
@@ -30,6 +31,8 @@ import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
 import frc.robot.subsystems.Controls.POVDriveV2;
 import frc.robot.subsystems.Controls.XboxDrive;
+import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.subsystems.SuperStructure.SuperStructure;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
@@ -64,6 +67,9 @@ public class RobotContainer {
 
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+    public ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
+    public GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
+    public SuperStructure m_Structure = new SuperStructure(m_ArmSubsystem, m_ElevatorSubsystem, m_GrabberSubsystem);
 
     // Auton
     AutoDirector autoDirector;
@@ -115,11 +121,20 @@ public class RobotContainer {
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
 
+        Driver.superStructureL1().onTrue(m_Structure.commands.L1());
+        Driver.superStructureL2().onTrue(m_Structure.commands.L2());
+        Driver.superStructureL3().onTrue(m_Structure.commands.L3());
+        Driver.superStructureL4().onTrue(m_Structure.commands.L4());
+        Driver.superStructureIntake().onTrue(m_Structure.commands.Intake());
+        
+        Driver.superStructureIntake()
+                .and(Driver.superStructureL1())
+                .and(Driver.superStructureL2())
+                .and(Driver.superStructureL3())
+                .and(Driver.superStructureL4())
+                .whileFalse(m_Structure.commands.continueToSetpoint());
 
-        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1());
-        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2());
-        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3());
-        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4());
+
         // LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
         // 75).andThen(LEDCommand.off()));

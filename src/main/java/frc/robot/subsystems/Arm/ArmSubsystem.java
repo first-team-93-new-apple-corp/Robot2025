@@ -2,6 +2,9 @@ package frc.robot.subsystems.Arm;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
+
+import static edu.wpi.first.units.Units.Degrees;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -9,6 +12,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
     // Setpoints
-    private double Intake, L1, L2, L3, L4;
+    private double Intake, IntakeOffset;
     // Limts
     private double lowLimit, highLimit;
 
@@ -49,23 +53,37 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kS = 0.0;
         wrist.getConfigurator().apply(wristConfig);
 
-        // Limits
-        lowLimit = 0.0;
-        highLimit = 0.0;
-        // Setpoints
-        L1 = 0.0; // TODO find values
-        L2 = 0.0;
-        L3 = L2; //
-        L4 = 10.0; //
+
         Intake = 0.0; // -90 degree from ground
+        IntakeOffset = 0.0;
+        
     }
 
     public double getPosition() {
         return m_Encoder.get();
     }
-
-    public void runAngle(double angle) {
+    public Angle getAngle() {
+        return Degrees.of(getPosition()*360 - IntakeOffset);
+    }
+    public void runAngle(Angle angle) {
         wrist.setControl(mmVolt.withPosition(angle));
+    }
+
+    public boolean atSetpoint(Elevator_Positions setpoint) {
+        switch (setpoint) {
+            case Intake:
+                return getAngle().isNear(ArmConstants.Setpoints.Intake, Degrees.of(5));
+            case L1:
+                return getAngle().isNear(ArmConstants.Setpoints.L1, Degrees.of(5));
+            case L2:
+                return getAngle().isNear(ArmConstants.Setpoints.L2, Degrees.of(5));
+            case L3:
+                return getAngle().isNear(ArmConstants.Setpoints.L3, Degrees.of(5));
+            case L4:
+                return getAngle().isNear(ArmConstants.Setpoints.L4, Degrees.of(5));
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -75,23 +93,23 @@ public class ArmSubsystem extends SubsystemBase {
 
     public class ArmCommands {
         public Command L1() {
-            return run(() -> runAngle(L1));
+            return run(() -> runAngle(ArmConstants.Setpoints.L1));
         }
 
         public Command L2() {
-            return run(() -> runAngle(L2));
+            return run(() -> runAngle(ArmConstants.Setpoints.L2));
         }
 
         public Command L3() {
-            return run(() -> runAngle(L3));
+            return run(() -> runAngle(ArmConstants.Setpoints.L3));
         }
 
         public Command L4() {
-            return run(() -> runAngle(L4));
+            return run(() -> runAngle(ArmConstants.Setpoints.L4));
         }
 
         public Command Stow() {
-            return run(() -> runAngle(Intake));
+            return run(() -> runAngle(ArmConstants.Setpoints.Intake));
         }
     }
 }

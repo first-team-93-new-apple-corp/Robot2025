@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -13,13 +14,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
 import frc.robot.Utilities.CommandLimitSwitch;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 
 public class ElevatorSubsystem extends SubsystemBase {
     // Kraken x60 (Controlled by TalonFX) 12-1 gear
     // 18-toothed sprocket 1-1 chain
     // 32.9 in max extension
-
+    private ArmSubsystem m_ArmSubsystem;
     private TalonFX outerElevatorMotor;
     private TalonFX innerElevatorMotor;
 
@@ -51,6 +54,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0.0);
 
     public ElevatorSubsystem() {
+        m_ArmSubsystem = new ArmSubsystem();
         outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID);
         innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID);
         var outerSlot0 = outerConfig.Slot0;
@@ -78,7 +82,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .plus(innerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.InnerRotationsToInches));
     }
 
-    private void setSetpoints(Distance D) {
+    private void setElevatorSetpoints(Distance D) {
         elevatorSetpoint = D;
         Distance outer = D.times(.54);
         Distance inner = D.times(.45);
@@ -87,6 +91,51 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .withPosition((outer.divideRatio(ElevatorConstants.OuterRotationsToInches).in(Rotations))));
         innerElevatorMotor.setControl(innerElevatorMotorMagic
                 .withPosition((inner.divideRatio(ElevatorConstants.InnerRotationsToInches).in(Rotations))));
+    }
+
+    public Distance getPositionElevator() {
+        return Inches.of(outerElevatorMotor.getPosition().getValue()
+                .timesRatio(ElevatorConstants.OuterRotationsToInches).in(Inches));
+    }
+
+    public Distance getPositionCarriage() {
+        return Inches.of(innerElevatorMotor.getPosition().getValue()
+                .timesRatio(ElevatorConstants.InnerRotationsToInches).in(Inches));
+    }
+
+    public Distance totalHeight() {
+        return getPositionElevator().plus(getPositionCarriage());
+    }
+
+    public Elevator_Positions getPosition() {
+        if (armPivotHeight().isNear(ElevatorConstants.L4Setpoint, ElevatorConstants.elevatorTolerance)) {
+            return Elevator_Positions.L4;
+        } else if (armPivotHeight().isNear(ElevatorConstants.L3Setpoint, ElevatorConstants.elevatorTolerance)) {
+            return Elevator_Positions.L3;
+        } else if (armPivotHeight().isNear(ElevatorConstants.L2Setpoint, ElevatorConstants.elevatorTolerance)) {
+            return Elevator_Positions.L2;
+        } else if (armPivotHeight().isNear(ElevatorConstants.L1Setpoint, ElevatorConstants.elevatorTolerance)) {
+            return Elevator_Positions.L1;
+        } else {
+            return Elevator_Positions.Intake;
+        }
+    }
+
+    public boolean atSetpoint(Elevator_Positions setpoint) {
+        switch (setpoint) {
+            case Intake:
+                return totalHeight().isNear(ElevatorConstants.IntakeSetpoint, Inches.of(1));
+            case L1:
+                return totalHeight().isNear(ElevatorConstants.L1Setpoint, Inches.of(1));
+            case L2:
+                return totalHeight().isNear(ElevatorConstants.L2Setpoint, Inches.of(1));
+            case L3:
+                return totalHeight().isNear(ElevatorConstants.L3Setpoint, Inches.of(1));
+            case L4:
+                return totalHeight().isNear(ElevatorConstants.L4Setpoint, Inches.of(1));
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -103,30 +152,37 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public class ElevatorCommands {
+        public Command Intake() {
+            return runOnce(() -> {
+                setElevatorSetpoints(ElevatorConstants.IntakeSetpoint);
+
+            });
+        }
+
         public Command L1() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setElevatorSetpoints(ElevatorConstants.L1Setpoint);
 
             });
         }
 
         public Command L2() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setElevatorSetpoints(ElevatorConstants.L2Setpoint);
 
             });
         }
 
         public Command L3() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setElevatorSetpoints(ElevatorConstants.L3Setpoint);
 
             });
         }
 
         public Command L4() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setElevatorSetpoints(ElevatorConstants.L4Setpoint);
 
             });
         }

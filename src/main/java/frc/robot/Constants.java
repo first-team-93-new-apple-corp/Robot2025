@@ -1,8 +1,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Per;
+
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Rotations;
+
+import java.util.PrimitiveIterator.OfDouble;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -28,18 +39,75 @@ public class Constants {
         public class AnalogIn {
             public static final int HallEffect = 0;
         }
+    }
 
-        public class CAN {
-            public static final int TOF = 21;
+    public class ArmConstants {
+        // Motor ID
+        public class IDs {
+            public static final int Wrist = 25;
+            public static final int Encoder = 99;
+        }
+
+        public class Setpoints {
+            // Limits
+            public static final double lowLimit = 0.0;
+            public static final double highLimit = 0.0;
+            // Setpoints
+            public static final double L1 = 0.0; // TODO find angles
+            public static final double L2 = 0.0;
+            public static final double L3 = L2;
+            public static final double L4 = 10.0;
+            public static final double Intake = 0.0; // -90 degree from ground
         }
     }
 
-    public class CTRE {
+    public class GrabberConstants {
+        // Motor ID (Rev)
         public static final int Grabber = 24;
-        public static final int Wrist = 25;
+        // Input ID
+        public static final int LimitSwitch = 99; // TDOD get dio pin
+        // Speed constants
+        public static final double intakeSpeed = 0.5;
+        public static final double outakeSpeed = 0.5;
+    }
 
-        public static final int FLDrive = 1;
-        public static final int FRDrive = 2;
+    public class ElevatorConstants {
+        public static final int outerElevatorMotorID = 20;
+        public static final int innerElevatorMotorID = 21;
+        // public static final int bottomOuterLimitSwitchID = 22;
+        // public static final int bottomInnerLimitSwitchID = 23;
+
+        public static final int InnerTopChannel = 1;
+        public static final int InnerBottomChannel = 2;
+        public static final int OuterTopChannel = 3;
+        public static final int OuterBottomChannel = 4;
+
+        public static final Distance L1Setpoint = Centimeters.of(46);
+        public static final Distance L2Setpoint = Centimeters.of(81);
+        public static final Distance L3Setpoint = Centimeters.of(121);
+        public static final Distance L4Setpoint = Centimeters.of(183);
+
+        public static final double SprocketRadiusInches = 1.37 / 2;
+
+        public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches
+                .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(12));
+
+        public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
+                .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
+
+
+        // public static final double kElevatorGearing = 1;
+        // public static final double kCarriageMass = 50;
+        // public static final double kElevatorDrumRadius = 1;
+        // public static final double kMinElevatorHeightMeters = 0;
+        // public static final double kMaxElevatorHeightMeters =
+        // Units.Meter.convertFrom(32.9, Inches);
+    }
+
+    public class Drivetrain {
+
+        public static final int FL_Drive = 1;
+        public static final int FR_Drive = 2;
         public static final int BR_Drive = 3;
         public static final int BL_Drive = 4;
 
@@ -51,7 +119,7 @@ public class Constants {
         public static final int FL_Cancoder = 10;
         public static final int FR_Cancoder = 11;
         public static final int BR_Cancoder = 12;
-        public static final int BL_CanCoder = 13;
+        public static final int BL_Cancoder = 13;
 
     }
 

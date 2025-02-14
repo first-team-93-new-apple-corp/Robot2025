@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
+import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
@@ -51,14 +53,25 @@ public class RobotContainer {
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
     // Controls
-    private final ControllerSchemeIO Driver = new XboxDrive(0);
+    private final CommandXboxController Xbox = new CommandXboxController(2);
+    private final CommandJoystick leftStick = new CommandJoystick(0);
+    private final CommandJoystick RightStick = new CommandJoystick(1);
+    // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
+    // () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1, 2);
+    // -> m_DriveSubsystem.getState().Pose);
+    // private final ControllerIO Driver = new XboxDrive(2);
+
+    // Simulating Elevator
+    public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
+
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
     // Arm subsystem
-    private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
+    // private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
 
     private final Vision frontCamera;
 
@@ -101,6 +114,12 @@ public class RobotContainer {
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
+
+
+        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1());
+        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2());
+        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3());
+        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4());
         // LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
         // 75).andThen(LEDCommand.off()));

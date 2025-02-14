@@ -63,4 +63,40 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger autoAlign() {
         return Xbox.x();
     }
+
+    @Override
+    public Trigger superStructureL1() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL1'");
+    }
+
+    @Override
+    public Trigger superStructureL2() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL2'");
+    }
+
+    @Override
+    public Trigger superStructureL3() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL3'");
+    }
+
+    @Override
+    public Trigger superStructureL4() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL4'");
+    }
+
+    @Override
+    public Trigger superStructureIntake() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureIntake'");
+    }
+
+    @Override
+    public Trigger outTake() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'outTake'");
+    }
 }

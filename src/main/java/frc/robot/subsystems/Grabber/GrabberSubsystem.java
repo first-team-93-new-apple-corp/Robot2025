@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Grabber;
 
 import frc.robot.Constants.GrabberConstants;
+import frc.robot.Constants.GrabberConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
@@ -41,6 +42,7 @@ public class GrabberSubsystem implements Subsystem {
         }
 
         public Command outtake() {
+            return runOnce(() -> setSpeed(GrabberConstants.outakeSpeed));
             return runOnce(() -> setSpeed(GrabberConstants.outakeSpeed));
         }
 

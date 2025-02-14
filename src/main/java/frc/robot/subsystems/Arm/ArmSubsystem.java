@@ -36,6 +36,8 @@ public class ArmSubsystem extends SubsystemBase {
         Commands = new ArmCommands();
         m_Encoder = new DutyCycleEncoder(ArmConstants.IDs.Encoder);
         wrist = new TalonFX(ArmConstants.IDs.Wrist);
+        m_Encoder = new DutyCycleEncoder(ArmConstants.IDs.Encoder);
+        wrist = new TalonFX(ArmConstants.IDs.Wrist);
         wristConfig = new TalonFXConfiguration();
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();

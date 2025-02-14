@@ -112,21 +112,21 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command L2() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setSetpoints(ElevatorConstants.L2Setpoint);
 
             });
         }
 
         public Command L3() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setSetpoints(ElevatorConstants.L3Setpoint);
 
             });
         }
 
         public Command L4() {
             return runOnce(() -> {
-                setSetpoints(ElevatorConstants.L1Setpoint);
+                setSetpoints(ElevatorConstants.L4Setpoint);
 
             });
         }

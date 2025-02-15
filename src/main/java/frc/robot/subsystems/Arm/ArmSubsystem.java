@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Arm;
 
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -8,7 +7,6 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;

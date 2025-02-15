@@ -34,7 +34,7 @@ public class GrabberSubsystem implements Subsystem {
         }
 
         public Command outtake() {
-            return runOnce(() -> setSpeed(GrabberConstants.outakeSpeed));
+            return startEnd(() -> setSpeed(GrabberConstants.outakeSpeed), () -> setSpeed(0));
         }
 
         public Command brake() {

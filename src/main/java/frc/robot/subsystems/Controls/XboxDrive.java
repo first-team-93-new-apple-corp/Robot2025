@@ -96,7 +96,6 @@ public class XboxDrive implements ControllerSchemeIO {
 
     @Override
     public Trigger outTake() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'outTake'");
+        return Xbox.b();
     }
 }

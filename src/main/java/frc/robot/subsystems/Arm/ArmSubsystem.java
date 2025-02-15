@@ -1,6 +1,5 @@
 package frc.robot.subsystems.Arm;
 
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
 
@@ -47,14 +46,23 @@ public class ArmSubsystem extends SubsystemBase {
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
-        slot0.kG = 0.0;
-        slot0.kV = 0.0;
-        slot0.kP = 1.0; // TODO tune values
+        slot0.kG = -0.07;
+        slot0.kV = 0.1;
+        slot0.kP = 0.3; // TODO tune values
         slot0.kI = 0.0;
         slot0.kD = 0.0;
         slot0.kS = 0.0;
         wrist.getConfigurator().apply(wristConfig);
 
+        // Limits
+        lowLimit = 0.0;
+        highLimit = 0.0;
+        // Setpoints
+        L1 = -45.0; // TODO find values
+        L2 = -20.0;
+        L3 = L2; //
+        L4 = -45.0; //
+        Intake = -90.0; // -90 degree from ground
 
         Intake = 0.0; // -90 degree from ground
         IntakeOffset = 0.0;

@@ -4,11 +4,11 @@ import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -52,25 +52,40 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0,
     // 0.01,
     // 0.0);
+    MotionMagicConfigs outerMMConfig;
+    MotionMagicConfigs innerMMConfig;
 
     public ElevatorSubsystem() {
-        m_ArmSubsystem = new ArmSubsystem();
-        outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID);
-        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID);
+        outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID, "rio");
+        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID, "Drivetrain");
+
+        outerMMConfig = new MotionMagicConfigs();
+        outerMMConfig = outerConfig.MotionMagic;
+        outerMMConfig.MotionMagicCruiseVelocity = 100;
+        outerMMConfig.MotionMagicAcceleration = 160;
+
         var outerSlot0 = outerConfig.Slot0;
-        outerSlot0.kP = 1;
-        outerSlot0.kD = 1;
-        outerSlot0.kG = 0.12;
-        outerSlot0.kA = 0.01;
-        outerSlot0.kV = 3.11;
+        outerSlot0.kP = 3.5;
+        outerSlot0.kD = 0.5;
+        outerSlot0.kG = 0.6;
+        outerSlot0.kA = 0;
+        outerSlot0.kV = 0.15;
+        
         var innerSlot0 = innerConfig.Slot0;
-        innerSlot0.kP = 1;
-        innerSlot0.kD = 1;
-        innerSlot0.kG = 0.16;
-        innerSlot0.kA = 0.02;
-        innerSlot0.kV = 3.11;
+        innerSlot0.kP = .9;
+        innerSlot0.kD = .15;
+        innerSlot0.kG = 0.45;
+        innerSlot0.kA = 0.04;
+        innerSlot0.kV = .2;
+
+        innerMMConfig = new MotionMagicConfigs();
+        innerMMConfig = outerConfig.MotionMagic;
+        innerMMConfig.MotionMagicCruiseVelocity = 80;
+        innerMMConfig.MotionMagicAcceleration = 160;
+
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
+
         OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
         InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
     }
@@ -190,13 +205,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command zeroOuterMotor() {
             return runOnce(() -> {
                 outerElevatorMotor.setPosition(0);
-            });
+            }).ignoringDisable(true);
         }
 
         public Command zeroInnerMotor() {
             return runOnce(() -> {
                 innerElevatorMotor.setPosition(0);
-            });
+            }).ignoringDisable(true);
         }
 
     }

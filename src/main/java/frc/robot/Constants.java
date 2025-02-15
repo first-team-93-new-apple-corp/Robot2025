@@ -3,6 +3,7 @@ package frc.robot;
 
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Per;
 
@@ -48,12 +49,12 @@ public class Constants {
             // Limits
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
-            // Setpoints
-            public static final Angle L1 = Degrees.of(10); // TODO find angles
-            public static final Angle L2 = Degrees.of(25);
+
+            public static final Angle L1 = Rotations.of(-45); // TODO find angles
+            public static final Angle L2 = Rotations.of(-20);
             public static final Angle L3 = L2;
-            public static final Angle L4 = Degrees.of(0);
-            public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
+            public static final Angle L4 = Rotations.of(-45);
+            public static final Angle Intake = Rotations.of(-90); // -90 degree from ground
         }
 
         public static final Distance armLength = Inches.of(17);

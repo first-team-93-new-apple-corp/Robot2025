@@ -18,6 +18,7 @@ import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
@@ -64,11 +65,9 @@ public class RobotContainer {
 
     // private final Vision frontCamera;
 
-    private GrabberSubsystem m_GrabberSubsystem;
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
-        m_GrabberSubsystem = new GrabberSubsystem();
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         // frontCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.FrontCam);
@@ -131,9 +130,6 @@ public class RobotContainer {
         // joystick.start().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
         // xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
         // xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
-
-        Driver.superStructureL1().onTrue(m_)
-
     }
 
     public void updateValues() {

@@ -4,6 +4,8 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.ElevatorConstants.Elevator_Positions;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotation;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -58,10 +60,7 @@ public class ArmSubsystem extends SubsystemBase {
         lowLimit = 0.0;
         highLimit = 0.0;
         // Setpoints
-        L1 = -45.0; // TODO find values
-        L2 = -20.0;
-        L3 = L2; //
-        L4 = -45.0; //
+
         Intake = -90.0; // -90 degree from ground
 
         Intake = 0.0; // -90 degree from ground
@@ -82,7 +81,7 @@ public class ArmSubsystem extends SubsystemBase {
     public boolean atSetpoint(Elevator_Positions setpoint) {
         switch (setpoint) {
             case Intake:
-                return getAngle().isNear(ArmConstants.Setpoints.Intake, Degrees.of(5));
+                return getAngle().times(108).isNear(ArmConstants.Setpoints.Intake, Degrees.of(5));
             case L1:
                 return getAngle().isNear(ArmConstants.Setpoints.L1, Degrees.of(5));
             case L2:

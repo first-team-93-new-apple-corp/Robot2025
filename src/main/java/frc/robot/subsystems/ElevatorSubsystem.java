@@ -58,22 +58,22 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         outerMMConfig = new MotionMagicConfigs();
         outerMMConfig = outerConfig.MotionMagic;
-        outerMMConfig.MotionMagicCruiseVelocity = 80;
+        outerMMConfig.MotionMagicCruiseVelocity = 100;
         outerMMConfig.MotionMagicAcceleration = 160;
 
         var outerSlot0 = outerConfig.Slot0;
-        outerSlot0.kP = 1;
-        outerSlot0.kD = 1;
-        outerSlot0.kG = 0.34;
-        outerSlot0.kA = 0.04;
-        outerSlot0.kV = 3.01;
-
+        outerSlot0.kP = 3.5;
+        outerSlot0.kD = 0.5;
+        outerSlot0.kG = 0.6;
+        outerSlot0.kA = 0;
+        outerSlot0.kV = 0.15;
+        
         var innerSlot0 = innerConfig.Slot0;
-        innerSlot0.kP = 1;
-        innerSlot0.kD = 1;
-        innerSlot0.kG = 0.16;
-        innerSlot0.kA = 0.02;
-        innerSlot0.kV = 3.11;
+        innerSlot0.kP = .9;
+        innerSlot0.kD = .15;
+        innerSlot0.kG = 0.45;
+        innerSlot0.kA = 0.04;
+        innerSlot0.kV = .2;
 
         innerMMConfig = new MotionMagicConfigs();
         innerMMConfig = outerConfig.MotionMagic;

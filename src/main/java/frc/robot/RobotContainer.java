@@ -12,11 +12,15 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
@@ -47,7 +51,7 @@ public class RobotContainer {
 
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-
+    public ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -94,12 +98,15 @@ public class RobotContainer {
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
-        Driver.outTake().whileTrue(m_GrabberSubsystem.Commands.outtake());
+        Driver.outTake().whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
+        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
+        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
+        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
+        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
+        Driver.superStructureIntake().whileTrue(m_GrabberSubsystem.Commands.intake().alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
 
-        // Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1());
-        // Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2());
-        // Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3());
-        // Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4());
+
         // LEDS
         // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
         // 75).andThen(LEDCommand.off()));
@@ -117,7 +124,10 @@ public class RobotContainer {
         // xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
         // xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
 
-        Driver.superStructureL1().onTrue(m_)
+        // Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
+        // Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
+        // Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
+        // Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
 
     }
 
@@ -125,7 +135,6 @@ public class RobotContainer {
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
-
     }
 
     public void updateSimValues() {

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -7,6 +8,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -54,7 +56,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     public ElevatorSubsystem() {
         outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID, "rio");
-        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID, "Drivetrain");
+        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID, "DriveTrain");
 
         outerMMConfig = new MotionMagicConfigs();
         outerMMConfig = outerConfig.MotionMagic;
@@ -63,20 +65,20 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         var outerSlot0 = outerConfig.Slot0;
         outerSlot0.kP = 3.5;
-        outerSlot0.kD = 0.5;
+        outerSlot0.kD = 0.03;
         outerSlot0.kG = 0.6;
         outerSlot0.kA = 0;
         outerSlot0.kV = 0.15;
         
         var innerSlot0 = innerConfig.Slot0;
         innerSlot0.kP = .9;
-        innerSlot0.kD = .15;
-        innerSlot0.kG = 0.45;
+        innerSlot0.kD = .1;
+        innerSlot0.kG =-0.45;
         innerSlot0.kA = 0.04;
         innerSlot0.kV = .2;
-
+        innerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         innerMMConfig = new MotionMagicConfigs();
-        innerMMConfig = outerConfig.MotionMagic;
+        innerMMConfig = innerConfig.MotionMagic;
         innerMMConfig.MotionMagicCruiseVelocity = 80;
         innerMMConfig.MotionMagicAcceleration = 160;
 
@@ -95,9 +97,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
-        elevatorSetpoint = D;
-        Distance outer = D.times(.54);
-        Distance inner = D.times(.45);
+        elevatorSetpoint = D.minus(Inches.of(8));
+        Distance outer = elevatorSetpoint.times(.54);
+        Distance inner = elevatorSetpoint.times(.45);
 
         outerElevatorMotor.setControl(outerElevatorMotorMagic
                 .withPosition((outer.divideRatio(ElevatorConstants.OuterRotationsToInches).in(Rotations))));
@@ -109,7 +111,10 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Elevtor Height", armPivotHeight().in(Inches));
         SmartDashboard.putNumber("Elevtor Height Setpoint", elevatorSetpoint.in(Inches));
-
+        // SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
+        // SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
+        // SmartDashboard.putBoolean("Carraige Bottom", InnerBottomSwitch.triggered());
+        // SmartDashboard.putBoolean("Carraige Bottom", OuterBottomSwitch.triggered());
         // m_elevatorSim.setInput(elevatorMotor.getMotorVoltage().getValueAsDouble() *
         // RobotController.getBatteryVoltage());
         // m_elevatorSim.update(0.020);
@@ -119,6 +124,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public class ElevatorCommands {
+
+        public Command outtake(){
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.minus(Centimeters.of(20)));
+
+            });
+ 
+        }
+
         public Command L1() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L1Setpoint);
@@ -143,6 +157,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command L4() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L4Setpoint);
+
+            });
+        }
+
+        public Command Bottom() {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.Bottom);
 
             });
         }

@@ -2,6 +2,8 @@ package frc.robot.subsystems.Arm;
 
 import frc.robot.Constants.ArmConstants;
 
+import static edu.wpi.first.units.Units.Rotations;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
@@ -51,11 +53,12 @@ public class ArmSubsystem extends SubsystemBase {
         lowLimit = 0.0;
         highLimit = 0.0;
         // Setpoints
-        L1 = -45.0; // TODO find values
-        L2 = -20.0;
+        L1 = 90; // TODO find values
+        L2 = 113;
         L3 = L2; //
-        L4 = -45.0; //
-        Intake = -90.0; // -90 degree from ground
+        L4 = 113; //
+        // Intake = -90.0; // -90 degree from ground
+        m_Encoder.setInverted(true);
     }
 
     public double getPosition() {
@@ -63,12 +66,16 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void runAngle(double angle) {
+
         wrist.setControl(mmVolt.withPosition(angle));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("WristAngle", m_Encoder.getFrequency());
+        wrist.setPosition(m_Encoder.get()*180);
+
+        SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("WristAngleEncoder", m_Encoder.get()*180);
     }
 
     public class ArmCommands {

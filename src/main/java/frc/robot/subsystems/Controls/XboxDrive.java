@@ -98,4 +98,10 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger outTake() {
         return Xbox.b();
     }
+
+    @Override
+    public Trigger removeAlgea() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'removeAlgea'");
+    }
 }

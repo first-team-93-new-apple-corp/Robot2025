@@ -41,7 +41,7 @@ public class Constants {
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;
-            public static final int Encoder = 99;
+            public static final int Encoder = 9;
         }
 
         public class Setpoints {
@@ -61,10 +61,10 @@ public class Constants {
         // Motor ID (Rev)
         public static final int Grabber = 18;
         // Input ID
-        public static final int LimitSwitch = 99; // TDOD get dio pin
+        public static final int LimitSwitch = 8; 
         // Speed constants
-        public static final double intakeSpeed = 0.5;
-        public static final double outakeSpeed = 0.5;
+        public static final double intakeSpeed = -0.2;
+        public static final double outakeSpeed = 0.25;
     }
 
     public class ElevatorConstants {
@@ -76,10 +76,11 @@ public class Constants {
         public static final int OuterTopChannel = 3;
         public static final int OuterBottomChannel = 4;
 
+        public static final Distance Bottom = Centimeters.of(25);
         public static final Distance L1Setpoint = Centimeters.of(46);
         public static final Distance L2Setpoint = Centimeters.of(81);
         public static final Distance L3Setpoint = Centimeters.of(121);
-        public static final Distance L4Setpoint = Centimeters.of(183);
+        public static final Distance L4Setpoint = Centimeters.of(173);
 
         public static final double SprocketRadiusInches = 1.37 / 2;
 

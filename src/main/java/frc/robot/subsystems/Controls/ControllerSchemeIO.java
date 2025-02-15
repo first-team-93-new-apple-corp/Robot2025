@@ -58,6 +58,8 @@ public interface ControllerSchemeIO {
 
     public Trigger outTake();
 
+    public Trigger removeAlgea();
+
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;
     }

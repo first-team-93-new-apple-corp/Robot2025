@@ -30,7 +30,7 @@ public class GrabberSubsystem implements Subsystem {
 
     public class GrabberCommands {
         public Command intake() {
-            return runOnce(() -> setSpeed(GrabberConstants.intakeSpeed));
+            return startEnd(() -> setSpeed(GrabberConstants.intakeSpeed), () -> setSpeed(0));
         }
 
         public Command outtake() {

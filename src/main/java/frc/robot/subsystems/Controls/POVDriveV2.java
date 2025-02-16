@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 import java.util.function.Supplier;
 
@@ -9,13 +9,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
-public class POVDriveV2 implements ControllerSchemeIO {
+public class POVDriveV2 extends TwoStickDriveXboxOp {
 
-    private CommandJoystick LeftStick;
-    private CommandJoystick RightStick;
     private Supplier<Double> robotAngle;
     private double Angle;
     private double PerspectiveOffset;
@@ -26,9 +23,8 @@ public class POVDriveV2 implements ControllerSchemeIO {
      * <p>
      * Uses left stick to generate center of rotation with FeildRel
      */
-    public POVDriveV2(int LeftPort, int RightPort, Supplier<Double> robotAngle) {
-        LeftStick = new CommandJoystick(LeftPort);
-        RightStick = new CommandJoystick(RightPort);
+    public POVDriveV2(int LeftPort, int RightPort, int opPort, Supplier<Double> robotAngle) {
+        super(LeftPort, RightPort, opPort);
         this.robotAngle = robotAngle;
         LeftStick.button(2).onTrue((new InstantCommand(() -> Angle = this.robotAngle.get())));
         LeftStick.povCenter().onChange((new InstantCommand(() -> Angle = this.robotAngle.get())));
@@ -96,12 +92,5 @@ public class POVDriveV2 implements ControllerSchemeIO {
     public Trigger robotRel() {
         return LeftStick.trigger();
     }
-    @Override
-    public Trigger autoAlignLeft() {
-        return LeftStick.button(3);
-    }
-    @Override
-    public Trigger autoAlignRight() {
-        return LeftStick.button(4);
-    }
+
 }

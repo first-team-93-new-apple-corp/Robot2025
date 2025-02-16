@@ -1,4 +1,4 @@
-package frc.robot.subsystems.Controlles;
+package frc.robot.subsystems.Controls;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -35,7 +35,6 @@ public interface ControllerSchemeIO {
     public double InputUp();
 
     public double InputTheta();
-    
 
     public Translation2d POV();
 
@@ -47,6 +46,18 @@ public interface ControllerSchemeIO {
 
     public Trigger autoAlignLeft();
     public Trigger autoAlignRight();
+
+    public Trigger superStructureL1();
+
+    public Trigger superStructureL2();
+
+    public Trigger superStructureL3();
+
+    public Trigger superStructureL4();
+
+    public Trigger superStructureIntake();
+
+    public Trigger outTake();
 
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;
@@ -60,7 +71,7 @@ public interface ControllerSchemeIO {
         return InputTheta() * MaxAngularRate;
     }
 
-    public default ChassisSpeeds Speeds(){
+    public default ChassisSpeeds Speeds() {
         return new ChassisSpeeds(DriveLeft(), DriveUp(), DriveTheta());
     }
 

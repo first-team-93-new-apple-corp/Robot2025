@@ -189,6 +189,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 }
             });
         }
+        
     }
 
     public DriverStation.Alliance getAlliance() {
@@ -279,5 +280,4 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         private SysIdRoutine m_sysIdRoutineToApply = m_sysIdRoutineTranslation;
 
     }
-
 }

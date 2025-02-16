@@ -1,45 +1,126 @@
 
 package frc.robot;
 
-public final class Constants {
-    public class Sensors {
+import edu.wpi.first.units.AngleUnit;
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
+import edu.wpi.first.units.measure.Per;
+
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.Rotations;
+
+import java.util.PrimitiveIterator.OfDouble;
+
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Translation3d;
+
+public class Constants {
+    public class Inputs {
+        public class Cameras {
+            public record Camera(String CamName, Transform3d camTransform) {
+            }
+
+            public static Camera FrontCam = new Camera("MainCamera",
+                    new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
+            public static Camera RearCam = new Camera("SecondaryCamera", new Transform3d(new Translation3d(0, 0, 0),
+                    new Rotation3d(0, 0, 0)));
+        }
+
         public class DIO {
             public static final int ThroughBoreEncoder = 9;
         }
+
         public class AnalogIn {
             public static final int HallEffect = 0;
         }
-        public class CAN {
-            public static final int TOF = 21;
-        }
-
     }
 
-    public class CTRE {
-            public static final int Intake = 14;
+    public class ArmConstants {
+        // Motor ID
+        public class IDs {
+            public static final int Wrist = 25;
+            public static final int Encoder = 99;
+        }
 
-            public static final int Shoot = 15;
+        public class Setpoints {
+            // Limits
+            public static final double lowLimit = 0.0;
+            public static final double highLimit = 0.0;
+            // Setpoints
+            public static final double L1 = 0.0; // TODO find angles
+            public static final double L2 = 0.0;
+            public static final double L3 = L2;
+            public static final double L4 = 10.0;
+            public static final double Intake = 0.0; // -90 degree from ground
+        }
+    }
 
-            public static final int Elevator = 16;
+    public class GrabberConstants {
+        // Motor ID (Rev)
+        public static final int Grabber = 24;
+        // Input ID
+        public static final int LimitSwitch = 99; // TDOD get dio pin
+        // Speed constants
+        public static final double intakeSpeed = 0.5;
+        public static final double outakeSpeed = 0.5;
+    }
 
-            public static final int L_Shoulder = 17;
-            public static final int R_Shoulder = 18;
-        
-            public static final int FLDrive = 1;
-            public static final int FRDrive = 2;
-            public static final int BR_Drive = 3;
-            public static final int BL_Drive = 4;
+    public class ElevatorConstants {
+        public static final int outerElevatorMotorID = 20;
+        public static final int innerElevatorMotorID = 21;
+        // public static final int bottomOuterLimitSwitchID = 22;
+        // public static final int bottomInnerLimitSwitchID = 23;
 
-            public static final int FL_Steer = 5;
-            public static final int FR_Steer = 6;
-            public static final int BR_Steer = 7;
-            public static final int BL_Steer = 8;
+        public static final int InnerTopChannel = 1;
+        public static final int InnerBottomChannel = 2;
+        public static final int OuterTopChannel = 3;
+        public static final int OuterBottomChannel = 4;
 
-            public static final int FL_Cancoder = 10;
-            public static final int FR_Cancoder = 11;
-            public static final int BR_Cancoder = 12;
-            public static final int BL_CanCoder = 13;
-        
+        public static final Distance L1Setpoint = Centimeters.of(46);
+        public static final Distance L2Setpoint = Centimeters.of(81);
+        public static final Distance L3Setpoint = Centimeters.of(121);
+        public static final Distance L4Setpoint = Centimeters.of(183);
+
+        public static final double SprocketRadiusInches = 1.37 / 2;
+
+        public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches
+                .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(12));
+
+        public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
+                .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
+
+
+        // public static final double kElevatorGearing = 1;
+        // public static final double kCarriageMass = 50;
+        // public static final double kElevatorDrumRadius = 1;
+        // public static final double kMinElevatorHeightMeters = 0;
+        // public static final double kMaxElevatorHeightMeters =
+        // Units.Meter.convertFrom(32.9, Inches);
+    }
+
+    public class Drivetrain {
+
+        public static final int FL_Drive = 1;
+        public static final int FR_Drive = 2;
+        public static final int BR_Drive = 3;
+        public static final int BL_Drive = 4;
+
+        public static final int FL_Steer = 5;
+        public static final int FR_Steer = 6;
+        public static final int BR_Steer = 7;
+        public static final int BL_Steer = 8;
+
+        public static final int FL_Cancoder = 10;
+        public static final int FR_Cancoder = 11;
+        public static final int BR_Cancoder = 12;
+        public static final int BL_Cancoder = 13;
+
     }
 
     public class Thrustmaster {
@@ -143,13 +224,16 @@ public final class Constants {
             public static final int Right_Stick_X = 4;
         }
     }
-    public class AprilTags{
-        public class RedTags{
+
+    public class AprilTags {
+        public class RedTags {
+            public static final int Proccessor = 16;
             public static final int L_Source = 1;
             public static final int R_Source = 2;
             public static final int BlueSide_Climb = 15;
             public static final int RedSide_Climb = 5;
-            //Imagine the reef (hexagon) is q a clock. Looking down from the driverstation with 6 O'Clock facing you.
+            // Imagine the reef (hexagon) is q a clock. Looking down from the driverstation
+            // with 6 O'Clock facing you.
             public static final int Reef_2_OClock = 6;
             public static final int Reef_4_OClock = 11;
             public static final int Reef_6_OClock = 10;
@@ -157,19 +241,22 @@ public final class Constants {
             public static final int Reef_10_OClock = 8;
             public static final int Reef_12_OClock = 7;
         }
-        public class BlueTags{
+
+        public class BlueTags {
+            public static final int Proccessor = 3;
             public static final int L_Source = 13;
             public static final int R_Source = 12;
             public static final int BlueSide_Climb = 14;
             public static final int RedSide_Climb = 4;
-            //Imagine the reef (hexagon) is a clock. Looking down from the driverstation with 6 O'Clock facing you.
+            // Imagine the reef (hexagon) is a clock. Looking down from the driverstation
+            // with 6 O'Clock facing you.
             public static final int Reef_2_OClock = 22;
             public static final int Reef_4_OClock = 17;
             public static final int Reef_6_OClock = 18;
             public static final int Reef_8_OClock = 19;
             public static final int Reef_10_OClock = 20;
             public static final int Reef_12_OClock = 21;
-            
+
         }
     }
 }

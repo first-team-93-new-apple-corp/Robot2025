@@ -58,6 +58,16 @@
     "edu.wpi.first.math.**.struct.*",
   ],
   "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable",
+  "markdownlint.config": {
+    "MD022": {
+      "lines_above": 0,
+      "lines_below": 0
+    },
+    "MD024": {
+      "siblings_only": true
+    },
+    "MD032": false
+  },
   "spellright.language": [
     "en"
   ],

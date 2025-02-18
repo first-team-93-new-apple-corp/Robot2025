@@ -3,8 +3,6 @@ package frc.robot;
 
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.DistanceUnit;
-import edu.wpi.first.units.Units;
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Per;
 
@@ -12,8 +10,6 @@ import static edu.wpi.first.units.Units.Centimeters;
 import static edu.wpi.first.units.Units.Degrees;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
-
-import java.util.PrimitiveIterator.OfDouble;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -25,10 +21,10 @@ public class Constants {
             public record Camera(String CamName, Transform3d camTransform) {
             }
 
-            public static Camera FrontCam = new Camera("MainCamera",
+            public static Camera FrontCam = new Camera("FrontCam",
                     new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
                             new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
-            public static Camera RearCam = new Camera("SecondaryCamera", new Transform3d(new Translation3d(0, 0, 0),
+            public static Camera RearCam = new Camera("RearCam", new Transform3d(new Translation3d(0, 0, 0),
                     new Rotation3d(0, 0, 0)));
         }
 
@@ -44,8 +40,8 @@ public class Constants {
     public class ArmConstants {
         // Motor ID
         public class IDs {
-            public static final int Wrist = 25;
-            public static final int Encoder = 99;
+            public static final int Wrist = 17;
+            public static final int Encoder = 9;
         }
 
         public class Setpoints {
@@ -63,29 +59,28 @@ public class Constants {
 
     public class GrabberConstants {
         // Motor ID (Rev)
-        public static final int Grabber = 24;
+        public static final int Grabber = 18;
         // Input ID
-        public static final int LimitSwitch = 99; // TDOD get dio pin
+        public static final int LimitSwitch = 8; 
         // Speed constants
-        public static final double intakeSpeed = 0.5;
-        public static final double outakeSpeed = 0.5;
+        public static final double intakeSpeed = -0.2;
+        public static final double outakeSpeed = 0.25;
     }
 
     public class ElevatorConstants {
-        public static final int outerElevatorMotorID = 20;
-        public static final int innerElevatorMotorID = 21;
-        // public static final int bottomOuterLimitSwitchID = 22;
-        // public static final int bottomInnerLimitSwitchID = 23;
+        public static final int outerElevatorMotorID = 16;
+        public static final int innerElevatorMotorID = 15;
 
         public static final int InnerTopChannel = 1;
         public static final int InnerBottomChannel = 2;
         public static final int OuterTopChannel = 3;
         public static final int OuterBottomChannel = 4;
 
+        public static final Distance Bottom = Centimeters.of(25);
         public static final Distance L1Setpoint = Centimeters.of(46);
         public static final Distance L2Setpoint = Centimeters.of(81);
         public static final Distance L3Setpoint = Centimeters.of(121);
-        public static final Distance L4Setpoint = Centimeters.of(183);
+        public static final Distance L4Setpoint = Centimeters.of(173);
 
         public static final double SprocketRadiusInches = 1.37 / 2;
 
@@ -94,14 +89,6 @@ public class Constants {
 
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
-
-
-        // public static final double kElevatorGearing = 1;
-        // public static final double kCarriageMass = 50;
-        // public static final double kElevatorDrumRadius = 1;
-        // public static final double kMinElevatorHeightMeters = 0;
-        // public static final double kMaxElevatorHeightMeters =
-        // Units.Meter.convertFrom(32.9, Inches);
     }
 
     public class Drivetrain {

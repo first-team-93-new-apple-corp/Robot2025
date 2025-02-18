@@ -9,31 +9,26 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
-import frc.robot.Constants.ElevatorConstants;
+import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.commands.intake;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
-import frc.robot.subsystems.Controls.POVDriveV2;
-import frc.robot.subsystems.Controls.XboxDrive;
+// import frc.robot.subsystems.Controls.XboxDrive;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
-import frc.robot.subsystems.VisionIO.CameraFactory;
 import frc.robot.subsystems.VisionIO.Vision;
 
 public class RobotContainer {
@@ -51,20 +46,12 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.02).withRotationalDeadband(MaxAngularRate * 0.02) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-    // Controls
-    private final CommandXboxController Xbox = new CommandXboxController(2);
-    private final CommandJoystick leftStick = new CommandJoystick(0);
-    private final CommandJoystick RightStick = new CommandJoystick(1);
-    // private final ControllerSchemeIO Driver = new POVDriveV2(0, 1,
-    // () -> m_DriveSubsystem.getState().Pose.getRotation().getDegrees());
+
     private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1, 2);
-    // -> m_DriveSubsystem.getState().Pose);
-    // private final ControllerIO Driver = new XboxDrive(2);
 
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
-
+    public ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
     // Auton
     AutoDirector autoDirector;
     SendableChooser<Command> a;
@@ -73,24 +60,23 @@ public class RobotContainer {
     // Arm subsystem
     // private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
 
-    private final Vision frontCamera;
+    // private final Vision frontCamera;
 
-    private CommandXboxController xbox;
+    private GrabberSubsystem m_GrabberSubsystem;
+    private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
+        m_GrabberSubsystem = new GrabberSubsystem();
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
-        frontCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.FrontCam);
+        // frontCamera = new CameraFactory().build(PoseSupplier,
+        // Constants.Inputs.Cameras.FrontCam);
         // rearCamera = new CameraFactory().build(PoseSupplier,
         // Constants.Inputs.Cameras.RearCam);
 
-        xbox = new CommandXboxController(0);
         // AUTON
         m_DriveSubsystem.configureAuto();
-        a = AutoBuilder.buildAutoChooser();
-        SmartDashboard.putData("a", a);
-        SmartDashboard.putData("a", a);
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
         configureBindings();
 
@@ -114,18 +100,16 @@ public class RobotContainer {
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
-
-
-        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1());
-        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2());
-        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3());
-        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4());
-        // LEDS
-        // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
-        // 75).andThen(LEDCommand.off()));
-        // Xbox.b().onTrue(LEDCommand.shoot().andThen(LEDCommand.off()));
-        // Xbox.y().onTrue(LEDCommand.test2().andThen(LEDCommand.off()));
-        // Xbox.a().onTrue(getIdleLEDs());
+        Driver.outTake()
+                .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
+        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
+        Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
+        Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
+        Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
+        Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
+                .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
+        Driver.bellyPanIntake().whileTrue(m_Intake);
 
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
@@ -136,21 +120,23 @@ public class RobotContainer {
         // joystick.start().and(joystick.x()).whileTrue(m_DriveSubsystem.Commands.sysIdQuasistatic(Direction.kReverse));
         // xbox.leftTrigger().whileTrue(m_Armsubsystem.Commands.runHigh());
         // xbox.rightTrigger().whileFalse(m_Armsubsystem.Commands.runRestIntake());
+
+        // Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
+        // Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
+        // Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
+        // Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
+
     }
 
     public void updateValues() {
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
-
     }
 
     public void updateSimValues() {
-        frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
+        // frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
     }
-    // public void syncTime() {
-    // initialTimestamp = Utils.getCurrentTimeSeconds();
-    // }
 
     public Command getAutonomousCommand() {
         // return a.getSelected();

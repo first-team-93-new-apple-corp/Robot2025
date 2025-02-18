@@ -14,6 +14,10 @@ public class CommandLimitSwitch {
         return LimitSwitch;
     }
 
+    public boolean triggered(){
+        return LimitSwitch.getValue() > 3000;
+    }
+
     public Trigger Tripped() {
         return new Trigger(() -> LimitSwitch.getValue() > 3000);
     }

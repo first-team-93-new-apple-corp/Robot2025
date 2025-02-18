@@ -1,14 +1,15 @@
 package frc.robot.subsystems.Arm;
 
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.intake;
+
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,9 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
     // Setpoints
-    private double Intake, L1, L2, L3, L4;
-    // Limts
-    private double lowLimit, highLimit;
+    private double Intake, L1, L2, L4, Setpoint;
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
@@ -41,27 +40,33 @@ public class ArmSubsystem extends SubsystemBase {
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
-        slot0.kG = 0.0;
-        slot0.kV = 0.0;
-        slot0.kP = 1.0; // TODO tune values
+        slot0.kG = -0.07;
+        slot0.kV = 0.1;
+        slot0.kP = 0.3; // TODO tune values
         slot0.kI = 0.0;
         slot0.kD = 0.0;
         slot0.kS = 0.0;
         wrist.getConfigurator().apply(wristConfig);
 
-        // Limits
-        lowLimit = 0.0;
-        highLimit = 0.0;
         // Setpoints
-        L1 = 0.0; // TODO find values
-        L2 = 0.0;
-        L3 = L2; //
-        L4 = 10.0; //
-        Intake = 0.0; // -90 degree from ground
+        Setpoint = 0;
+        L1 = 90; // TODO find values
+        L2 = 113;
+        L4 = 113; //
+        // Intake = -90.0; // -90 degree from ground
+        m_Encoder.setInverted(true);
     }
 
     public double getPosition() {
-        return m_Encoder.get();
+        return m_Encoder.get() * 180;
+    }
+
+    public double getSetpoint() {
+        return Setpoint;
+    }
+
+    public boolean atSetpoint() {
+        return Math.abs(getPosition() - Setpoint) < 1;
     }
 
     public void runAngle(double angle) {
@@ -70,28 +75,35 @@ public class ArmSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("WristAngle", m_Encoder.getFrequency());
+        wrist.setPosition(getPosition());
+
+        SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("WristAngleEncoder", getPosition());
     }
 
     public class ArmCommands {
         public Command L1() {
-            return run(() -> runAngle(L1));
+            Setpoint = L1;
+            return run(() -> runAngle(Setpoint));
         }
 
         public Command L2() {
-            return run(() -> runAngle(L2));
+            Setpoint = L2;
+            return run(() -> runAngle(Setpoint));
         }
 
         public Command L3() {
-            return run(() -> runAngle(L3));
+            return L2();
         }
 
         public Command L4() {
-            return run(() -> runAngle(L4));
+            Setpoint = L4;
+            return run(() -> runAngle(Setpoint));
         }
 
-        public Command Stow() {
-            return run(() -> runAngle(Intake));
+        public Command Intake() {
+            Setpoint = Intake;
+            return run(() -> runAngle(Setpoint));
         }
     }
 }

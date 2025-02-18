@@ -54,9 +54,13 @@ public interface ControllerSchemeIO {
 
     public Trigger superStructureL4();
 
-    public Trigger superStructureIntake();
+    public Trigger verticalCoralIntake();
+
+    public Trigger bellyPanIntake();
 
     public Trigger outTake();
+
+    public Trigger removeAlgea();
 
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;

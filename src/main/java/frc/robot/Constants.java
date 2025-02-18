@@ -67,15 +67,15 @@ public class Constants {
         public static final int outerElevatorMotorID = 16;
         public static final int innerElevatorMotorID = 15;
 
-        public static final int InnerTopChannel = 1;
-        public static final int InnerBottomChannel = 2;
-        public static final int OuterTopChannel = 3;
-        public static final int OuterBottomChannel = 4;
+        public static final int InnerTopChannel = 3;
+        public static final int InnerBottomChannel = 4;
+        public static final int OuterTopChannel = 5;
+        public static final int OuterBottomChannel = 6;
 
         public static final Distance Bottom = Centimeters.of(25);
         public static final Distance L1Setpoint = Centimeters.of(46);
-        public static final Distance L2Setpoint = Centimeters.of(81);
-        public static final Distance L3Setpoint = Centimeters.of(121);
+        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(8));
+        public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(8));
         public static final Distance L4Setpoint = Centimeters.of(173);
 
         public static final double SprocketRadiusInches = 1.37 / 2;

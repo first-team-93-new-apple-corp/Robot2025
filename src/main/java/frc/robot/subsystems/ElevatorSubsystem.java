@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.Utilities.CommandLimitSwitch;
+import frc.robot.Utilities.CommandLimitSwitchDio;
 
 public class ElevatorSubsystem extends SubsystemBase {
     // Kraken x60 (Controlled by TalonFX) 12-1 gear
@@ -60,7 +61,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         outerMMConfig = new MotionMagicConfigs();
         outerMMConfig = outerConfig.MotionMagic;
-        outerMMConfig.MotionMagicCruiseVelocity = 100;
+        outerMMConfig.MotionMagicCruiseVelocity = 80;
         outerMMConfig.MotionMagicAcceleration = 160;
 
         var outerSlot0 = outerConfig.Slot0;
@@ -85,8 +86,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
 
-        OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
-        InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+        // OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
+        // InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
     }
 
     private Distance armPivotHeight() {
@@ -97,7 +98,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
-        elevatorSetpoint = D.minus(Inches.of(8));
         Distance outer = elevatorSetpoint.times(.54);
         Distance inner = elevatorSetpoint.times(.45);
 
@@ -115,6 +115,12 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Elevtor Height", armPivotHeight().in(Inches));
         SmartDashboard.putNumber("Elevtor Height Setpoint", elevatorSetpoint.in(Inches));
+
+        InnerTopSwitch.publishValue();
+        InnerBottomSwitch.publishValue();
+        OuterTopSwitch.publishValue();
+        OuterBottomSwitch.publishValue();
+
         // SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
         // SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
         // SmartDashboard.putBoolean("Carraige Bottom", InnerBottomSwitch.triggered());

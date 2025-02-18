@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,7 +38,7 @@ public class ArmSubsystem extends SubsystemBase {
         mmConfig = wristConfig.MotionMagic;
         mmConfig.MotionMagicCruiseVelocity = 80;
         mmConfig.MotionMagicAcceleration = 160;
-
+        
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
         slot0.kG = -0.07;
@@ -46,6 +47,7 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kI = 0.0;
         slot0.kD = 0.0;
         slot0.kS = 0.0;
+        slot0.GravityType  = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
 
         // Setpoints

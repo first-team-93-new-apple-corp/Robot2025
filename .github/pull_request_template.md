@@ -9,25 +9,26 @@ These are the criteria that every Pull Request should meet, please check them of
 - [ ] Apply code formatting
 - [ ] Review VS Code problem notes and check spelling
 - [ ] Review your own Pull Request before asking someone else to
+- [ ] Update changelog
 
 ## State Subsystem
 
-- 
+-
 
 ## What Type?
 
- - [ ] Updated Code
- - [ ] New Code
-   - Task #
-     
+- [ ] Updated Code
+- [ ] New Code
+  - Task #
+
 ## Have you tested the Code?
 
- - [ ] Yes
- - [ ] Absolutely!
- 
+- [ ] Yes
+- [ ] Absolutely!
+
 ## Explain your code (What it does and how it does it)
 
-- 
+-
 
 ## One of these People must review your code
 

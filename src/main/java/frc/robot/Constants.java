@@ -3,6 +3,7 @@ package frc.robot;
 
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Per;
 
@@ -29,11 +30,16 @@ public class Constants {
         }
 
     }
-    public class ClimberConstants{
+
+    public class ClimberConstants {
         public static final int Climber = 19;
         public static final int ClimberEncoder = 9;
     }
+
     public class ArmConstants {
+
+        // Offset
+        public static final Angle Offset = Degrees.of(89.5);
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;
@@ -45,11 +51,11 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
-            public static final double L1 = 0.0; // TODO find angles
-            public static final double L2 = 0.0;
-            public static final double L3 = L2;
-            public static final double L4 = 10.0;
-            public static final double Intake = 0.0; // -90 degree from ground
+            public static final Angle L1 = Degrees.of(15); // TODO find angles
+            public static final Angle L2 = Degrees.of(0);
+            public static final Angle L3 = L2;
+            public static final Angle L4 = Degrees.of(10);
+            public static final Angle Intake = Degrees.of(0); // -90 degree from ground
         }
     }
 
@@ -57,7 +63,7 @@ public class Constants {
         // Motor ID (Rev)
         public static final int Grabber = 18;
         // Input ID
-        public static final int LimitSwitch = 8; 
+        public static final int LimitSwitch = 8;
         // Speed constants
         public static final double intakeSpeed = -0.2;
         public static final double outakeSpeed = 0.25;

@@ -3,6 +3,8 @@ package frc.robot.subsystems.Arm;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.intake;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -11,6 +13,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -25,8 +28,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
-    // Setpoints
-    private double Intake, L1, L2, L4, Setpoint;
+    private Angle lastSetpoint;
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
@@ -38,7 +40,7 @@ public class ArmSubsystem extends SubsystemBase {
         mmConfig = wristConfig.MotionMagic;
         mmConfig.MotionMagicCruiseVelocity = 80;
         mmConfig.MotionMagicAcceleration = 160;
-        
+
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
         slot0.kG = -0.07;
@@ -47,52 +49,52 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kI = 0.0;
         slot0.kD = 0.0;
         slot0.kS = 0.0;
-        slot0.GravityType  = GravityTypeValue.Arm_Cosine;
+        slot0.GravityType = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
 
-        // Setpoints
-        Setpoint = 0;
-        L1 = 90; // TODO find values
-        L2 = 113;
-        L4 = 113; //
-        Intake = 45;
-        // Intake = -90.0; // -90 degree from ground
         m_Encoder.setInverted(true);
+
+        // Set initial value, shouldn't need to change later.
+        wrist.setPosition(getAngle());
     }
 
     public double getPosition() {
         return m_Encoder.get() * 180;
     }
 
-    public double getSetpoint() {
-        return Setpoint;
+    public Angle getAngle() {
+        return Degrees.of(getPosition()).minus(ArmConstants.Offset);
     }
 
     public boolean atSetpoint() {
-        return Math.abs(getPosition() - Setpoint) < 1;
+        return wrist.getPosition().getValue().isNear(lastSetpoint, Degrees.of(2));
     }
 
-    public void runAngle(double angle) {
+    public void runAngle(Angle angle) {
+        lastSetpoint = angle;
         wrist.setControl(mmVolt.withPosition(angle));
     }
 
     @Override
     public void periodic() {
-        wrist.setPosition(getPosition());
+        // wrist.setPosition(getPosition());
 
+        // This should result in less stuttering when we set a new angle
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Degrees.of(5))) {
+            wrist.setPosition(getAngle());
+        }
+        //108 -> 19:30 = 170.5:1
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("WristAngleEncoder", getPosition());
+        SmartDashboard.putNumber("WristAngleEncoder", getAngle().magnitude());
     }
 
     public class ArmCommands {
         public Command L1() {
-            Setpoint = L1;
-            return run(() -> runAngle(Setpoint));
+            return run(() -> runAngle(ArmConstants.Setpoints.L1));
         }
 
         public Command L2() {
-            Setpoint = L2;
-            return run(() -> runAngle(Setpoint));
+            return run(() -> runAngle(ArmConstants.Setpoints.L2));
         }
 
         public Command L3() {
@@ -100,13 +102,11 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         public Command L4() {
-            Setpoint = L4;
-            return run(() -> runAngle(Setpoint));
+            return run(() -> runAngle(ArmConstants.Setpoints.L4));
         }
 
         public Command Intake() {
-            Setpoint = Intake;
-            return run(() -> runAngle(Setpoint));
+            return run(() -> runAngle(ArmConstants.Setpoints.Intake));
         }
     }
 }

@@ -107,6 +107,10 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .withPosition((inner.divideRatio(ElevatorConstants.InnerRotationsToInches).in(Rotations))));
     }
 
+    public boolean atSetpoint(){
+        return armPivotHeight().isNear(elevatorSetpoint, Centimeters.of(1));
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevtor Height", armPivotHeight().in(Inches));
@@ -164,6 +168,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command Bottom() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.Bottom);
+
+            });
+        }
+
+        public Command changeSetpointBy(Distance D) {
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.plus(D));
 
             });
         }

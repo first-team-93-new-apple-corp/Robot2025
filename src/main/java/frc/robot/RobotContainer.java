@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.commands.intake;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
@@ -63,7 +64,7 @@ public class RobotContainer {
     // private final Vision frontCamera;
 
     private GrabberSubsystem m_GrabberSubsystem;
-
+    private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
         m_GrabberSubsystem = new GrabberSubsystem();
@@ -104,15 +105,8 @@ public class RobotContainer {
         Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
-        Driver.superStructureIntake().whileTrue(m_GrabberSubsystem.Commands.intake().alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
-
-
-        // LEDS
-        // Xbox.x().onTrue(LEDCommand.test(10, Color.kGreen, Color.kBlack, 25,
-        // 75).andThen(LEDCommand.off()));
-        // Xbox.b().onTrue(LEDCommand.shoot().andThen(LEDCommand.off()));
-        // Xbox.y().onTrue(LEDCommand.test2().andThen(LEDCommand.off()));
-        // Xbox.a().onTrue(getIdleLEDs());
+        Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake().alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
+        Driver.bellyPanIntake().whileTrue(m_Intake);
 
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
@@ -140,9 +134,6 @@ public class RobotContainer {
     public void updateSimValues() {
         // frontCamera.updateSim(m_DriveSubsystem.getState().Pose);
     }
-    // public void syncTime() {
-    // initialTimestamp = Utils.getCurrentTimeSeconds();
-    // }
 
     public Command getAutonomousCommand() {
         // return a.getSelected();

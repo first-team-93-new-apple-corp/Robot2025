@@ -89,7 +89,7 @@ public class XboxDrive implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger superStructureIntake() {
+    public Trigger verticalCoralIntake() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'superStructureIntake'");
     }
@@ -103,5 +103,11 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger removeAlgea() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'removeAlgea'");
+    }
+
+    @Override
+    public Trigger bellyPanIntake() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'bellyPanIntake'");
     }
 }

@@ -78,7 +78,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger superStructureIntake() {
+    public Trigger verticalCoralIntake() {
         return operatorController.leftTrigger();
     }
 
@@ -90,6 +90,11 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     @Override
     public Trigger removeAlgea() {
         return operatorController.start();
+    }
+
+    @Override
+    public Trigger bellyPanIntake() {
+        return operatorController.back();
     }
 
 

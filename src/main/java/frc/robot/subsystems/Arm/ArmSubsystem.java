@@ -1,6 +1,7 @@
 package frc.robot.subsystems.Arm;
 
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.intake;
 
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -24,9 +25,7 @@ public class ArmSubsystem extends SubsystemBase {
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
     // Setpoints
-    private double Intake, L1, L2, L3, L4;
-    // Limts
-    private double lowLimit, highLimit;
+    private double Intake, L1, L2, L4, Setpoint;
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
@@ -49,54 +48,62 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kS = 0.0;
         wrist.getConfigurator().apply(wristConfig);
 
-        // Limits
-        lowLimit = 0.0;
-        highLimit = 0.0;
         // Setpoints
+        Setpoint = 0;
         L1 = 90; // TODO find values
         L2 = 113;
-        L3 = L2; //
         L4 = 113; //
         // Intake = -90.0; // -90 degree from ground
         m_Encoder.setInverted(true);
     }
 
     public double getPosition() {
-        return m_Encoder.get();
+        return m_Encoder.get()*180;
+    }
+
+    public double getSetpoint(){
+        return Setpoint;
+    }
+
+    public boolean atSetpoint(){
+        return Math.abs(getPosition() - Setpoint) < 1;
     }
 
     public void runAngle(double angle) {
-
         wrist.setControl(mmVolt.withPosition(angle));
     }
 
     @Override
     public void periodic() {
-        wrist.setPosition(m_Encoder.get()*180);
+        wrist.setPosition(getPosition());
 
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("WristAngleEncoder", m_Encoder.get()*180);
+        SmartDashboard.putNumber("WristAngleEncoder", getPosition());
     }
 
     public class ArmCommands {
         public Command L1() {
-            return run(() -> runAngle(L1));
+            Setpoint = L1;
+            return run(() -> runAngle(Setpoint));
         }
 
         public Command L2() {
-            return run(() -> runAngle(L2));
+            Setpoint = L2;
+            return run(() -> runAngle(Setpoint));
         }
 
         public Command L3() {
-            return run(() -> runAngle(L3));
+            return L2();
         }
 
         public Command L4() {
-            return run(() -> runAngle(L4));
+            Setpoint = L4;
+            return run(() -> runAngle(Setpoint));
         }
 
-        public Command Stow() {
-            return run(() -> runAngle(Intake));
+        public Command Intake() {
+            Setpoint = Intake;
+            return run(() -> runAngle(Setpoint));
         }
     }
 }

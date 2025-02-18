@@ -13,7 +13,7 @@ These are the criteria that every Pull Request should meet, please check them of
 
 ## State Subsystem
 
--
+- <!--- Add subsystem here--->
 
 ## What Type?
 
@@ -28,7 +28,7 @@ These are the criteria that every Pull Request should meet, please check them of
 
 ## Explain your code (What it does and how it does it)
 
--
+- <!--- Add description here--->
 
 ## One of these People must review your code
 

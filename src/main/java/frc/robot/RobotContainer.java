@@ -62,12 +62,11 @@ public class RobotContainer {
 
     // private final Vision frontCamera;
 
-    private GrabberSubsystem m_GrabberSubsystem;
+    private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
-        m_GrabberSubsystem = new GrabberSubsystem();
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         // frontCamera = new CameraFactory().build(PoseSupplier,

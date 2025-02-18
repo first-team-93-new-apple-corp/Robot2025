@@ -28,20 +28,16 @@ public class Constants {
                     new Rotation3d(0, 0, 0)));
         }
 
-        public class DIO {
-            public static final int ThroughBoreEncoder = 9;
-        }
-
-        public class AnalogIn {
-            public static final int HallEffect = 0;
-        }
     }
-
+    public class ClimberConstants{
+        public static final int Climber = 19;
+        public static final int ClimberEncoder = 9;
+    }
     public class ArmConstants {
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;
-            public static final int Encoder = 9;
+            public static final int Encoder = 7;
         }
 
         public class Setpoints {

@@ -53,6 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
         L1 = 90; // TODO find values
         L2 = 113;
         L4 = 113; //
+        Intake = 45;
         // Intake = -90.0; // -90 degree from ground
         m_Encoder.setInverted(true);
     }

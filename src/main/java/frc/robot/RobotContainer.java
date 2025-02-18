@@ -49,7 +49,6 @@ public class RobotContainer {
 
     private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1, 2);
 
-
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();
     public ArmSubsystem m_ArmSubsystem = new ArmSubsystem();
@@ -65,12 +64,14 @@ public class RobotContainer {
 
     private GrabberSubsystem m_GrabberSubsystem;
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
+
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
         m_GrabberSubsystem = new GrabberSubsystem();
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
-        // frontCamera = new CameraFactory().build(PoseSupplier, Constants.Inputs.Cameras.FrontCam);
+        // frontCamera = new CameraFactory().build(PoseSupplier,
+        // Constants.Inputs.Cameras.FrontCam);
         // rearCamera = new CameraFactory().build(PoseSupplier,
         // Constants.Inputs.Cameras.RearCam);
 
@@ -99,13 +100,15 @@ public class RobotContainer {
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
-        Driver.outTake().whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
+        Driver.outTake()
+                .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
         Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
         Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
-        Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake().alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
+        Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
+                .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_Intake);
 
         // SYSID ROUTINES

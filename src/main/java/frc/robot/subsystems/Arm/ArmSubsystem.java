@@ -58,14 +58,14 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return m_Encoder.get()*180;
+        return m_Encoder.get() * 180;
     }
 
-    public double getSetpoint(){
+    public double getSetpoint() {
         return Setpoint;
     }
 
-    public boolean atSetpoint(){
+    public boolean atSetpoint() {
         return Math.abs(getPosition() - Setpoint) < 1;
     }
 

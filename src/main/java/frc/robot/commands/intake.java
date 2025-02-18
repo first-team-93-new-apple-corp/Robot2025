@@ -11,11 +11,12 @@ import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem.ArmCommands;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 
-public class intake extends SequentialCommandGroup{
+public class intake extends SequentialCommandGroup {
     ElevatorSubsystem m_Elev;
     ArmSubsystem m_Arm;
     GrabberSubsystem m_Grab;
-    public intake(ElevatorSubsystem m_Elev, ArmSubsystem m_Arm, GrabberSubsystem m_Grab){
+
+    public intake(ElevatorSubsystem m_Elev, ArmSubsystem m_Arm, GrabberSubsystem m_Grab) {
         this.m_Elev = m_Elev;
         this.m_Arm = m_Arm;
         this.m_Grab = m_Grab;

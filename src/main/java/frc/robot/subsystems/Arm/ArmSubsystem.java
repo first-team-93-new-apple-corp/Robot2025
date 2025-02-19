@@ -39,14 +39,14 @@ public class ArmSubsystem extends SubsystemBase {
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
         mmConfig = wristConfig.MotionMagic;
-        mmConfig.MotionMagicCruiseVelocity = 20;
-        mmConfig.MotionMagicAcceleration = 2000;
+        mmConfig.MotionMagicCruiseVelocity = 800;
+        mmConfig.MotionMagicAcceleration = 1000;
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
-        slot0.kG = 0.02;
-        slot0.kV = 0.007;
-        slot0.kP = 0.03; // TODO tune values
+        slot0.kG = 0.01953125;
+        slot0.kV = 0.04;
+        slot0.kP = .1; // TODO tune values
         slot0.kI = 0.0;
         slot0.kD = 0.01;    
         slot0.kS = 0.0;
@@ -69,7 +69,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return wrist.getPosition().getValue().isNear(lastSetpoint, Degrees.of(2));
+        return wrist.getPosition().getValue().isNear(lastSetpoint, Degrees.of(1));
     }
 
     public void runAngle(Angle angle) {
@@ -83,7 +83,7 @@ public class ArmSubsystem extends SubsystemBase {
         // wrist.setPosition(getPosition());
 
         // This should result in less stuttering when we set a new angle
-        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(.5))) {
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(1.5))) {
             wrist.setPosition(getAngle());
         }
         //108 -> 19:30 = 170.5:1

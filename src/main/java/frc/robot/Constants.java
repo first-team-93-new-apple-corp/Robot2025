@@ -39,7 +39,8 @@ public class Constants {
     public class ArmConstants {
 
         // Offset
-        public static final Angle Offset = Degrees.of(134.5);
+        public static final Angle Offset = Degrees.of(90
+        );
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;

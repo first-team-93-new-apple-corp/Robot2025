@@ -102,6 +102,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
+        elevatorSetpoint = D;
         Distance outer = elevatorSetpoint.times(.54);
         Distance inner = elevatorSetpoint.times(.45);
 

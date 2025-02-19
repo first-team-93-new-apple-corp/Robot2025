@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.commands.intake;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
@@ -64,6 +65,8 @@ public class RobotContainer {
 
     private GrabberSubsystem m_GrabberSubsystem;
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
+
+    private ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
@@ -110,6 +113,12 @@ public class RobotContainer {
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_Intake);
+
+        Driver.climberIn().onTrue(m_ClimberSubsystem.climberCommands.inwardPosition());
+        Driver.climberOut().onTrue(m_ClimberSubsystem.climberCommands.outwardPosition());
+
+        Driver.climberIn().onFalse(m_ClimberSubsystem.climberCommands.stop());
+        Driver.climberOut().onFalse(m_ClimberSubsystem.climberCommands.stop());
 
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.

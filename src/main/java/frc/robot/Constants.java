@@ -3,6 +3,7 @@ package frc.robot;
 
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Per;
 
@@ -89,6 +90,16 @@ public class Constants {
 
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
+    }
+
+    public class ClimberConstants{
+        public static final int climberMotorID = 19;
+        public static final int climberEncoderID = 9;
+
+        public static final Angle outSetpoint = Degrees.of(0.0);
+        public static final Angle inSetpoint = Degrees.of(0.0);
+
+        public static final double OutputAngleToMotorPosition = 5;
     }
 
     public class Drivetrain {

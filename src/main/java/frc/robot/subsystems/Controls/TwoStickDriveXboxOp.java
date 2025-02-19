@@ -97,5 +97,17 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         return operatorController.back();
     }
 
+    @Override
+    public Trigger climberIn() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'climberIn'");
+    }
+
+    @Override
+    public Trigger climberOut() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
+    }
+
 
 }

@@ -2,13 +2,9 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Inches;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
-import frc.robot.subsystems.Arm.ArmSubsystem.ArmCommands;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 
 public class intake extends SequentialCommandGroup {

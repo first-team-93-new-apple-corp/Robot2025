@@ -9,6 +9,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -70,6 +71,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         outerSlot0.kG = 0.6;
         outerSlot0.kA = 0;
         outerSlot0.kV = 0.15;
+        outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         var innerSlot0 = innerConfig.Slot0;
         innerSlot0.kP = .9;
@@ -77,7 +79,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         innerSlot0.kG = -0.45;
         innerSlot0.kA = 0.04;
         innerSlot0.kV = .2;
+
         innerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         innerMMConfig = new MotionMagicConfigs();
         innerMMConfig = innerConfig.MotionMagic;
         innerMMConfig.MotionMagicCruiseVelocity = 80;

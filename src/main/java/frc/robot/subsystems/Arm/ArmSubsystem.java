@@ -12,6 +12,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
@@ -38,17 +39,18 @@ public class ArmSubsystem extends SubsystemBase {
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
         mmConfig = wristConfig.MotionMagic;
-        mmConfig.MotionMagicCruiseVelocity = 80;
-        mmConfig.MotionMagicAcceleration = 160;
+        mmConfig.MotionMagicCruiseVelocity = 20;
+        mmConfig.MotionMagicAcceleration = 2000;
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; // TODO find values
-        slot0.kG = -0.07;
-        slot0.kV = 0.1;
-        slot0.kP = 0.3; // TODO tune values
+        slot0.kG = 0.02;
+        slot0.kV = 0.007;
+        slot0.kP = 0.03; // TODO tune values
         slot0.kI = 0.0;
-        slot0.kD = 0.0;
+        slot0.kD = 0.01;    
         slot0.kS = 0.0;
+        wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         slot0.GravityType = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
 
@@ -59,11 +61,11 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public double getPosition() {
-        return m_Encoder.get() * 180;
+        return m_Encoder.get();
     }
 
     public Angle getAngle() {
-        return Degrees.of(getPosition()).minus(ArmConstants.Offset);
+        return (Rotations.of(getPosition()).minus(ArmConstants.Offset)).times(180);
     }
 
     public boolean atSetpoint() {
@@ -71,8 +73,9 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public void runAngle(Angle angle) {
-        lastSetpoint = angle;
-        wrist.setControl(mmVolt.withPosition(angle));
+        // angle is in output degrees
+        lastSetpoint = angle.times(180);
+        wrist.setControl(mmVolt.withPosition(lastSetpoint));
     }
 
     @Override
@@ -80,12 +83,12 @@ public class ArmSubsystem extends SubsystemBase {
         // wrist.setPosition(getPosition());
 
         // This should result in less stuttering when we set a new angle
-        if (!wrist.getPosition().getValue().isNear(getAngle(), Degrees.of(5))) {
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(.5))) {
             wrist.setPosition(getAngle());
         }
         //108 -> 19:30 = 170.5:1
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("WristAngleEncoder", getAngle().magnitude());
+        SmartDashboard.putNumber("WristAngleEncoder", getAngle().in(Rotations));
     }
 
     public class ArmCommands {

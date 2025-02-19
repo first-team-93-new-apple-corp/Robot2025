@@ -74,10 +74,11 @@ public class Constants {
         public static final int outerElevatorMotorID = 16;
         public static final int innerElevatorMotorID = 15;
 
-        public static final int InnerTopChannel = 3;
-        public static final int InnerBottomChannel = 4;
-        public static final int OuterTopChannel = 5;
-        public static final int OuterBottomChannel = 6;
+        // THESE ARE THE VALUES AS OF 2/19/2025 @ 11:04 AM
+        public static final int InnerTopChannel = 2;
+        public static final int InnerBottomChannel = 0; 
+        public static final int OuterTopChannel = 1;
+        public static final int OuterBottomChannel = 3; 
 
         public static final Distance Bottom = Centimeters.of(25);
         public static final Distance L1Setpoint = Centimeters.of(46);

@@ -202,5 +202,17 @@ public class ElevatorSubsystem extends SubsystemBase {
             }).ignoringDisable(true);
         }
 
+        public Command maxInnerMotor() {
+            return runOnce(() -> {
+                innerElevatorMotor.setPosition(64.3);
+            }).ignoringDisable(true);
+        }
+
+        public Command maxOuterMotor() {
+            return runOnce(() -> {
+                innerElevatorMotor.setPosition(102.3);
+            }).ignoringDisable(true);
+        }
+
     }
 }

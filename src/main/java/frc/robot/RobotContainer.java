@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -57,6 +58,10 @@ public class RobotContainer {
     SendableChooser<Command> a;
     // Logging
     private final Telemetry logger = new Telemetry(MaxSpeed);
+    // private AnalogInput test0 = new AnalogInput(0);
+    // private AnalogInput test1 = new AnalogInput(1);
+    // private AnalogInput test2 = new AnalogInput(2);
+    // private AnalogInput test3 = new AnalogInput(3);
     // Arm subsystem
     // private final ArmSubsystem m_Armsubsystem = new ArmSubsystem();
 
@@ -131,6 +136,12 @@ public class RobotContainer {
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
+        // SmartDashboard.putNumber("Analog Test Port 0", test0.getValue());
+        // SmartDashboard.putNumber("Analog Test Port 1", test1.getValue());
+        // SmartDashboard.putNumber("Analog Test Port 2", test2.getValue());
+        // SmartDashboard.putNumber("Analog Test Port 3", test3.getValue());
+
+
     }
 
     public void updateSimValues() {

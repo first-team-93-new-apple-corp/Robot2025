@@ -43,12 +43,12 @@ public class ArmSubsystem extends SubsystemBase {
         mmConfig.MotionMagicAcceleration = 1000;
 
         var slot0 = wristConfig.Slot0;
-        slot0.kA = 0.0; // TODO find values
-        slot0.kG = 0.01953125;
-        slot0.kV = 0.04;
-        slot0.kP = .1; // TODO tune values
+        slot0.kA = 0.0; 
+        slot0.kG = 0.017;
+        slot0.kV = 0.029;
+        slot0.kP = 0.5 ; 
         slot0.kI = 0.0;
-        slot0.kD = 0.01;    
+        slot0.kD = 0.0;    
         slot0.kS = 0.0;
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         slot0.GravityType = GravityTypeValue.Arm_Cosine;

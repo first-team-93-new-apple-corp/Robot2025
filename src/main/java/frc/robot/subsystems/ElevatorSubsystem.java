@@ -126,10 +126,15 @@ public class ElevatorSubsystem extends SubsystemBase {
         OuterTopSwitch.publishValue();
         OuterBottomSwitch.publishValue();
 
-        // SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
-        // SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
-        // SmartDashboard.putBoolean("Carraige Bottom", InnerBottomSwitch.triggered());
-        // SmartDashboard.putBoolean("Carraige Bottom", OuterBottomSwitch.triggered());
+        SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
+        SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
+        SmartDashboard.putBoolean("Carraige Bottom", InnerBottomSwitch.triggered());
+        SmartDashboard.putBoolean("Elevator Bottom", OuterBottomSwitch.triggered());
+        InnerTopSwitch.publishValue();
+        InnerBottomSwitch.publishValue();
+        OuterTopSwitch.publishValue();
+        OuterBottomSwitch.publishValue();
+
         // m_elevatorSim.setInput(elevatorMotor.getMotorVoltage().getValueAsDouble() *
         // RobotController.getBatteryVoltage());
         // m_elevatorSim.update(0.020);

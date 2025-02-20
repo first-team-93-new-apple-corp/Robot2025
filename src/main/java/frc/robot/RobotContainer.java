@@ -12,6 +12,7 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -131,6 +132,8 @@ public class RobotContainer {
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
+
+
     }
 
     public void updateSimValues() {

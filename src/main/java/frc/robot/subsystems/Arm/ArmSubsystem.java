@@ -1,14 +1,20 @@
 package frc.robot.subsystems.Arm;
 
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
+import frc.robot.commands.intake;
+
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,10 +29,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
-    // Setpoints
-    private double Intake, L1, L2, L3, L4;
-    // Limts
-    private double lowLimit, highLimit;
+    private Angle lastSetpoint;
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
@@ -36,62 +39,77 @@ public class ArmSubsystem extends SubsystemBase {
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
         mmConfig = wristConfig.MotionMagic;
-        mmConfig.MotionMagicCruiseVelocity = 80;
-        mmConfig.MotionMagicAcceleration = 160;
+        mmConfig.MotionMagicCruiseVelocity = 800;
+        mmConfig.MotionMagicAcceleration = 1000;
 
         var slot0 = wristConfig.Slot0;
-        slot0.kA = 0.0; // TODO find values
-        slot0.kG = 0.0;
-        slot0.kV = 0.0;
-        slot0.kP = 1.0; // TODO tune values
+        slot0.kA = 0.0; 
+        slot0.kG = 0.017;
+        slot0.kV = 0.029;
+        slot0.kP = 0.5 ; 
         slot0.kI = 0.0;
-        slot0.kD = 0.0;
+        slot0.kD = 0.0;    
         slot0.kS = 0.0;
+        wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        slot0.GravityType = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
 
-        // Limits
-        lowLimit = 0.0;
-        highLimit = 0.0;
-        // Setpoints
-        L1 = 0.0; // TODO find values
-        L2 = 0.0;
-        L3 = L2; //
-        L4 = 10.0; //
-        Intake = 0.0; // -90 degree from ground
+        m_Encoder.setInverted(true);
+
+        // Set initial value, shouldn't need to change later.
+        wrist.setPosition(getAngle());
     }
 
     public double getPosition() {
         return m_Encoder.get();
     }
 
-    public void runAngle(double angle) {
-        wrist.setControl(mmVolt.withPosition(angle));
+    public Angle getAngle() {
+        return (Rotations.of(getPosition()).minus(ArmConstants.Offset)).times(180);
+    }
+
+    public boolean atSetpoint() {
+        return wrist.getPosition().getValue().isNear(lastSetpoint, Degrees.of(1));
+    }
+
+    public void runAngle(Angle angle) {
+        // angle is in output degrees
+        lastSetpoint = angle.times(180);
+        wrist.setControl(mmVolt.withPosition(lastSetpoint));
     }
 
     @Override
     public void periodic() {
-        SmartDashboard.putNumber("WristAngle", m_Encoder.getFrequency());
+        // wrist.setPosition(getPosition());
+
+        // This should result in less stuttering when we set a new angle
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(1.5))) {
+            wrist.setPosition(getAngle());
+        }
+        //108 -> 19:30 = 170.5:1
+        SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("WristAngleEncoder", getAngle().in(Rotations));
     }
 
     public class ArmCommands {
         public Command L1() {
-            return run(() -> runAngle(L1));
+            return run(() -> runAngle(ArmConstants.Setpoints.L1));
         }
 
         public Command L2() {
-            return run(() -> runAngle(L2));
+            return run(() -> runAngle(ArmConstants.Setpoints.L2));
         }
 
         public Command L3() {
-            return run(() -> runAngle(L3));
+            return L2();
         }
 
         public Command L4() {
-            return run(() -> runAngle(L4));
+            return run(() -> runAngle(ArmConstants.Setpoints.L4));
         }
 
-        public Command Stow() {
-            return run(() -> runAngle(Intake));
+        public Command Intake() {
+            return run(() -> runAngle(ArmConstants.Setpoints.Intake));
         }
     }
 }

@@ -43,7 +43,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger Brake() {
+    public Trigger Brake()  {
         return RightStick.trigger();
     }
 
@@ -51,6 +51,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     public Trigger robotRel() {
         return LeftStick.trigger();
     }
+
 
     @Override
     public Trigger autoAlignLeft() {
@@ -68,27 +69,40 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
     @Override
     public Trigger superStructureL2() {
-        return operatorController.x();
+                return operatorController.x();
+
     }
 
     @Override
     public Trigger superStructureL3() {
-        return operatorController.b();
+                return operatorController.b();
+
     }
 
     @Override
     public Trigger superStructureL4() {
-        return operatorController.y();
+                return operatorController.y();
+
     }
 
     @Override
-    public Trigger superStructureIntake() {
+    public Trigger verticalCoralIntake() {
         return operatorController.leftTrigger();
     }
 
     @Override
     public Trigger outTake() {
         return operatorController.rightTrigger();
+    }
+
+    @Override
+    public Trigger removeAlgea() {
+        return operatorController.start();
+    }
+
+    @Override
+    public Trigger bellyPanIntake() {
+        return operatorController.back();
     }
 
 }

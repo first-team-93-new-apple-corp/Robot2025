@@ -1,19 +1,25 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Inch;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
 
+import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
-import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ElevatorConstants.ElevatorStrategy;
 import frc.robot.Utilities.CommandLimitSwitch;
+import frc.robot.Utilities.CommandLimitSwitchDio;
 
 public class ElevatorSubsystem extends SubsystemBase {
     // Kraken x60 (Controlled by TalonFX) 12-1 gear
@@ -49,26 +55,45 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0,
     // 0.01,
     // 0.0);
+    MotionMagicConfigs outerMMConfig;
+    MotionMagicConfigs innerMMConfig;
 
     public ElevatorSubsystem() {
-        outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID);
-        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID);
+        outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID, "rio");
+        innerElevatorMotor = new TalonFX(ElevatorConstants.innerElevatorMotorID, "DriveTrain");
+
+        outerMMConfig = new MotionMagicConfigs();
+        outerMMConfig = outerConfig.MotionMagic;
+        outerMMConfig.MotionMagicCruiseVelocity = 80;
+        outerMMConfig.MotionMagicAcceleration = 160;
+
         var outerSlot0 = outerConfig.Slot0;
-        outerSlot0.kP = 1;
-        outerSlot0.kD = 1;
-        outerSlot0.kG = 0.12;
-        outerSlot0.kA = 0.01;
-        outerSlot0.kV = 3.11;
+        outerSlot0.kP = 3.5;
+        outerSlot0.kD = 0.03;
+        outerSlot0.kG = 0.6;
+        outerSlot0.kA = 0;
+        outerSlot0.kV = 0.15;
+        outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+
         var innerSlot0 = innerConfig.Slot0;
         innerSlot0.kP = 1;
-        innerSlot0.kD = 1;
-        innerSlot0.kG = 0.16;
-        innerSlot0.kA = 0.02;
-        innerSlot0.kV = 3.11;
+        innerSlot0.kD = 0;
+        innerSlot0.kG = 0.44;
+        innerSlot0.kA = 0;
+        innerSlot0.kV = .14;
+
+        innerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        innerMMConfig = new MotionMagicConfigs();
+        innerMMConfig = innerConfig.MotionMagic;
+        innerMMConfig.MotionMagicCruiseVelocity = 80;
+        innerMMConfig.MotionMagicAcceleration = 160;
+
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
-        OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
-        InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+
+        // OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
+        // InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
     }
 
     private Distance armPivotHeight() {
@@ -78,10 +103,43 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .plus(innerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.InnerRotationsToInches));
     }
 
-    private void setSetpoints(Distance D) {
+    private void setSetpoints(Distance D){
+        setSetpoints(D, ElevatorStrategy.noBias);
+    }
+
+    private void setSetpoints(Distance D, ElevatorStrategy Strategy) {
+        if (D.gt(Centimeters.of(173))) {
+            D = Centimeters.of(173);
+        } else if (D.lt((ElevatorConstants.Bottom))) {
+            D = ElevatorConstants.Bottom;
+        }
         elevatorSetpoint = D;
-        Distance outer = D.times(.54);
-        Distance inner = D.times(.45);
+        Distance outer = elevatorSetpoint.times(.54);
+        Distance inner = elevatorSetpoint.times(.45);
+        switch (Strategy) {
+            case carriageBias:
+                if(elevatorSetpoint.gt(Inches.of(28))){
+                    inner = Inches.of(28);
+                    outer = elevatorSetpoint.minus(inner);
+                } else {
+                    inner = elevatorSetpoint.times(1);
+                    outer = Inches.of(0.2);
+                }
+                break;
+            case noBias:
+                outer = elevatorSetpoint.times(.54);
+                inner = elevatorSetpoint.times(.45);
+                break;
+            case stageOneBias:
+                if (elevatorSetpoint.gt(Inches.of(33))) {
+                    outer = Inches.of(33);
+                    inner = elevatorSetpoint.minus(outer);
+                } else {
+                    outer = elevatorSetpoint.times(1);
+                    inner = Inches.of(0.2);
+                }
+                break;
+        }
 
         outerElevatorMotor.setControl(outerElevatorMotorMagic
                 .withPosition((outer.divideRatio(ElevatorConstants.OuterRotationsToInches).in(Rotations))));
@@ -89,10 +147,28 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .withPosition((inner.divideRatio(ElevatorConstants.InnerRotationsToInches).in(Rotations))));
     }
 
+    public boolean atSetpoint() {
+        return armPivotHeight().isNear(elevatorSetpoint, Centimeters.of(1));
+    }
+
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Elevtor Height", armPivotHeight().in(Inches));
         SmartDashboard.putNumber("Elevtor Height Setpoint", elevatorSetpoint.in(Inches));
+
+        InnerTopSwitch.publishValue();
+        InnerBottomSwitch.publishValue();
+        OuterTopSwitch.publishValue();
+        OuterBottomSwitch.publishValue();
+
+        SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
+        SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
+        SmartDashboard.putBoolean("Carraige Bottom", InnerBottomSwitch.triggered());
+        SmartDashboard.putBoolean("Elevator Bottom", OuterBottomSwitch.triggered());
+        InnerTopSwitch.publishValue();
+        InnerBottomSwitch.publishValue();
+        OuterTopSwitch.publishValue();
+        OuterBottomSwitch.publishValue();
 
         // m_elevatorSim.setInput(elevatorMotor.getMotorVoltage().getValueAsDouble() *
         // RobotController.getBatteryVoltage());
@@ -103,6 +179,15 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public class ElevatorCommands {
+
+        public Command outtake() {
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.minus(Centimeters.of(20)));
+
+            });
+
+        }
+
         public Command L1() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L1Setpoint);
@@ -131,16 +216,49 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
+        public Command Bottom() {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.Bottom);
+
+            });
+        }
+        
+        public Command intake(){
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.L2Setpoint, ElevatorStrategy.stageOneBias);
+
+            });
+        }
+
+        public Command changeSetpointBy(Distance D, ElevatorStrategy strategy) {
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.plus(D), strategy);
+
+            });
+        }
+
         public Command zeroOuterMotor() {
             return runOnce(() -> {
                 outerElevatorMotor.setPosition(0);
-            });
+            }).ignoringDisable(true);
         }
 
         public Command zeroInnerMotor() {
             return runOnce(() -> {
                 innerElevatorMotor.setPosition(0);
-            });
+            }).ignoringDisable(true);
+        }
+
+        public Command maxInnerMotor() {
+            return runOnce(() -> {
+                innerElevatorMotor.setPosition(64.3);
+            }).ignoringDisable(true);
+        }
+
+        public Command maxOuterMotor() {
+            return runOnce(() -> {
+                innerElevatorMotor.setPosition(102.3);
+            }).ignoringDisable(true);
         }
 
     }

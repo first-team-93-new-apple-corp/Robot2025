@@ -52,10 +52,10 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
-            public static final Angle L1 = Degrees.of(15); // TODO find angles
-            public static final Angle L2 = Degrees.of(0);
+            public static final Angle L1 = Degrees.of(95); // TODO find angles
+            public static final Angle L2 = Degrees.of(150);
             public static final Angle L3 = L2;
-            public static final Angle L4 = Degrees.of(10);
+            public static final Angle L4 = Degrees.of(120);
             public static final Angle Intake = Degrees.of(0); // -90 degree from ground
         }
     }
@@ -66,7 +66,7 @@ public class Constants {
         // Input ID
         public static final int LimitSwitch = 8;
         // Speed constants
-        public static final double intakeSpeed = -0.2;
+        public static final double intakeSpeed = -0.4;
         public static final double outakeSpeed = 0.25;
     }
 
@@ -80,12 +80,12 @@ public class Constants {
         public static final int OuterTopChannel = 1;
         public static final int OuterBottomChannel = 3; 
 
-        public static final Distance Bottom = Centimeters.of(25);
+        public static final Distance Bottom = Centimeters.of(25).minus(Inches.of(8));
         public static final Distance L1Setpoint = Centimeters.of(46);
-        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(8));
-        public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(8));
+        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(12));
+        public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(12.5));
         public static final Distance L4Setpoint = Centimeters.of(173);
-
+        public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
         public static final double SprocketRadiusInches = 1.37 / 2;
 
         public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches
@@ -93,6 +93,12 @@ public class Constants {
 
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
+
+        public enum ElevatorStrategy{
+            stageOneBias,
+            carriageBias,
+            noBias,
+        }
     }
 
     public class Drivetrain {

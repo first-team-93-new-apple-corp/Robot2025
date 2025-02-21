@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Centimeters;
+import static edu.wpi.first.units.Units.Inch;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.ElevatorConstants.ElevatorStrategy;
 import frc.robot.Utilities.CommandLimitSwitch;
 import frc.robot.Utilities.CommandLimitSwitchDio;
 
@@ -74,11 +76,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
         var innerSlot0 = innerConfig.Slot0;
-        innerSlot0.kP = .9;
-        innerSlot0.kD = .1;
-        innerSlot0.kG = -0.45;
-        innerSlot0.kA = 0.04;
-        innerSlot0.kV = .2;
+        innerSlot0.kP = 1;
+        innerSlot0.kD = 0;
+        innerSlot0.kG = 0.44;
+        innerSlot0.kA = 0;
+        innerSlot0.kV = .14;
 
         innerConfig.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
@@ -101,10 +103,43 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .plus(innerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.InnerRotationsToInches));
     }
 
-    private void setSetpoints(Distance D) {
+    private void setSetpoints(Distance D){
+        setSetpoints(D, ElevatorStrategy.noBias);
+    }
+
+    private void setSetpoints(Distance D, ElevatorStrategy Strategy) {
+        if (D.gt(Centimeters.of(173))) {
+            D = Centimeters.of(173);
+        } else if (D.lt((ElevatorConstants.Bottom))) {
+            D = ElevatorConstants.Bottom;
+        }
         elevatorSetpoint = D;
         Distance outer = elevatorSetpoint.times(.54);
         Distance inner = elevatorSetpoint.times(.45);
+        switch (Strategy) {
+            case carriageBias:
+                if(elevatorSetpoint.gt(Inches.of(28))){
+                    inner = Inches.of(28);
+                    outer = elevatorSetpoint.minus(inner);
+                } else {
+                    inner = elevatorSetpoint.times(1);
+                    outer = Inches.of(0.2);
+                }
+                break;
+            case noBias:
+                outer = elevatorSetpoint.times(.54);
+                inner = elevatorSetpoint.times(.45);
+                break;
+            case stageOneBias:
+                if (elevatorSetpoint.gt(Inches.of(33))) {
+                    outer = Inches.of(33);
+                    inner = elevatorSetpoint.minus(outer);
+                } else {
+                    outer = elevatorSetpoint.times(1);
+                    inner = Inches.of(0.2);
+                }
+                break;
+        }
 
         outerElevatorMotor.setControl(outerElevatorMotorMagic
                 .withPosition((outer.divideRatio(ElevatorConstants.OuterRotationsToInches).in(Rotations))));
@@ -187,10 +222,17 @@ public class ElevatorSubsystem extends SubsystemBase {
 
             });
         }
-
-        public Command changeSetpointBy(Distance D) {
+        
+        public Command intake(){
             return runOnce(() -> {
-                setSetpoints(elevatorSetpoint.plus(D));
+                setSetpoints(ElevatorConstants.L2Setpoint, ElevatorStrategy.stageOneBias);
+
+            });
+        }
+
+        public Command changeSetpointBy(Distance D, ElevatorStrategy strategy) {
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.plus(D), strategy);
 
             });
         }

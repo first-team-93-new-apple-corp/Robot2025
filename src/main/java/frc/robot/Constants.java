@@ -62,7 +62,7 @@ public class Constants {
         // Motor ID (Rev)
         public static final int Grabber = 18;
         // Input ID
-        public static final int LimitSwitch = 8; 
+        public static final int LimitSwitch = 8;
         // Speed constants
         public static final double intakeSpeed = -0.2;
         public static final double outakeSpeed = 0.25;
@@ -92,14 +92,16 @@ public class Constants {
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
     }
 
-    public class ClimberConstants{
+    public class ClimberConstants {
         public static final int climberMotorID = 19;
         public static final int climberEncoderID = 9;
 
-        public static final Angle outSetpoint = Degrees.of(0.0);
-        public static final Angle inSetpoint = Degrees.of(0.0);
+        public static final Angle outSetpoint = Degrees.of(10);
+        public static final Angle inSetpoint = Degrees.of(120);
 
-        public static final double OutputAngleToMotorPosition = 5;
+        // public static final Per<AngleUnit, AngleUnit> OutputAngleToMotorRotations = Degrees.of(10)
+        //         .div(Rotations.of(10));
+
     }
 
     public class Drivetrain {

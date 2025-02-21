@@ -1,8 +1,10 @@
 package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.StaticBrake;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.fasterxml.jackson.databind.introspect.VirtualAnnotatedMember;
 
@@ -26,9 +28,9 @@ public class ClimberSubsystem extends SubsystemBase {
     public ClimberSubsystem() {
         climber = new TalonFX(ClimberConstants.climberMotorID, "rio");
         climberConfig = new TalonFXConfiguration();
-
+        
         m_Encoder = new DutyCycleEncoder(ClimberConstants.climberEncoderID);
-
+        
         // PID configuation just in case
         // var slot0 = climberConfig.Slot0;
         // slot0.kA = 0.0;
@@ -38,15 +40,15 @@ public class ClimberSubsystem extends SubsystemBase {
         // slot0.kI = 0.0;
         // slot0.kD = 0.0;
         // slot0.kS = 0.0;
+        
         climber.getConfigurator().apply(climberConfig);
 
     }
 
-    
     private void runAngle(Angle angle) {
 
         climber.set(
-                controller.calculate(m_Encoder.get()*180, angle.in(Degrees) * ClimberConstants.OutputAngleToMotorPosition));
+                controller.calculate(m_Encoder.get(), angle.divideRatio(ClimberConstants.OutputAngleToMotorRotations).in(Rotations)));
     }
 
     public class ClimberCommands {

@@ -90,7 +90,7 @@ public class RobotContainer {
         xbox = new CommandXboxController(0);
         // AUTON
         m_DriveSubsystem.configureAuto();
-        autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem));
+        autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem, null, m_ElevatorSubsystem, null));
         configureBindings();
 
     }

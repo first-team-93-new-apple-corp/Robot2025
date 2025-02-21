@@ -83,7 +83,7 @@ public class ArmSubsystem extends SubsystemBase {
         // wrist.setPosition(getPosition());
 
         // This should result in less stuttering when we set a new angle
-        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(1.5))) {
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(2))) {
             wrist.setPosition(getAngle());
         }
         //108 -> 19:30 = 170.5:1

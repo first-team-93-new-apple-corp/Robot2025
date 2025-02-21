@@ -92,8 +92,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
 
-        // OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
-        // InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+        OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
+        InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+        SmartDashboard.putData("zero carriage",Commands.zeroInnerMotor());
+        SmartDashboard.putData("zero ele",Commands.zeroOuterMotor());
+        // OuterTopSwitch.Tripped().onTrue(Commands.maxOuterMotor());
+        // InnerTopSwitch.Tripped().onTrue(Commands.maxInnerMotor());
     }
 
     private Distance armPivotHeight() {
@@ -104,7 +108,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D){
-        setSetpoints(D, ElevatorStrategy.noBias);
+        setSetpoints(D, ElevatorStrategy.stageOneBias);
     }
 
     private void setSetpoints(Distance D, ElevatorStrategy Strategy) {
@@ -118,9 +122,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         Distance inner = elevatorSetpoint.times(.45);
         switch (Strategy) {
             case carriageBias:
-                if(elevatorSetpoint.gt(Inches.of(28))){
-                    inner = Inches.of(28);
-                    outer = elevatorSetpoint.minus(inner);
+                if(elevatorSetpoint.gt(Inches.of(31))){
+                    inner = Inches.of(31);
+                    outer = elevatorSetpoint.minus(inner).times(0.98);
                 } else {
                     inner = elevatorSetpoint.times(1);
                     outer = Inches.of(0.2);
@@ -131,12 +135,12 @@ public class ElevatorSubsystem extends SubsystemBase {
                 inner = elevatorSetpoint.times(.45);
                 break;
             case stageOneBias:
-                if (elevatorSetpoint.gt(Inches.of(33))) {
-                    outer = Inches.of(33);
-                    inner = elevatorSetpoint.minus(outer);
+                if (elevatorSetpoint.gt(Inches.of(36.5))) {
+                    outer = Inches.of(36.5);
+                    inner = elevatorSetpoint.minus(outer).times(.98);
                 } else {
                     outer = elevatorSetpoint.times(1);
-                    inner = Inches.of(0.2);
+                    inner = Inches.of(0.5);
                 }
                 break;
         }
@@ -155,11 +159,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putNumber("Elevtor Height", armPivotHeight().in(Inches));
         SmartDashboard.putNumber("Elevtor Height Setpoint", elevatorSetpoint.in(Inches));
-
-        InnerTopSwitch.publishValue();
-        InnerBottomSwitch.publishValue();
-        OuterTopSwitch.publishValue();
-        OuterBottomSwitch.publishValue();
 
         SmartDashboard.putBoolean("Carraige Top", InnerTopSwitch.triggered());
         SmartDashboard.putBoolean("Elevator Top", OuterTopSwitch.triggered());
@@ -251,15 +250,16 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command maxInnerMotor() {
             return runOnce(() -> {
-                innerElevatorMotor.setPosition(64.3);
+                innerElevatorMotor.setPosition(64.5);
             }).ignoringDisable(true);
         }
 
         public Command maxOuterMotor() {
             return runOnce(() -> {
-                innerElevatorMotor.setPosition(102.3);
+                innerElevatorMotor.setPosition(97.5);
             }).ignoringDisable(true);
         }
+
 
     }
 }

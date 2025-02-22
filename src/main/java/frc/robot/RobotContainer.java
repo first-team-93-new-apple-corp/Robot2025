@@ -9,9 +9,11 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -19,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.Utilities.CommandLimitSwitchDio;
 import frc.robot.commands.intake;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
@@ -62,12 +65,11 @@ public class RobotContainer {
 
     // private final Vision frontCamera;
 
-    private GrabberSubsystem m_GrabberSubsystem;
+    private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
-        m_GrabberSubsystem = new GrabberSubsystem();
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         // frontCamera = new CameraFactory().build(PoseSupplier,
@@ -84,6 +86,9 @@ public class RobotContainer {
 
     // private GamePiecePhoton vision = new GamePiecePhoton();
     private void configureBindings() {
+        SignalLogger.setPath("/media/sda1/logs/");
+        SignalLogger.start();
+        
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())
                 .withVelocityY(Driver.DriveUp())
@@ -99,7 +104,7 @@ public class RobotContainer {
         Driver.Seed().onTrue(m_DriveSubsystem.runOnce(() -> m_DriveSubsystem.seedFieldCentric()));
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
-        Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
+        // Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
         Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
@@ -108,9 +113,13 @@ public class RobotContainer {
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
-                .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
-        Driver.bellyPanIntake().whileTrue(m_Intake);
-
+                .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
+        Driver.bellyPanIntake().whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
+        Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(m_Intake);
+        // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
+        // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
+        // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));
+        // Driver.manDownArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-1)));
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -129,9 +138,12 @@ public class RobotContainer {
     }
 
     public void updateValues() {
+
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
+
+
     }
 
     public void updateSimValues() {
@@ -142,6 +154,7 @@ public class RobotContainer {
         // return a.getSelected();
         return autoDirector.selection().command();
     }
+    
 
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);

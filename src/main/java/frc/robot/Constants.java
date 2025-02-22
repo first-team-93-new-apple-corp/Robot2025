@@ -58,7 +58,7 @@ public class Constants {
             public static final Angle L1 = Degrees.of(5); // TODO find angles
             public static final Angle L2 = Degrees.of(60);
             public static final Angle L3 = L2;
-            public static final Angle L4 = Degrees.of(37.5);
+            public static final Angle L4 = Degrees.of(38.5);
             public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
         }
     }
@@ -88,6 +88,8 @@ public class Constants {
         public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(14));
         public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(12.5));
         public static final Distance L4Setpoint = Centimeters.of(173);
+        public static final Distance Algea1 = Centimeters.of(90);
+        public static final Distance Algea2 = Centimeters.of(130);
         public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
         public static final double SprocketRadiusInches = 1.37 / 2;
 

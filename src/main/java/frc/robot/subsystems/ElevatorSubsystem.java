@@ -219,6 +219,20 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
+        public Command Algea1() {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.Algea1);
+
+            });
+        }
+
+        public Command Algea2() {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.Algea2);
+
+            });
+        }
+
         public Command Bottom() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.Bottom);

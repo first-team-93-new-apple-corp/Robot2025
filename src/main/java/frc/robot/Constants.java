@@ -32,11 +32,6 @@ public class Constants {
 
     }
 
-    public class ClimberConstants {
-        public static final int Climber = 19;
-        public static final int ClimberEncoder = 9;
-    }
-
     public class ArmConstants {
 
         // Offset

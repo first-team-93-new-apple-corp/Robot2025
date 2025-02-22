@@ -1,5 +1,6 @@
 package frc.robot.subsystems.Auton;
 
+import frc.robot.commands.intake;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
@@ -9,5 +10,6 @@ public record AutoSubsystems(
     SwerveDriveSubsystem driveSubsystem,
     ArmSubsystem armSubsystem,
     ElevatorSubsystem elevatorSubsystem,
-    GrabberSubsystem grabberSubsystem
+    GrabberSubsystem grabberSubsystem,
+    intake intakeCommand
 ) {}

@@ -2,6 +2,7 @@ package frc.robot.subsystems.Auton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 
@@ -21,20 +22,23 @@ public class AutoDirector {
     AddAutos();
   }
 
-  public record Auto(String name, Command command, Pose2d initPose) {}
-
+  public record Auto(String name, Command command, Pose2d initPose) {
+  }
 
   public Auto selection() {
-      return autoChooser.getSelected();
+    return autoChooser.getSelected();
   }
 
   public void AddAutos() {
     autoChooser.setDefaultOption(doNothing().name, doNothing());
-    Autos.add(Coral());
-    Autos.add(straight());
-    Autos.add(PathPlannerAuto());
-    Autos.add(HPintake());
-    Autos.add(newAuto());
+    // Autos.add(Coral());
+    // Autos.add(straight());
+    // Autos.add(PathPlannerAuto());
+    // Autos.add(HPintake());
+    // Autos.add(newAuto());
+    Autos.add(Leftside());
+    Autos.add(RightSide());
+    Autos.add(CenterSide());
 
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -47,7 +51,7 @@ public class AutoDirector {
     return new Auto("doNothing", new InstantCommand(), new Pose2d());
   }
 
-  public Auto newAuto(){
+  public Auto newAuto() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("TSC", "R6B"));
 
@@ -56,11 +60,11 @@ public class AutoDirector {
     return new Auto("new Auto", tracker, new Pose2d());
   }
 
-  public Auto straight(){
+  public Auto straight() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("TestingPath", "Test 2"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> new Pose2d());
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> new Pose2d(), false);
     return new Auto("straight", tracker, new Pose2d());
   }
 
@@ -70,10 +74,11 @@ public class AutoDirector {
     paths.add(new AutoSector("C2", "R4A"));
     paths.add(new AutoSector("C3", "R6A"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
-    
-    return new Auto("Coral", tracker, PositionConstants.startingPoses.top() );
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left());
+
+    return new Auto("Coral", tracker, PositionConstants.startingPoses.Left());
   }
+
   public Auto HPintake() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("TSC", "R8B"));
@@ -83,12 +88,61 @@ public class AutoDirector {
     paths.add(new AutoSector("BSC", "R4A"));
     paths.add(new AutoSector("BSC", "R4B"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.top());
-    
-    return new Auto("Human Player Intake", tracker, PositionConstants.startingPoses.top() );
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left());
+
+    return new Auto("Human Player Intake", tracker, PositionConstants.startingPoses.Left());
   }
-  public Auto PathPlannerAuto(){
+
+  public Auto PathPlannerAuto() {
     return new Auto("PP Auto", AutoBuilder.buildAuto("New New Auto"), new Pose2d());
   }
 
+  public Auto Leftside() {
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("LHP", "R10B"));
+    paths.add(new AutoSector("LHP", "R10A"));
+    paths.add(new AutoSector("LHP", "R8B"));
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R12A");
+
+    return new Auto("Leftside 4 Coral", tracker, PositionConstants.startingPoses.Left());
+  }
+
+  public Auto RightSide() {
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("RHP", "R2A"));
+    paths.add(new AutoSector("RHP", "R2B"));
+    paths.add(new AutoSector("RHP", "R4A"));
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.right(), "R12B");
+
+    return new Auto("Rightside 4 Coral", tracker, PositionConstants.startingPoses.right());
+  }
+
+  public Auto CenterSide() {
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("C1", "R6B"));
+    paths.add(new AutoSector("C2", "R6A"));
+    paths.add(new AutoSector("C3", "R4B"));
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R8A");
+
+    return new Auto("CenterSide 4 Coral", tracker, PositionConstants.startingPoses.Left());
+  }
+
+  public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,
+      String preLoadPath, boolean Leave) {
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, initalPose, preLoadPath, Leave);
+
+    return new Auto(name, tracker, initalPose.get());
+  }
+
+  public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,
+      boolean Leave) {
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, initalPose, Leave);
+
+    return new Auto(name, tracker, initalPose.get());
+  }
 }

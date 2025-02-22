@@ -23,6 +23,7 @@ import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.Utilities.CommandLimitSwitchDio;
 import frc.robot.commands.intake;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
@@ -67,6 +68,8 @@ public class RobotContainer {
 
     private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
+
+    private ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
     public RobotContainer() {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
@@ -115,6 +118,12 @@ public class RobotContainer {
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
+
+        Driver.climberIn().onTrue(m_ClimberSubsystem.climberCommands.inwardPosition());
+        Driver.climberOut().onTrue(m_ClimberSubsystem.climberCommands.outwardPosition());
+
+        Driver.climberIn().onFalse(m_ClimberSubsystem.climberCommands.stop());
+        Driver.climberOut().onFalse(m_ClimberSubsystem.climberCommands.stop());
         Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(m_Intake);
         // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));

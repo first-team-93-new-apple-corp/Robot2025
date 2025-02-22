@@ -96,11 +96,10 @@ public class Constants {
         public static final int climberMotorID = 19;
         public static final int climberEncoderID = 9;
 
-        public static final Angle outSetpoint = Degrees.of(10);
-        public static final Angle inSetpoint = Degrees.of(120);
+        public static final double outSetpoint = 10;
+        public static final double inSetpoint = 120;
 
-        // public static final Per<AngleUnit, AngleUnit> OutputAngleToMotorRotations = Degrees.of(10)
-        //         .div(Rotations.of(10));
+        public static final double encoderOffset = 0; //TODO find offset
 
     }
 

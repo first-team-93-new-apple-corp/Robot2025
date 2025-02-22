@@ -18,6 +18,8 @@ public class ClimberSubsystem extends SubsystemBase {
     BangBangController controller = new BangBangController();
     public ClimberCommands climberCommands = new ClimberCommands();
 
+    double speedMultiplier = 0.5; // Set the value between 0 and 1. Controls the speed of the motor.
+
     public ClimberSubsystem() {
         climber = new TalonFX(ClimberConstants.climberMotorID, "rio");
         // climberConfig = new TalonFXConfiguration();
@@ -41,7 +43,7 @@ public class ClimberSubsystem extends SubsystemBase {
     private void runAngle(Double angle) {
 
         climber.set(
-                controller.calculate((m_Encoder.get() * 360) - ClimberConstants.encoderOffset, angle));
+                controller.calculate((m_Encoder.get() * 360) - ClimberConstants.encoderOffset, angle)*speedMultiplier);
     }
 
     public class ClimberCommands {

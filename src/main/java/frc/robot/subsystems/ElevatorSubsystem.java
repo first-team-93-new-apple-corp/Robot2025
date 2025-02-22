@@ -96,6 +96,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
         SmartDashboard.putData("zero carriage",Commands.zeroInnerMotor());
         SmartDashboard.putData("zero ele",Commands.zeroOuterMotor());
+        SmartDashboard.putData("Coast carriage", Commands.brakeInnerMotor(false));
+        SmartDashboard.putData("Coast ele", Commands.brakeOuterMotor(false));
+        SmartDashboard.putData("Brake carriage", Commands.brakeInnerMotor(true));
+        SmartDashboard.putData("Brake ele", Commands.brakeOuterMotor(true));
         // OuterTopSwitch.Tripped().onTrue(Commands.maxOuterMotor());
         // InnerTopSwitch.Tripped().onTrue(Commands.maxInnerMotor());
     }
@@ -152,7 +156,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return armPivotHeight().isNear(elevatorSetpoint, Centimeters.of(1));
+        return armPivotHeight().isNear(elevatorSetpoint, Centimeters.of(3));
     }
 
     @Override
@@ -266,7 +270,29 @@ public class ElevatorSubsystem extends SubsystemBase {
                 innerElevatorMotor.setPosition(97.5);
             }).ignoringDisable(true);
         }
-
+        public Command brakeInnerMotor(boolean brake){
+            return runOnce(() -> {
+                if (brake){
+                    innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+                    innerElevatorMotor.getConfigurator().apply(innerConfig);
+                } else {
+                    innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+                    innerElevatorMotor.getConfigurator().apply(innerConfig);
+                }
+                
+            }).ignoringDisable(true);
+        }
+        public Command brakeOuterMotor(boolean brake){
+            return runOnce(() -> {
+                if (brake){
+                    outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+                    outerElevatorMotor.getConfigurator().apply(outerConfig);
+                } else {
+                    outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+                    outerElevatorMotor.getConfigurator().apply(outerConfig);
+                }  
+            }).ignoringDisable(true);
+        }
 
     }
 }

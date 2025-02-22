@@ -1,11 +1,9 @@
 package frc.robot.subsystems.Arm;
 
 import frc.robot.Constants.ArmConstants;
-import frc.robot.commands.intake;
+import frc.robot.Utilities.Elastic;
 
 import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.DegreesPerSecond;
-import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
@@ -13,11 +11,14 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -31,7 +32,7 @@ public class ArmSubsystem extends SubsystemBase {
 
     private DutyCycleEncoder m_Encoder;
     public ArmCommands Commands;
-    private Angle lastSetpoint;
+    private Angle lastSetpoint = Rotations.of(0);
 
     public ArmSubsystem() {
         Commands = new ArmCommands();
@@ -49,13 +50,14 @@ public class ArmSubsystem extends SubsystemBase {
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; 
-        slot0.kG = 0.018; //0.017
-        slot0.kV = 0.030; //0.029
-        slot0.kP = 0.5 ; 
+        slot0.kG = 0.02; //0.017
+        slot0.kV = 0.017; //0.029
+        slot0.kP = 0.45 ; 
         slot0.kI = 0.0;
         slot0.kD = 0.0;    
         slot0.kS = 0.0;
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        wristConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         slot0.GravityType = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
         
@@ -64,28 +66,34 @@ public class ArmSubsystem extends SubsystemBase {
 
         // Set initial value, shouldn't need to change later.
         wrist.setPosition(getAngle());
+        SmartDashboard.putData("Brake Arm", Commands.brakeMotor(true));
+        SmartDashboard.putData("Coast Arm", Commands.brakeMotor(false));
     }
-
-    public double getPosition() {
-        return m_Encoder.get();
+    /**
+     * Returns the encoder position in output angle
+     */
+    public Angle getPosition() {
+        return Rotations.of(m_Encoder.get()).minus(ArmConstants.Offset);
     }
-
+    /**
+     * Returns the encoder position in input angle(motor) rotations
+     */
     public Angle getAngle() {
-        return (Rotations.of(getPosition()).minus(ArmConstants.Offset)).times(ArmConstants.GearRatio);
+        return (getPosition().times(ArmConstants.GearRatio));
     }
 
     public boolean atSetpoint() {
-        return wrist.getPosition().getValue().isNear(lastSetpoint, Degrees.of(1));
+        return wrist.getPosition().getValue().isNear(lastSetpoint, Rotations.of(2));
     }
 
     public void runAngle(Angle angle) {
         // angle is in output degrees
-        lastSetpoint = angle.times(ArmConstants.GearRatio);
-        if (lastSetpoint.lt(Degrees.of(0))){
-            lastSetpoint = Degrees.of(0);
-        } else if (lastSetpoint.gt(Degrees.of(150))){
-            lastSetpoint = Degrees.of(150);
+        if (angle.lt(Degrees.of(-90))){
+            angle = Degrees.of(-90);
+        } else if (angle.gt(Degrees.of(90))){
+            angle = Degrees.of(90);
         }
+        lastSetpoint = angle.times(ArmConstants.GearRatio);
         wrist.setControl(mmVolt.withPosition(lastSetpoint));
     }
 
@@ -100,20 +108,26 @@ public class ArmSubsystem extends SubsystemBase {
         //108 -> 19:30 = 170.5:1
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("WristAngleEncoder", getAngle().in(Rotations));
+        // Shuffleboard.getTab("Teleoperated").add("WristAngleOutput", getPosition().in(Degrees)).withWidget(BuiltInWidgets.kDial);
+        SmartDashboard.putNumber("WristAngleOutput", getPosition().in(Degrees));
+
+        SmartDashboard.putNumber("WristSetpoint", lastSetpoint.in(Rotations));
         SmartDashboard.putNumber("WristCurrentStator", wrist.getStatorCurrent().getValueAsDouble());
         SmartDashboard.putNumber("WristCurrentStall", wrist.getMotorStallCurrent().getValueAsDouble());
         SmartDashboard.putNumber("WristCurrentSupply", wrist.getSupplyCurrent().getValueAsDouble());
         SmartDashboard.putNumber("WristCurrentTorque", wrist.getTorqueCurrent().getValueAsDouble());
-
+        
     }
+
+
 
     public class ArmCommands {
         public Command L1() {
-            return run(() -> runAngle(ArmConstants.Setpoints.L1));
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.L1));
         }
 
         public Command L2() {
-            return run(() -> runAngle(ArmConstants.Setpoints.L2));
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.L2));
         }
 
         public Command L3() {
@@ -121,16 +135,32 @@ public class ArmSubsystem extends SubsystemBase {
         }
 
         public Command L4() {
-            return run(() -> runAngle(ArmConstants.Setpoints.L4));
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.L4));
         }
 
         public Command Intake() {
-            return run(() -> runAngle(ArmConstants.Setpoints.Intake));
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.Intake));
+        }
+
+        public Command GroundIntake() {
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.GroundIntake));
         }
         public Command changeSetpointBy(Angle D) {
             return runOnce(() -> {
                 runAngle(lastSetpoint.plus(D));
             });
+        }
+        public Command brakeMotor(boolean brake){
+            return runOnce(() -> {
+                if (brake){
+                    wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+                    wrist.getConfigurator().apply(wristConfig);
+                } else {
+                    wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+                    wrist.getConfigurator().apply(wristConfig);
+                }
+                
+            }).ignoringDisable(true);
         }
     }
 }

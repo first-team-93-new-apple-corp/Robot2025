@@ -88,6 +88,7 @@ public class RobotContainer {
     private void configureBindings() {
         SignalLogger.setPath("/media/sda1/logs/");
         SignalLogger.start();
+        
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())
                 .withVelocityY(Driver.DriveUp())
@@ -103,7 +104,7 @@ public class RobotContainer {
         Driver.Seed().onTrue(m_DriveSubsystem.runOnce(() -> m_DriveSubsystem.seedFieldCentric()));
         Driver.Brake().whileTrue(m_DriveSubsystem.Commands.applyRequest(() -> brake));
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
-        Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
+        // Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
         Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
@@ -112,7 +113,7 @@ public class RobotContainer {
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
-                .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
+                .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_Intake);
         // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
@@ -136,6 +137,7 @@ public class RobotContainer {
     }
 
     public void updateValues() {
+
         // Comment out this line if feild relitive becomes an issue.
         // feedVision(frontCamera);
         // feedVision(rearCamera);
@@ -151,6 +153,7 @@ public class RobotContainer {
         // return a.getSelected();
         return autoDirector.selection().command();
     }
+    
 
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);

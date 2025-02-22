@@ -23,26 +23,30 @@ public class Constants {
             }
 
             public static Camera FrontCam = new Camera("FrontCam",
-                    new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
-                            new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
-            public static Camera RearCam = new Camera("RearCam", new Transform3d(new Translation3d(0, 0, 0),
-                    new Rotation3d(0, 0, 0)));
+                    new Transform3d(new Translation3d(Inches.of(11), Inches.of(12.5), Inches.of(11.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(0))));
+            public static Camera RearCam = new Camera("RearCam",
+                    new Transform3d(new Translation3d(Inches.of(-11), Inches.of(-12.5), Inches.of(11.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
         }
 
-        public class DIO {
-            public static final int ThroughBoreEncoder = 9;
-        }
+    }
 
-        public class AnalogIn {
-            public static final int HallEffect = 0;
-        }
+    public class ClimberConstants {
+        public static final int Climber = 19;
+        public static final int ClimberEncoder = 9;
     }
 
     public class ArmConstants {
+
+        // Offset
+        public static final double GearRatio = 121.5;
+        public static final Angle Offset = Degrees.of(178);
+
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;
-            public static final int Encoder = 9;
+            public static final int Encoder = 7;
         }
 
         public class Setpoints {
@@ -50,11 +54,12 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
-            public static final double L1 = 0.0; // TODO find angles
-            public static final double L2 = 0.0;
-            public static final double L3 = L2;
-            public static final double L4 = 10.0;
-            public static final double Intake = 0.0; // -90 degree from ground
+            public static final Angle GroundIntake = Degrees.of(-3); // TODO find angles
+            public static final Angle L1 = Degrees.of(5); // TODO find angles
+            public static final Angle L2 = Degrees.of(60);
+            public static final Angle L3 = L2;
+            public static final Angle L4 = Degrees.of(37.5);
+            public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
         }
     }
 
@@ -64,25 +69,26 @@ public class Constants {
         // Input ID
         public static final int LimitSwitch = 8;
         // Speed constants
-        public static final double intakeSpeed = -0.2;
-        public static final double outakeSpeed = 0.25;
+        public static final double intakeSpeed = -0.8;
+        public static final double outakeSpeed = 0.35;
     }
 
     public class ElevatorConstants {
         public static final int outerElevatorMotorID = 16;
         public static final int innerElevatorMotorID = 15;
 
-        public static final int InnerTopChannel = 1;
-        public static final int InnerBottomChannel = 2;
-        public static final int OuterTopChannel = 3;
-        public static final int OuterBottomChannel = 4;
+        // THESE ARE THE VALUES AS OF 2/19/2025 @ 11:04 AM
+        public static final int InnerTopChannel = 2;
+        public static final int InnerBottomChannel = 0;
+        public static final int OuterTopChannel = 1;
+        public static final int OuterBottomChannel = 3;
 
-        public static final Distance Bottom = Centimeters.of(25);
+        public static final Distance Bottom = Inches.of(1);
         public static final Distance L1Setpoint = Centimeters.of(46);
-        public static final Distance L2Setpoint = Centimeters.of(81);
-        public static final Distance L3Setpoint = Centimeters.of(121);
+        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(14));
+        public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(12.5));
         public static final Distance L4Setpoint = Centimeters.of(173);
-
+        public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
         public static final double SprocketRadiusInches = 1.37 / 2;
 
         public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches
@@ -90,6 +96,12 @@ public class Constants {
 
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
+
+        public enum ElevatorStrategy {
+            stageOneBias,
+            carriageBias,
+            noBias,
+        }
     }
 
     public class ClimberConstants {

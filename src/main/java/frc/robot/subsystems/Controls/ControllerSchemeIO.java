@@ -70,6 +70,8 @@ public interface ControllerSchemeIO {
 
     public Trigger manDownArm();
 
+    public Trigger Prime();
+
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;
     }

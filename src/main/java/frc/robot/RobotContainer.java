@@ -114,7 +114,8 @@ public class RobotContainer {
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
-        Driver.bellyPanIntake().whileTrue(m_Intake);
+        Driver.bellyPanIntake().whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
+        Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(m_Intake);
         // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
         // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));

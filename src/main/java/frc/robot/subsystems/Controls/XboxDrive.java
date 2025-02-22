@@ -134,4 +134,10 @@ public class XboxDrive implements ControllerSchemeIO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'manDownArm'");
     }
+
+    @Override
+    public Trigger Prime() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'Prime'");
+    }
 }

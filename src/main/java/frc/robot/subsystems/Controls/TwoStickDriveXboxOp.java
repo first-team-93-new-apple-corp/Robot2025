@@ -117,5 +117,10 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         return operatorController.povLeft();
     }
 
+    @Override
+    public Trigger Prime(){
+        return operatorController.rightBumper();
+    }
+
 
 }

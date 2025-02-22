@@ -94,8 +94,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
         InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
-        SmartDashboard.putData("zero carriage",Commands.zeroInnerMotor());
-        SmartDashboard.putData("zero ele",Commands.zeroOuterMotor());
+        SmartDashboard.putData("zero carriage", Commands.zeroInnerMotor());
+        SmartDashboard.putData("zero ele", Commands.zeroOuterMotor());
         SmartDashboard.putData("Coast carriage", Commands.brakeInnerMotor(false));
         SmartDashboard.putData("Coast ele", Commands.brakeOuterMotor(false));
         SmartDashboard.putData("Brake carriage", Commands.brakeInnerMotor(true));
@@ -111,7 +111,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 .plus(innerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.InnerRotationsToInches));
     }
 
-    private void setSetpoints(Distance D){
+    private void setSetpoints(Distance D) {
         setSetpoints(D, ElevatorStrategy.stageOneBias);
     }
 
@@ -126,7 +126,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Distance inner = elevatorSetpoint.times(.45);
         switch (Strategy) {
             case carriageBias:
-                if(elevatorSetpoint.gt(Inches.of(31))){
+                if (elevatorSetpoint.gt(Inches.of(31))) {
                     inner = Inches.of(31);
                     outer = elevatorSetpoint.minus(inner).times(0.98);
                 } else {
@@ -225,8 +225,15 @@ public class ElevatorSubsystem extends SubsystemBase {
 
             });
         }
-        
-        public Command intake(){
+
+        public Command intakePrime() {
+            return runOnce(() -> {
+                setSetpoints(Inches.of(20.5), ElevatorStrategy.stageOneBias);
+
+            });
+        }
+
+        public Command intake() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L2Setpoint, ElevatorStrategy.stageOneBias);
 
@@ -270,27 +277,29 @@ public class ElevatorSubsystem extends SubsystemBase {
                 innerElevatorMotor.setPosition(97.5);
             }).ignoringDisable(true);
         }
-        public Command brakeInnerMotor(boolean brake){
+
+        public Command brakeInnerMotor(boolean brake) {
             return runOnce(() -> {
-                if (brake){
+                if (brake) {
                     innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
                     innerElevatorMotor.getConfigurator().apply(innerConfig);
                 } else {
                     innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
                     innerElevatorMotor.getConfigurator().apply(innerConfig);
                 }
-                
+
             }).ignoringDisable(true);
         }
-        public Command brakeOuterMotor(boolean brake){
+
+        public Command brakeOuterMotor(boolean brake) {
             return runOnce(() -> {
-                if (brake){
+                if (brake) {
                     outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
                     outerElevatorMotor.getConfigurator().apply(outerConfig);
                 } else {
                     outerConfig.MotorOutput.NeutralMode = NeutralModeValue.Coast;
                     outerElevatorMotor.getConfigurator().apply(outerConfig);
-                }  
+                }
             }).ignoringDisable(true);
         }
 

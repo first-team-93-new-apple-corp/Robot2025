@@ -9,6 +9,7 @@ import static edu.wpi.first.units.Units.*;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.Utilities.CommandLimitSwitchDio;
 import frc.robot.commands.intake;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
@@ -84,6 +86,8 @@ public class RobotContainer {
 
     // private GamePiecePhoton vision = new GamePiecePhoton();
     private void configureBindings() {
+        SignalLogger.setPath("/media/sda1/logs/");
+        SignalLogger.start();
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())
                 .withVelocityY(Driver.DriveUp())
@@ -110,7 +114,10 @@ public class RobotContainer {
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.L1()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_Intake);
-
+        // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
+        // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
+        // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));
+        // Driver.manDownArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-1)));
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.

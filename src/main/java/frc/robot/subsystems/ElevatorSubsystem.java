@@ -229,6 +229,13 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
+        public Command changeSetpointBy(Distance D) {
+            return runOnce(() -> {
+                setSetpoints(elevatorSetpoint.plus(D));
+
+            });
+        }
+
         public Command changeSetpointBy(Distance D, ElevatorStrategy strategy) {
             return runOnce(() -> {
                 setSetpoints(elevatorSetpoint.plus(D), strategy);

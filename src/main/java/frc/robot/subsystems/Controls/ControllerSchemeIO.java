@@ -61,6 +61,14 @@ public interface ControllerSchemeIO {
     public Trigger outTake();
 
     public Trigger removeAlgea();
+    
+    public Trigger manUpElev();
+
+    public Trigger manDownElev();
+    
+    public Trigger manUpArm();
+
+    public Trigger manDownArm();
 
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;

@@ -110,4 +110,28 @@ public class XboxDrive implements ControllerSchemeIO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'bellyPanIntake'");
     }
+
+    @Override
+    public Trigger manUpElev() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'manUpElev'");
+    }
+
+    @Override
+    public Trigger manDownElev() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'manDownElev'");
+    }
+
+    @Override
+    public Trigger manUpArm() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'manUpArm'");
+    }
+
+    @Override
+    public Trigger manDownArm() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'manDownArm'");
+    }
 }

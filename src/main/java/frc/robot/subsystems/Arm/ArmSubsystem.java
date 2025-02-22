@@ -4,6 +4,7 @@ import frc.robot.Constants.ArmConstants;
 import frc.robot.commands.intake;
 
 import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.DegreesPerSecond;
 import static edu.wpi.first.units.Units.Radians;
 import static edu.wpi.first.units.Units.Rotations;
 
@@ -15,6 +16,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,16 +38,19 @@ public class ArmSubsystem extends SubsystemBase {
         m_Encoder = new DutyCycleEncoder(ArmConstants.IDs.Encoder);
         wrist = new TalonFX(ArmConstants.IDs.Wrist);
         wristConfig = new TalonFXConfiguration();
+        wristConfig.CurrentLimits.StatorCurrentLimit = 20/2;
+        wristConfig.CurrentLimits.StatorCurrentLimitEnable = true;
         mmVolt = new MotionMagicVoltage(0);
         mmConfig = new MotionMagicConfigs();
         mmConfig = wristConfig.MotionMagic;
         mmConfig.MotionMagicCruiseVelocity = 800;
         mmConfig.MotionMagicAcceleration = 1000;
+        
 
         var slot0 = wristConfig.Slot0;
         slot0.kA = 0.0; 
-        slot0.kG = 0.017;
-        slot0.kV = 0.029;
+        slot0.kG = 0.018; //0.017
+        slot0.kV = 0.030; //0.029
         slot0.kP = 0.5 ; 
         slot0.kI = 0.0;
         slot0.kD = 0.0;    
@@ -53,6 +58,7 @@ public class ArmSubsystem extends SubsystemBase {
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         slot0.GravityType = GravityTypeValue.Arm_Cosine;
         wrist.getConfigurator().apply(wristConfig);
+        
 
         m_Encoder.setInverted(true);
 
@@ -65,7 +71,7 @@ public class ArmSubsystem extends SubsystemBase {
     }
 
     public Angle getAngle() {
-        return (Rotations.of(getPosition()).minus(ArmConstants.Offset)).times(180);
+        return (Rotations.of(getPosition()).minus(ArmConstants.Offset)).times(ArmConstants.GearRatio);
     }
 
     public boolean atSetpoint() {
@@ -74,7 +80,12 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void runAngle(Angle angle) {
         // angle is in output degrees
-        lastSetpoint = angle.times(180);
+        lastSetpoint = angle.times(ArmConstants.GearRatio);
+        if (lastSetpoint.lt(Degrees.of(0))){
+            lastSetpoint = Degrees.of(0);
+        } else if (lastSetpoint.gt(Degrees.of(150))){
+            lastSetpoint = Degrees.of(150);
+        }
         wrist.setControl(mmVolt.withPosition(lastSetpoint));
     }
 
@@ -89,6 +100,11 @@ public class ArmSubsystem extends SubsystemBase {
         //108 -> 19:30 = 170.5:1
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("WristAngleEncoder", getAngle().in(Rotations));
+        SmartDashboard.putNumber("WristCurrentStator", wrist.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("WristCurrentStall", wrist.getMotorStallCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("WristCurrentSupply", wrist.getSupplyCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("WristCurrentTorque", wrist.getTorqueCurrent().getValueAsDouble());
+
     }
 
     public class ArmCommands {
@@ -110,6 +126,11 @@ public class ArmSubsystem extends SubsystemBase {
 
         public Command Intake() {
             return run(() -> runAngle(ArmConstants.Setpoints.Intake));
+        }
+        public Command changeSetpointBy(Angle D) {
+            return runOnce(() -> {
+                runAngle(lastSetpoint.plus(D));
+            });
         }
     }
 }

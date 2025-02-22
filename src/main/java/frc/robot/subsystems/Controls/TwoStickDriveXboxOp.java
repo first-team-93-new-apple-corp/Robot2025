@@ -97,5 +97,25 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         return operatorController.back();
     }
 
+    @Override
+    public Trigger manUpElev() {
+        return operatorController.povUp();
+    }
+
+    @Override
+    public Trigger manDownElev() {
+        return operatorController.povDown();
+    }
+
+    @Override
+    public Trigger manUpArm() {
+        return operatorController.povRight();
+    }
+
+    @Override
+    public Trigger manDownArm() {
+        return operatorController.povLeft();
+    }
+
 
 }

@@ -23,8 +23,8 @@ public class Constants {
             }
 
             public static Camera FrontCam = new Camera("FrontCam",
-                    new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
-                            new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
+                    new Transform3d(new Translation3d(Inches.of(11), Inches.of(12.5), Inches.of(11.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(0))));
             public static Camera RearCam = new Camera("RearCam", new Transform3d(new Translation3d(0, 0, 0),
                     new Rotation3d(0, 0, 0)));
         }
@@ -39,8 +39,9 @@ public class Constants {
     public class ArmConstants {
 
         // Offset
+        public static final double GearRatio = 121.5;
         public static final Angle Offset = Degrees.of(90
-        );
+        ).minus(Rotations.of(15));
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;

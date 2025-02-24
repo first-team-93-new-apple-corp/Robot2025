@@ -4,36 +4,25 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.commands.PathfindingCommand;
-import com.pathplanner.lib.pathfinding.LocalADStar;
-import com.pathplanner.lib.pathfinding.Pathfinding;
-
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
-  // private final LED m_LED;
+
 
   public Robot() {
     m_robotContainer = new RobotContainer();
-    // PathfindingCommand.warmupCommand().schedule();
-    // Pathfinding.setPathfinder(new LocalADStar());
-    // addPeriodic(() -> m_robotContainer.m_LED.twoColorCycle(5, Color.kGreen, Color.kBlack, 144, 25), 0.6, 0.005);
   }
 
   @Override
   public void robotPeriodic() {
-    SmartDashboard.putData(CommandScheduler.getInstance());
-    if (m_robotContainer.m_DriveSubsystem.getCurrentCommand() != null) {
-      SmartDashboard.putString("Swerve", m_robotContainer.m_DriveSubsystem.getCurrentCommand().getName());
-    } else {
-      SmartDashboard.putString("Swerve", "---");
-    }
+
     CommandScheduler.getInstance().run();
+
+    m_robotContainer.updateValues();
   }
 
   @Override
@@ -51,7 +40,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-  
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -72,7 +61,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    
+
   }
 
   @Override
@@ -99,7 +88,15 @@ public class Robot extends TimedRobot {
   public void testExit() {
   }
 
-  @Override
-  public void simulationPeriodic() {
-  }
+  // @Override
+  // public void simulationPeriodic() {
+  // m_robotContainer.updateSimValues();
+  // m_ElevatorSubsystem.m_elevatorSim.setInput(m_ElevatorSubsystem.elevatorMotor.getMotorVoltage().getValueAsDouble()
+  // * RobotController.getBatteryVoltage());
+  // m_ElevatorSubsystem.m_elevatorSim.update(0.020);
+
+  // RoboRioSim.setVInVoltage(
+  // BatterySim.calculateDefaultBatteryLoadedVoltage(m_ElevatorSubsystem.m_elevatorSim.getCurrentDrawAmps()));
+
+  // }
 }

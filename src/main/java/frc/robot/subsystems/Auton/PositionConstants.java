@@ -18,14 +18,14 @@ public class PositionConstants {
     }
 
     public class startingPoses {
-        private static final double startingLineBlue = 2.9;
+        private static final double startingLineBlue = 7.2;
 
-        public static final Pose2d leftBlue = new Pose2d(startingLineBlue, 7.624, towardAlliance);
-        public static final Pose2d rightBlue = new Pose2d(startingLineBlue, .475, towardAlliance); 
+        public static final Pose2d leftBlue = new Pose2d(startingLineBlue, 7.55, towardAlliance);
+        public static final Pose2d rightBlue = new Pose2d(startingLineBlue, 0.475, towardAlliance); 
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
 
-        public static final Pose2d top() {
+        public static final Pose2d Left() {
             Optional<Alliance> ally = DriverStation.getAlliance();
             if (ally.isPresent()) {
                 if (ally.get() == Alliance.Red) {

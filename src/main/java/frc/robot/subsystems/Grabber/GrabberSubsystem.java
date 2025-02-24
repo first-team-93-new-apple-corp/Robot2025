@@ -1,12 +1,12 @@
 package frc.robot.subsystems.Grabber;
 
-import frc.robot.Constants.GrabberConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Constants.GrabberConstants;
 
 public class GrabberSubsystem implements Subsystem {
     SparkMax motor;

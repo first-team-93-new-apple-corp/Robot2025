@@ -4,6 +4,7 @@ package frc.robot;
 import edu.wpi.first.units.AngleUnit;
 import edu.wpi.first.units.DistanceUnit;
 import edu.wpi.first.units.measure.Angle;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.units.measure.Per;
 
@@ -23,10 +24,11 @@ public class Constants {
             }
 
             public static Camera FrontCam = new Camera("FrontCam",
-                    new Transform3d(new Translation3d(Inches.of(-0.5), Inches.of(12.5), Inches.of(6.5)),
-                            new Rotation3d(Degrees.of(0), Degrees.of(-20), Degrees.of(0))));
-            public static Camera RearCam = new Camera("RearCam", new Transform3d(new Translation3d(0, 0, 0),
-                    new Rotation3d(0, 0, 0)));
+                    new Transform3d(new Translation3d(Inches.of(11), Inches.of(12.5), Inches.of(11.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(0))));
+            public static Camera RearCam = new Camera("RearCam",
+                    new Transform3d(new Translation3d(Inches.of(-11), Inches.of(-12.5), Inches.of(11.5)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
         }
 
     }
@@ -39,8 +41,9 @@ public class Constants {
     public class ArmConstants {
 
         // Offset
-        public static final Angle Offset = Degrees.of(90
-        );
+        public static final double GearRatio = 121.5;
+        public static final Angle Offset = Degrees.of(178);
+
         // Motor ID
         public class IDs {
             public static final int Wrist = 17;
@@ -52,11 +55,12 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
-            public static final Angle L1 = Degrees.of(95); // TODO find angles
-            public static final Angle L2 = Degrees.of(150);
+            public static final Angle GroundIntake = Degrees.of(-3); // TODO find angles
+            public static final Angle L1 = Degrees.of(5); // TODO find angles
+            public static final Angle L2 = Degrees.of(60);
             public static final Angle L3 = L2;
-            public static final Angle L4 = Degrees.of(120);
-            public static final Angle Intake = Degrees.of(0); // -90 degree from ground
+            public static final Angle L4 = Degrees.of(38.5);
+            public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
         }
     }
 
@@ -66,8 +70,8 @@ public class Constants {
         // Input ID
         public static final int LimitSwitch = 8;
         // Speed constants
-        public static final double intakeSpeed = -0.4;
-        public static final double outakeSpeed = 0.25;
+        public static final double intakeSpeed = -0.8;
+        public static final double outakeSpeed = 0.35;
     }
 
     public class ElevatorConstants {
@@ -76,15 +80,17 @@ public class Constants {
 
         // THESE ARE THE VALUES AS OF 2/19/2025 @ 11:04 AM
         public static final int InnerTopChannel = 2;
-        public static final int InnerBottomChannel = 0; 
+        public static final int InnerBottomChannel = 0;
         public static final int OuterTopChannel = 1;
-        public static final int OuterBottomChannel = 3; 
+        public static final int OuterBottomChannel = 3;
 
-        public static final Distance Bottom = Centimeters.of(25).minus(Inches.of(8));
+        public static final Distance Bottom = Inches.of(1);
         public static final Distance L1Setpoint = Centimeters.of(46);
-        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(12));
+        public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(14));
         public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(12.5));
         public static final Distance L4Setpoint = Centimeters.of(173);
+        public static final Distance Algea1 = Centimeters.of(90);
+        public static final Distance Algea2 = Centimeters.of(130);
         public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
         public static final double SprocketRadiusInches = 1.37 / 2;
 
@@ -94,7 +100,7 @@ public class Constants {
         public static final Per<DistanceUnit, AngleUnit> InnerRotationsToInches = Inches
                 .of(2 * Math.PI * SprocketRadiusInches).div(Rotations.of(9));
 
-        public enum ElevatorStrategy{
+        public enum ElevatorStrategy {
             stageOneBias,
             carriageBias,
             noBias,

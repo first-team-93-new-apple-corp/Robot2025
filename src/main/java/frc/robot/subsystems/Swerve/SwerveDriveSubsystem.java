@@ -120,8 +120,8 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                                                                            // feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
-                        new PIDConstants(3.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(3.0, 0.0, 0.0) // Rotation PID constants
+                        new PIDConstants(2.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(2.0, 0.0, 0.0) // Rotation PID constants
                 ),
                 config, // The robot configuration
                 () -> {
@@ -165,7 +165,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                         ABSupplier = "A";
                     }
                 }
-                PathConstraints constraints = new PathConstraints(MaxSpeed.minus(MetersPerSecond.of(3)), MaxAcceleration.minus(MetersPerSecondPerSecond.of(10)), MaxAngularRate, MaxAngularAcceleration);
+                PathConstraints constraints = new PathConstraints(MaxSpeed.minus(MetersPerSecond.of(3.5)), MaxAcceleration.minus(MetersPerSecondPerSecond.of(10)), MaxAngularRate, MaxAngularAcceleration);
                 Path = ReefChooser.Choose(ABSupplier, getState().Pose, getAlliance());
                 return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints);
             } catch (Exception e) {

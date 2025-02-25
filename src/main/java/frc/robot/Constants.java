@@ -84,7 +84,7 @@ public class Constants {
         public static final Distance L2Setpoint = Centimeters.of(81).minus(Inches.of(14));
         public static final Distance L3Setpoint = Centimeters.of(121).minus(Inches.of(12.5));
         public static final Distance L4Setpoint = Centimeters.of(173);
-        public static final Distance Algea1 = Centimeters.of(90);
+        public static final Distance Algea1 = Centimeters.of(80);
         public static final Distance Algea2 = Centimeters.of(130);
         public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
         public static final double SprocketRadiusInches = 1.37 / 2;

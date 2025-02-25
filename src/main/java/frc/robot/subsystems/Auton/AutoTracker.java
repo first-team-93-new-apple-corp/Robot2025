@@ -18,6 +18,7 @@ import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Swerve.TunerConstants;
@@ -70,7 +71,9 @@ public class AutoTracker extends SequentialCommandGroup {
             return Commands.print("Intake");
 
         } else {
-            return subsystems.intakeCommand();
+            return Commands.print("Intake");
+            // CommandScheduler.getInstance().clearComposedCommands();
+            // return subsystems.intakeCommand();
         }
     }
 

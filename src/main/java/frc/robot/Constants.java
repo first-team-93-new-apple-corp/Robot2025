@@ -32,11 +32,6 @@ public class Constants {
 
     }
 
-    public class ClimberConstants {
-        public static final int Climber = 19;
-        public static final int ClimberEncoder = 9;
-    }
-
     public class ArmConstants {
 
         // Offset
@@ -104,6 +99,17 @@ public class Constants {
             carriageBias,
             noBias,
         }
+    }
+
+    public class ClimberConstants {
+        public static final int climberMotorID = 19;
+        public static final int climberEncoderID = 9;
+
+        public static final double outSetpoint = 10;
+        public static final double inSetpoint = 120;
+
+        public static final double encoderOffset = 0; //TODO find offset
+
     }
 
     public class Drivetrain {

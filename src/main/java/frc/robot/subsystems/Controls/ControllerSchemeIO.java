@@ -73,6 +73,10 @@ public interface ControllerSchemeIO {
 
     public Trigger Prime();
 
+    public Trigger climberIn();
+
+    public Trigger climberOut();
+
     public default double DriveLeft() {
         return InputLeft() * MaxSpeed;
     }

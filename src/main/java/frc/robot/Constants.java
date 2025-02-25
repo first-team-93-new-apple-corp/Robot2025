@@ -24,18 +24,13 @@ public class Constants {
             }
 
             public static Camera FrontCam = new Camera("FrontCam",
-                    new Transform3d(new Translation3d(Inches.of(11), Inches.of(12.5), Inches.of(11.5)),
+                    new Transform3d(new Translation3d(Inches.of(12.5), Inches.of(-11.125), Inches.of(11.25)),
                             new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(0))));
             public static Camera RearCam = new Camera("RearCam",
-                    new Transform3d(new Translation3d(Inches.of(-11), Inches.of(-12.5), Inches.of(11.5)),
+                    new Transform3d(new Translation3d(Inches.of(-12.5), Inches.of(11.125), Inches.of(11.25)),
                             new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
         }
 
-    }
-
-    public class ClimberConstants {
-        public static final int Climber = 19;
-        public static final int ClimberEncoder = 9;
     }
 
     public class ArmConstants {
@@ -105,6 +100,17 @@ public class Constants {
             carriageBias,
             noBias,
         }
+    }
+
+    public class ClimberConstants {
+        public static final int climberMotorID = 19;
+        public static final int climberEncoderID = 9;
+
+        public static final double outSetpoint = 10;
+        public static final double inSetpoint = 120;
+
+        public static final double encoderOffset = 0; //TODO find offset
+
     }
 
     public class Drivetrain {

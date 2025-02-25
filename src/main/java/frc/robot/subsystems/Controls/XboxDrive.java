@@ -142,6 +142,18 @@ public class XboxDrive implements ControllerSchemeIO {
     }
 
     @Override
+    public Trigger climberIn() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'climberIn'");
+    }
+
+    @Override
+    public Trigger climberOut() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
+    }
+
+    @Override
     public Trigger robotRel() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'robotRel'");

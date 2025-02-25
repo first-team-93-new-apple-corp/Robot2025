@@ -13,15 +13,10 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
-import frc.robot.Utilities.CommandLimitSwitchDio;
 import frc.robot.commands.intake;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -33,6 +28,7 @@ import frc.robot.subsystems.Controls.ControllerSchemeIO;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
+import frc.robot.subsystems.VisionIO.CameraFactory;
 import frc.robot.subsystems.VisionIO.Vision;
 
 public class RobotContainer {
@@ -66,6 +62,9 @@ public class RobotContainer {
 
     // private final Vision frontCamera;
 
+    private Vision frontCamera;
+    private Vision rearCamera;
+
     private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
 
@@ -75,10 +74,10 @@ public class RobotContainer {
         m_DriveSubsystem.registerTelemetry(logger::telemeterize);
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
-        // frontCamera = new CameraFactory().build(PoseSupplier,
-        // Constants.Inputs.Cameras.FrontCam);
-        // rearCamera = new CameraFactory().build(PoseSupplier,
-        // Constants.Inputs.Cameras.RearCam);
+        frontCamera = new CameraFactory().build(PoseSupplier,
+        Constants.Inputs.Cameras.FrontCam);
+        rearCamera = new CameraFactory().build(PoseSupplier,
+        Constants.Inputs.Cameras.RearCam);
 
         // AUTON
         m_DriveSubsystem.configureAuto();
@@ -110,11 +109,16 @@ public class RobotContainer {
         // Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
-        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
+        
         Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
+
+        Driver.removeAlgea().and(Driver.superStructureL2()).onTrue(m_ElevatorSubsystem.Commands.Algea1().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.removeAlgea().and(Driver.superStructureL3()).onTrue(m_ElevatorSubsystem.Commands.Algea2().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
+
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake().whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
@@ -125,10 +129,12 @@ public class RobotContainer {
         Driver.climberIn().onFalse(m_ClimberSubsystem.climberCommands.stop());
         Driver.climberOut().onFalse(m_ClimberSubsystem.climberCommands.stop());
         Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(m_Intake);
+
         // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
         // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));
         // Driver.manDownArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-1)));
+        
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -149,8 +155,8 @@ public class RobotContainer {
     public void updateValues() {
 
         // Comment out this line if feild relitive becomes an issue.
-        // feedVision(frontCamera);
-        // feedVision(rearCamera);
+        feedVision(frontCamera);
+        feedVision(rearCamera);
 
 
     }

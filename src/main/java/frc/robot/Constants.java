@@ -23,10 +23,10 @@ public class Constants {
             }
 
             public static Camera FrontCam = new Camera("FrontCam",
-                    new Transform3d(new Translation3d(Inches.of(11), Inches.of(12.5), Inches.of(11.5)),
+                    new Transform3d(new Translation3d(Inches.of(12.5), Inches.of(-11.125), Inches.of(11.25)),
                             new Rotation3d(Degrees.of(0), Degrees.of(-10), Degrees.of(0))));
             public static Camera RearCam = new Camera("RearCam",
-                    new Transform3d(new Translation3d(Inches.of(-11), Inches.of(-12.5), Inches.of(11.5)),
+                    new Transform3d(new Translation3d(Inches.of(-12.5), Inches.of(11.125), Inches.of(11.25)),
                             new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
         }
 

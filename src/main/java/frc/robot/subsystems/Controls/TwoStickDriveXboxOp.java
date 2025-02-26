@@ -18,9 +18,8 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         operatorController = new CommandXboxController(opPort);
     }
 
-
-    public double deadzone(double value){
-        if(Math.abs(value) < Constants.Thrustmaster.Deadzone){
+    public double deadzone(double value) {
+        if (Math.abs(value) < Constants.Thrustmaster.Deadzone) {
             return 0.0;
         }
         return value;
@@ -127,7 +126,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger Prime(){
+    public Trigger Prime() {
         return operatorController.rightBumper();
     }
 
@@ -142,6 +141,5 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
     }
-
 
 }

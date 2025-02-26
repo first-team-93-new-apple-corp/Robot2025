@@ -13,8 +13,8 @@ public class XboxDrive implements ControllerSchemeIO {
         Xbox = new CommandXboxController(port);
     }
 
-    public double deadzone(double value){
-        if(Math.abs(value) < Constants.Thrustmaster.Deadzone){
+    public double deadzone(double value) {
+        if (Math.abs(value) < Constants.Thrustmaster.Deadzone) {
             return 0.0;
         }
         return value;
@@ -60,11 +60,12 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger Brake() {
         return Xbox.rightTrigger();
     }
-    
+
     @Override
     public Trigger robotRel() {
         return Xbox.a();
     }
+
     @Override
     public Trigger autoAlign() {
         return Xbox.x();

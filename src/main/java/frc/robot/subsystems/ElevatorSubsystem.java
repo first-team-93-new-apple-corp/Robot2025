@@ -112,7 +112,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
-        setSetpoints(D, ElevatorStrategy.stageOneBias);
+        setSetpoints(D, ElevatorStrategy.noBias);
     }
 
     private void setSetpoints(Distance D, ElevatorStrategy Strategy) {

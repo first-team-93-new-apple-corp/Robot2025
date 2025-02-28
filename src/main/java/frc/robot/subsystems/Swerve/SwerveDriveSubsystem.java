@@ -46,8 +46,8 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private double m_lastSimTime;
     private LinearVelocity MaxSpeed = TunerConstants.kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
     private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
-    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(14.715);
-    private AngularAcceleration MaxAngularAcceleration = RadiansPerSecondPerSecond.of(68.931);
+    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
+    private AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
 
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
@@ -165,7 +165,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                         ABSupplier = "A";
                     }
                 }
-                PathConstraints constraints = new PathConstraints(MaxSpeed.minus(MetersPerSecond.of(3.5)), MaxAcceleration.minus(MetersPerSecondPerSecond.of(10)), MaxAngularRate, MaxAngularAcceleration);
+                PathConstraints constraints = new PathConstraints(MaxSpeed.minus(MetersPerSecond.of(3.5)), MaxAcceleration.minus(MetersPerSecondPerSecond.of(7)), MaxAngularRate, MaxAngularAcceleration);
                 Path = ReefChooser.Choose(ABSupplier, getState().Pose, getAlliance());
                 return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints);
             } catch (Exception e) {

@@ -3,6 +3,7 @@ package frc.robot.subsystems.Controls;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 
 public class XboxDrive implements ControllerSchemeIO {
 
@@ -12,21 +13,26 @@ public class XboxDrive implements ControllerSchemeIO {
         Xbox = new CommandXboxController(port);
     }
 
+    public double deadzone(double value) {
+        if (Math.abs(value) < Constants.Thrustmaster.Deadzone) {
+            return 0.0;
+        }
+        return value;
+    }
+
     @Override
     public double InputLeft() {
-        return -Xbox.getLeftY();
+        return deadzone(-Xbox.getLeftY());
     }
 
     @Override
     public double InputUp() {
-        return -Xbox.getLeftX();
+        return deadzone(-Xbox.getLeftX());
     }
-
-
 
     @Override
     public double InputTheta() {
-        return -Xbox.getRightX();
+        return deadzone(-Xbox.getRightX());
     }
 
     @Override
@@ -54,11 +60,12 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger Brake() {
         return Xbox.rightTrigger();
     }
-    
+
     @Override
     public Trigger robotRel() {
         return Xbox.a();
     }
+
     @Override
     public Trigger autoAlign() {
         return Xbox.x();

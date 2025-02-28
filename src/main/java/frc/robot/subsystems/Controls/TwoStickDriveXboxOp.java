@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants;
 
 public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
@@ -17,19 +18,26 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         operatorController = new CommandXboxController(opPort);
     }
 
+    public double deadzone(double value) {
+        if (Math.abs(value) < Constants.Thrustmaster.Deadzone) {
+            return 0.0;
+        }
+        return value;
+    }
+
     @Override
     public double InputLeft() {
-        return -LeftStick.getY();
+        return deadzone(-LeftStick.getY());
     }
 
     @Override
     public double InputUp() {
-        return -LeftStick.getX();
+        return deadzone(-LeftStick.getX());
     }
 
     @Override
     public double InputTheta() {
-        return -RightStick.getX();
+        return deadzone(-RightStick.getX());
     }
 
     @Override
@@ -118,7 +126,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger Prime(){
+    public Trigger Prime() {
         return operatorController.rightBumper();
     }
 
@@ -133,6 +141,5 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
     }
-
 
 }

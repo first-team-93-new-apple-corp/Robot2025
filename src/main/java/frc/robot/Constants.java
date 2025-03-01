@@ -50,6 +50,7 @@ public class Constants {
             public static final double lowLimit = 0.0;
             public static final double highLimit = 0.0;
             // Setpoints
+            public static final Angle Vertical = Degrees.of(90); // TODO find angles
             public static final Angle GroundIntake = Degrees.of(-3); // TODO find angles
             public static final Angle L1 = Degrees.of(5); // TODO find angles
             public static final Angle L2 = Degrees.of(60);
@@ -65,8 +66,8 @@ public class Constants {
         // Input ID
         public static final int LimitSwitch = 8;
         // Speed constants
-        public static final double intakeSpeed = -0.8;
-        public static final double outakeSpeed = 0.7;
+        public static final double intakeSpeed = -.7;
+        public static final double outakeSpeed = 1;
     }
 
     public class ElevatorConstants {
@@ -74,10 +75,10 @@ public class Constants {
         public static final int innerElevatorMotorID = 15;
 
         // THESE ARE THE VALUES AS OF 2/19/2025 @ 11:04 AM
-        public static final int InnerTopChannel = 2;
-        public static final int InnerBottomChannel = 0;
-        public static final int OuterTopChannel = 1;
-        public static final int OuterBottomChannel = 3;
+        public static final int InnerTopChannel = 3; 
+        public static final int InnerBottomChannel = 0; 
+        public static final int OuterTopChannel = 1; 
+        public static final int OuterBottomChannel = 2; 
 
         public static final Distance Bottom = Inches.of(1);
         public static final Distance L1Setpoint = Centimeters.of(46);

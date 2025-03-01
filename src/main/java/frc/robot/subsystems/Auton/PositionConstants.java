@@ -22,6 +22,8 @@ public class PositionConstants {
 
         public static final Pose2d leftBlue = new Pose2d(startingLineBlue, 7.55, towardAlliance);
         public static final Pose2d rightBlue = new Pose2d(startingLineBlue, 0.475, towardAlliance); 
+        public static final Pose2d CenterCoralBlue = new Pose2d(1.232, 4.033, awayFromAlliance); 
+        public static final Pose2d CenterCoralRed = FlippingUtil.flipFieldPose(CenterCoralBlue);
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
 
@@ -38,6 +40,21 @@ public class PositionConstants {
                 }
             } else {
                 return leftBlue;
+            }
+        }
+        public static final Pose2d CeneterCoral() {
+            Optional<Alliance> ally = DriverStation.getAlliance();
+            if (ally.isPresent()) {
+                if (ally.get() == Alliance.Red) {
+                    return CenterCoralRed;
+                }
+                if (ally.get() == Alliance.Blue) {
+                    return CenterCoralBlue;
+                } else {
+                    return CenterCoralBlue;
+                }
+            } else {
+                return CenterCoralBlue;
             }
         }
         public static final Pose2d right() {

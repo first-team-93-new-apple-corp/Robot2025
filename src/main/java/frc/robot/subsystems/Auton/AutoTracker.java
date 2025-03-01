@@ -1,5 +1,7 @@
 package frc.robot.subsystems.Auton;
 
+import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
+import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
@@ -28,13 +30,13 @@ public class AutoTracker extends SequentialCommandGroup {
     PathPlannerPath intakingpath;
     PathPlannerPath scoringPath;
 
-    private LinearVelocity MaxSpeed = TunerConstants.kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
+    private LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
     private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
-    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(14.715);
-    private AngularAcceleration MaxAngularAcceleration = RadiansPerSecondPerSecond.of(68.931);
+    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
+    private AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
+    
+    PathConstraints constraints = new PathConstraints(MaxSpeed.div(9), MaxAcceleration.div(12), MaxAngularRate.div(9), MaxAngularAcceleration.div(9));
 
-    PathConstraints constraints = new PathConstraints(MaxSpeed, MaxAcceleration,
-            MaxAngularRate, MaxAngularAcceleration); // Vision m_Vision = new Vision();
 
     private AutoSubsystems subsystems;
 
@@ -50,11 +52,18 @@ public class AutoTracker extends SequentialCommandGroup {
         this(subsystems, paths, initalPose, preLoad, true);
     }
 
+    Command L2() {
+        if (Utils.isSimulation()) {
+            return Commands.print("to L4");
+        } else {
+            return subsystems.armSubsystem().Commands.L2().alongWith(subsystems.elevatorSubsystem().Commands.L2());
+        }
+    }
     Command L4() {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
         } else {
-            return subsystems.armSubsystem().Commands.L4().alongWith(subsystems.elevatorSubsystem().Commands.L4());
+            return subsystems.armSubsystem().Commands.L2().alongWith(subsystems.elevatorSubsystem().Commands.L2());
         }
     }
 
@@ -62,6 +71,7 @@ public class AutoTracker extends SequentialCommandGroup {
         if (Utils.isSimulation()) {
             return Commands.print("to L1");
         } else {
+            
             return subsystems.armSubsystem().Commands.L1().alongWith(subsystems.elevatorSubsystem().Commands.L1());
         }
     }

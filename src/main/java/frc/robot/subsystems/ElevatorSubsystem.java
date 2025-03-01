@@ -92,8 +92,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
 
-        OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
-        InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+        // OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
+        // InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
         SmartDashboard.putData("zero carriage", Commands.zeroInnerMotor());
         SmartDashboard.putData("zero ele", Commands.zeroOuterMotor());
         SmartDashboard.putData("Coast carriage", Commands.brakeInnerMotor(false));
@@ -201,6 +201,13 @@ public class ElevatorSubsystem extends SubsystemBase {
         public Command L2() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L2Setpoint);
+
+            });
+        }
+
+        public Command L2(ElevatorStrategy strategy) {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.L2Setpoint, strategy);
 
             });
         }

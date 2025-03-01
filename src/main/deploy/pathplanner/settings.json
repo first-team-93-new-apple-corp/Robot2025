@@ -7,8 +7,8 @@
     "Coral Locations"
   ],
   "autoFolders": [],
-  "defaultMaxVel": 2.5,
-  "defaultMaxAccel": 4.0,
+  "defaultMaxVel": 0.5,
+  "defaultMaxAccel": 0.5,
   "defaultMaxAngVel": 681.074931,
   "defaultMaxAngAccel": 3949.0,
   "defaultNominalVoltage": 12.0,

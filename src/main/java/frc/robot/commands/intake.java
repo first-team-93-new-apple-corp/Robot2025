@@ -38,7 +38,7 @@ public class intake extends SequentialCommandGroup {
                         .alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())))
                         .until(() -> m_IntakeLimit.triggered()));
 
-        addCommands(m_Elev.Commands.L2().alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
+        addCommands(m_Elev.Commands.L2(ElevatorStrategy.stageOneBias).alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
         addCommands(m_Arm.Commands.L2());
     }
 }

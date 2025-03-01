@@ -138,6 +138,7 @@ public class RobotContainer {
         Driver.climberOut().onFalse(m_ClimberSubsystem.climberCommands.stop());
         Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(m_Intake);
 
+        Driver.verticalCoralIntake().and(Driver.Prime()).onTrue(m_ElevatorSubsystem.Commands.Bottom().alongWith(m_ArmSubsystem.Commands.VerticalStow()));
         // Driver.manUpElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(1)));
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
         // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));

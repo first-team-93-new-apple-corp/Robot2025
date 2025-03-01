@@ -145,6 +145,10 @@ public class ArmSubsystem extends SubsystemBase {
             return runOnce(() -> runAngle(ArmConstants.Setpoints.GroundIntake));
         }
 
+        public Command VerticalStow() {
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.Vertical));
+        }
+
         public Command changeSetpointBy(Angle D) {
             return runOnce(() -> {
                 runAngle(lastSetpoint.plus(D));

@@ -120,8 +120,10 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                                                                            // feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
-                        new PIDConstants(5, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants
+                        // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
+                        // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
+                        new PIDConstants(1, 0.0, 0.1), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {

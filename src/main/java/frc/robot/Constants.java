@@ -66,7 +66,7 @@ public class Constants {
         public static final int LimitSwitch = 8;
         // Speed constants
         public static final double intakeSpeed = -0.8;
-        public static final double outakeSpeed = 0.35;
+        public static final double outakeSpeed = 0.7;
     }
 
     public class ElevatorConstants {

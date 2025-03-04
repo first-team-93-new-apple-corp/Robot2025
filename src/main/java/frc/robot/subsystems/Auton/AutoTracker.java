@@ -92,8 +92,8 @@ public class AutoTracker extends SequentialCommandGroup {
             return Commands.print("outtake");
 
         } else {
-            return subsystems.elevatorSubsystem().Commands.L3()
-                    .alongWith(subsystems.grabberSubsystem().Commands.outtake());
+            return (subsystems.elevatorSubsystem().Commands.outtake().alongWith(Commands.waitSeconds(1)))
+                    .alongWith(subsystems.grabberSubsystem().Commands.outtake().withDeadline(Commands.waitSeconds(1)));
         }
     }
 
@@ -124,7 +124,7 @@ public class AutoTracker extends SequentialCommandGroup {
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
                 addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints)
-                        .alongWith(L1()));
+                        .alongWith(Commands.waitSeconds(.5).andThen(L1())));
                 addCommands(Intake());
                 addCommands(Commands.print("intake"));
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)

@@ -135,9 +135,9 @@ public class AutoDirector {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("C2", "R6B"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R6A");
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.CeneterCoral(), "R6A");
 
-    return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.Left());
+    return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.CeneterCoral());
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

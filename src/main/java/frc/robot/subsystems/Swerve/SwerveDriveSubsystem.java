@@ -108,9 +108,9 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 () -> getState().Speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> setControl(
-                        autoRequest.withSpeeds(speeds)
-                                .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                                .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
+                        autoRequest.withSpeeds(speeds)),
+                                // .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                                // .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
                                                                                                            // ChassisSpeeds.
                                                                                                            // Also
                                                                                                            // optionally

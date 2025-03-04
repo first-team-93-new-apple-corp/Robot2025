@@ -34,9 +34,9 @@ public class AutoTracker extends SequentialCommandGroup {
     private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
     private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
     private AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
-    
-    PathConstraints constraints = new PathConstraints(MaxSpeed.div(9), MaxAcceleration.div(12), MaxAngularRate.div(9), MaxAngularAcceleration.div(9));
 
+    PathConstraints constraints = new PathConstraints(MaxSpeed.div(9), MaxAcceleration.div(12), MaxAngularRate.div(9),
+            MaxAngularAcceleration.div(9));
 
     private AutoSubsystems subsystems;
 
@@ -59,6 +59,7 @@ public class AutoTracker extends SequentialCommandGroup {
             return subsystems.armSubsystem().Commands.L2().alongWith(subsystems.elevatorSubsystem().Commands.L2());
         }
     }
+
     Command L4() {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
@@ -71,7 +72,7 @@ public class AutoTracker extends SequentialCommandGroup {
         if (Utils.isSimulation()) {
             return Commands.print("to L1");
         } else {
-            
+
             return subsystems.armSubsystem().Commands.L1().alongWith(subsystems.elevatorSubsystem().Commands.L1());
         }
     }
@@ -81,9 +82,9 @@ public class AutoTracker extends SequentialCommandGroup {
             return Commands.print("Intake");
 
         } else {
-            return Commands.print("Intake");
-            // CommandScheduler.getInstance().clearComposedCommands();
-            // return subsystems.intakeCommand();
+            return (subsystems.grabberSubsystem().Commands.intake()
+                    .alongWith(subsystems.armSubsystem().Commands.GroundIntake())
+                    .alongWith(subsystems.elevatorSubsystem().Commands.Bottom()));
         }
     }
 
@@ -124,8 +125,7 @@ public class AutoTracker extends SequentialCommandGroup {
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
                 addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints)
-                        .alongWith(Commands.waitSeconds(.5).andThen(L1())));
-                addCommands(Intake());
+                        .alongWith(Commands.waitSeconds(.5)).andThen(Commands.waitSeconds(.5)).andThen(Intake()));
                 addCommands(Commands.print("intake"));
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                         .alongWith(L4()));

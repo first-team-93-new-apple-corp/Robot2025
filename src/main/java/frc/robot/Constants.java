@@ -1,17 +1,12 @@
 
 package frc.robot;
 
-import edu.wpi.first.units.AngleUnit;
-import edu.wpi.first.units.DistanceUnit;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Angle;
-import edu.wpi.first.units.measure.Distance;
-import edu.wpi.first.units.measure.Per;
+import edu.wpi.first.units.*;
+import edu.wpi.first.units.measure.*;
 
-import static edu.wpi.first.units.Units.Centimeters;
-import static edu.wpi.first.units.Units.Degrees;
-import static edu.wpi.first.units.Units.Inches;
-import static edu.wpi.first.units.Units.Rotations;
+import static edu.wpi.first.units.Units.*;
+
+import com.pathplanner.lib.path.PathConstraints;
 
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
@@ -75,10 +70,10 @@ public class Constants {
         public static final int innerElevatorMotorID = 15;
 
         // THESE ARE THE VALUES AS OF 2/19/2025 @ 11:04 AM
-        public static final int InnerTopChannel = 3; 
-        public static final int InnerBottomChannel = 0; 
-        public static final int OuterTopChannel = 1; 
-        public static final int OuterBottomChannel = 2; 
+        public static final int InnerTopChannel = 3;
+        public static final int InnerBottomChannel = 0;
+        public static final int OuterTopChannel = 1;
+        public static final int OuterBottomChannel = 2;
 
         public static final Distance Bottom = Inches.of(1);
         public static final Distance L1Setpoint = Centimeters.of(46);
@@ -110,7 +105,7 @@ public class Constants {
         public static final double outSetpoint = 10;
         public static final double inSetpoint = 120;
 
-        public static final double encoderOffset = 0; //TODO find offset
+        public static final double encoderOffset = 0; // TODO find offset
 
     }
 
@@ -269,5 +264,27 @@ public class Constants {
             public static final int Reef_12_OClock = 21;
 
         }
+    }
+
+    public class AutoConstants {
+        public enum IntakingStrategy {
+            ground,
+            pup
+        }
+
+        public record AutoSector(
+                String intakingPath,
+                String ShootingPath) {
+        }
+
+        static LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
+        static AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
+        static LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
+        static AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
+
+        public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(2.5), MaxAcceleration.div(7),
+                MaxAngularRate.div(9),
+                MaxAngularAcceleration.div(9));
+
     }
 }

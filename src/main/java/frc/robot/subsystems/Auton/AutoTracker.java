@@ -4,39 +4,32 @@ import static edu.wpi.first.units.Units.DegreesPerSecondPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.MetersPerSecondPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
-import static edu.wpi.first.units.Units.RadiansPerSecondPerSecond;
-
 import java.util.List;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.subsystems.Swerve.TunerConstants;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.Constants.AutoConstants.AutoSector;
+import frc.robot.Constants.AutoConstants.IntakingStrategy;
 
 public class AutoTracker extends SequentialCommandGroup {
 
     PathPlannerPath intakingpath;
     PathPlannerPath scoringPath;
 
-    private LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
-    private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
-    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
-    private AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
-
-    PathConstraints constraints = new PathConstraints(MaxSpeed.div(9), MaxAcceleration.div(12), MaxAngularRate.div(9),
-            MaxAngularAcceleration.div(9));
+    PathConstraints constraints = AutoConstants.constraints;
 
     private AutoSubsystems subsystems;
 
@@ -52,7 +45,7 @@ public class AutoTracker extends SequentialCommandGroup {
         this(subsystems, paths, initalPose, preLoad, true);
     }
 
-    Command L2() {
+    private Command L2() {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
         } else {
@@ -60,15 +53,15 @@ public class AutoTracker extends SequentialCommandGroup {
         }
     }
 
-    Command L4() {
+    private Command L4() {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
         } else {
-            return subsystems.armSubsystem().Commands.L2().alongWith(subsystems.elevatorSubsystem().Commands.L2());
+            return subsystems.armSubsystem().Commands.L3().alongWith(subsystems.elevatorSubsystem().Commands.L3());
         }
     }
 
-    Command L1() {
+    private Command L1() {
         if (Utils.isSimulation()) {
             return Commands.print("to L1");
         } else {
@@ -77,18 +70,29 @@ public class AutoTracker extends SequentialCommandGroup {
         }
     }
 
-    Command Intake() {
+    private Command Intake(IntakingStrategy strategy) {
         if (Utils.isSimulation()) {
             return Commands.print("Intake");
 
         } else {
-            return (subsystems.grabberSubsystem().Commands.intake()
+            // ground
+            return ((subsystems.grabberSubsystem().Commands.intake()
                     .alongWith(subsystems.armSubsystem().Commands.GroundIntake())
-                    .alongWith(subsystems.elevatorSubsystem().Commands.Bottom()));
+                    .alongWith(subsystems.elevatorSubsystem().Commands.Bottom()))
+                    .alongWith((subsystems.driveSubsystem().Commands
+                            .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(.5))
+                            .withDeadline(Commands.waitSeconds(1.5))).andThen(subsystems.driveSubsystem().Commands
+                                    .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0))))
+                    .withDeadline(Commands.waitSeconds(1.6)))
+                    .andThen((subsystems.driveSubsystem().Commands
+                            .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                            .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands
+                                    .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                            .withDeadline(Commands.waitSeconds(.6)));
         }
     }
 
-    Command Outtake() {
+    private Command Outtake() {
         if (Utils.isSimulation()) {
             return Commands.print("outtake");
 
@@ -113,6 +117,11 @@ public class AutoTracker extends SequentialCommandGroup {
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                         .alongWith(L4()));
                 addCommands(Outtake());
+                addCommands((subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                        .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                        .withDeadline(Commands.waitSeconds(.6)));
             }
 
         } catch (Exception e) {
@@ -125,12 +134,20 @@ public class AutoTracker extends SequentialCommandGroup {
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
                 addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints)
-                        .alongWith(Commands.waitSeconds(.5)).andThen(Commands.waitSeconds(.5)).andThen(Intake()));
-                addCommands(Commands.print("intake"));
-                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                        .alongWith(L4()));
-                addCommands(Outtake());
+                        .alongWith(Commands.waitSeconds(2).andThen(L1())).withDeadline(Commands.waitSeconds(4)));
 
+                addCommands(Intake(IntakingStrategy.ground));
+                addCommands(Commands.print("intake"));
+
+                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                        .alongWith(L4()).withDeadline(Commands.waitSeconds(7)));
+                addCommands(Outtake());
+                addCommands((subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                        .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+
+                        .withDeadline(Commands.waitSeconds(.6)));
             } catch (Exception e) {
                 e.printStackTrace();
 

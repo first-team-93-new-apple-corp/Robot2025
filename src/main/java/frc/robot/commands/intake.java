@@ -15,12 +15,14 @@ public class intake extends SequentialCommandGroup {
     ElevatorSubsystem m_Elev;
     ArmSubsystem m_Arm;
     GrabberSubsystem m_Grab;
-    CommandLimitSwitchDio m_IntakeLimit = new CommandLimitSwitchDio(Constants.GrabberConstants.LimitSwitch);
+    CommandLimitSwitchDio m_IntakeLimit;
+    
 
     public intake(ElevatorSubsystem m_Elev, ArmSubsystem m_Arm, GrabberSubsystem m_Grab) {
         this.m_Elev = m_Elev;
         this.m_Arm = m_Arm;
         this.m_Grab = m_Grab;
+        this.m_IntakeLimit = GrabberSubsystem.limit;
 
         addCommands(m_Elev.Commands.intake().alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
         addCommands(Commands.print("Elevator has ended"));

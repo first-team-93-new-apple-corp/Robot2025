@@ -117,6 +117,11 @@ public class AutoTracker extends SequentialCommandGroup {
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                         .alongWith(L4()));
                 addCommands(Outtake());
+                if (subsystems.grabberSubsystem().hasCoral()) {
+                    addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                            .alongWith(L4()));
+                    addCommands(Outtake());
+                }
                 addCommands((subsystems.driveSubsystem().Commands
                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
                         .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands

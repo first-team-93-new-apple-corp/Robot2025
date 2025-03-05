@@ -133,7 +133,7 @@ public class Constants {
         public static final int Center_Button = 2;
         public static final int Left_Button = 3;
         public static final int Right_Button = 4;
-        public static final double Deadzone = 0.1;
+        public static final double Deadzone = 0.05;
 
         public class Left_Buttons {
             public static final int Top_Left = 11;

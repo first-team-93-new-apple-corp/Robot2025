@@ -97,6 +97,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         RobotConfig config = null;
         try {
             config = RobotConfig.fromGUISettings();
+            
         } catch (Exception e) {
             // Handle exception as needed
             e.printStackTrace();
@@ -123,7 +124,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                         // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
                         // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                         new PIDConstants(1, 0.0, 0.1), // Translation PID constants AUTO ALIGN
-                        new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
+                        new PIDConstants(3, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {

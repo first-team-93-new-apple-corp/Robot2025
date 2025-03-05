@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import frc.robot.Constants.AutoConstants.AutoSector;
 
 public class AutoDirector {
   AutoSubsystems subsystems;
@@ -134,10 +135,11 @@ public class AutoDirector {
   public Auto CenterSide2() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("C2", "R6B"));
+    paths.add(new AutoSector("C1", "R8A"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.CeneterCoral(), "R6A");
-
-    return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.CeneterCoral());
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.CenterLeft(), "R6A");
+    
+    return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.CenterLeft());
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

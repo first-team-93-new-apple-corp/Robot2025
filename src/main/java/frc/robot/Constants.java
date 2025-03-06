@@ -278,13 +278,13 @@ public class Constants {
         }
 
         static LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
-        static AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
         static LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
-        static AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
+        static AngularVelocity MaxAngularRate = RotationsPerSecond.of(3 / 4); // 3/4 of a rotation per second
+        static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(1.5);
 
         public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(2.5), MaxAcceleration.div(7),
-                MaxAngularRate.div(9),
-                MaxAngularAcceleration.div(9));
+                MaxAngularRate,
+                MaxAngularAcceleration);
 
     }
 }

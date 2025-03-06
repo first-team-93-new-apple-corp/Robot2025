@@ -117,16 +117,16 @@ public class AutoTracker extends SequentialCommandGroup {
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                         .alongWith(L4()));
                 addCommands(Outtake());
-                if (subsystems.grabberSubsystem().hasCoral()) {
-                    addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                            .alongWith(L4()));
-                    addCommands(Outtake());
-                }
+                // if (subsystems.grabberSubsystem().hasCoral()) {
+                //     addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                //             .alongWith(L4()));
+                //     addCommands(Outtake());
+                // } // This wouldnt work - Commands are complied at startime - which means that It would only check if we have coral
                 addCommands((subsystems.driveSubsystem().Commands
                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                        .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands
+                        .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(.6)));
+                        .withDeadline(Commands.waitSeconds(1)));
             }
 
         } catch (Exception e) {
@@ -138,21 +138,20 @@ public class AutoTracker extends SequentialCommandGroup {
                 intakingpath = PathPlannerPath.fromPathFile(autoSector.intakingPath());
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
-                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints)
-                        .alongWith(Commands.waitSeconds(2).andThen(L1())).withDeadline(Commands.waitSeconds(4)));
+                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
+                       addCommands(Commands.waitSeconds(2).alongWith(L1()));
 
                 addCommands(Intake(IntakingStrategy.ground));
                 addCommands(Commands.print("intake"));
 
                 addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                        .alongWith(L4()).withDeadline(Commands.waitSeconds(7)));
+                        .alongWith(L4()));
                 addCommands(Outtake());
                 addCommands((subsystems.driveSubsystem().Commands
                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                        .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands
+                        .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-
-                        .withDeadline(Commands.waitSeconds(.6)));
+                        .withDeadline(Commands.waitSeconds(1)));
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -160,4 +159,29 @@ public class AutoTracker extends SequentialCommandGroup {
         }
     }
 
+    //really coolio Code goes here (Ive got a plan)
+    public void addSector(AutoSector sector){
+        try {
+            intakingpath = PathPlannerPath.fromPathFile(sector.intakingPath());
+            scoringPath = PathPlannerPath.fromPathFile(sector.ShootingPath());
+
+            addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
+                   addCommands(Commands.waitSeconds(2).alongWith(L1()));
+
+            addCommands(Intake(IntakingStrategy.ground));
+            addCommands(Commands.print("intake"));
+
+            addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                    .alongWith(L4()));
+            addCommands(Outtake());
+            addCommands((subsystems.driveSubsystem().Commands
+                    .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                    .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                            .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                    .withDeadline(Commands.waitSeconds(1)));
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
 }

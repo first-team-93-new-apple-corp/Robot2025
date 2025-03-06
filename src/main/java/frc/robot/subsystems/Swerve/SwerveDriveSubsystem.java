@@ -9,6 +9,8 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -57,7 +59,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private boolean m_hasAppliedOperatorPerspective = false;
     private SysID sysID = new SysID();
     public SwerveCommands Commands = new SwerveCommands();
-    private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
+    private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity).withSteerRequestType(SteerRequestType.MotionMagicExpo);
     Alliance CurrentAlliance = Alliance.Blue;
 
     public SwerveDriveSubsystem getSubsystem() {
@@ -123,8 +125,8 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                 // holonomic drive trains
                         // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
                         // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
-                        new PIDConstants(1, 0.0, 0.1), // Translation PID constants AUTO ALIGN
-                        new PIDConstants(3, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
+                        new PIDConstants(2, 0.0, 0.1), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(2.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {

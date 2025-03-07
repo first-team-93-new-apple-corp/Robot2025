@@ -17,8 +17,10 @@ import edu.wpi.first.units.measure.AngularAcceleration;
 import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.AutoConstants.AutoSector;
@@ -105,7 +107,7 @@ public class AutoTracker extends SequentialCommandGroup {
     public AutoTracker(AutoSubsystems subsystems, List<AutoSector> paths, Supplier<Pose2d> initalPose, String preLoad,
             boolean Leave) {
         this.subsystems = subsystems;
-
+        boolean coral = SmartDashboard.getBoolean("Has Coral", false);
         addCommands(Commands.print("Auto Time"));
         addCommands(Commands.runOnce(() -> subsystems.driveSubsystem().resetPose(initalPose.get()),
                 subsystems.driveSubsystem()));
@@ -114,19 +116,32 @@ public class AutoTracker extends SequentialCommandGroup {
             // preload
             if (!(preLoad.equals("x"))) {
                 scoringPath = PathPlannerPath.fromPathFile(preLoad);
-                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                        .alongWith(L4()));
-                addCommands(Outtake());
-                // if (subsystems.grabberSubsystem().hasCoral()) {
+               addCommands(score(scoringPath)); 
+                
+
+                // coral = SmartDashboard.getBoolean("Has Coral", coral);
+                // addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                //         .alongWith(L4()));
+                // addCommands(Outtake());
+                // addCommands((subsystems.driveSubsystem().Commands
+                //         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                //         .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                //                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                //         .withDeadline(Commands.waitSeconds(1)));
+                // coral = SmartDashboard.getBoolean("Has Coral", coral);
+                // if (!coral) {
+                //     addCommands(Commands.print("Scored Succesfully"));
+                // } else {
                 //     addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                 //             .alongWith(L4()));
                 //     addCommands(Outtake());
-                // } // This wouldnt work - Commands are complied at startime - which means that It would only check if we have coral
-                addCommands((subsystems.driveSubsystem().Commands
-                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                        .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
-                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(1)));
+                //     addCommands((subsystems.driveSubsystem().Commands
+                //             .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                //             .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                //                     .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                //             .withDeadline(Commands.waitSeconds(1)));
+                // }
+
             }
 
         } catch (Exception e) {
@@ -138,20 +153,22 @@ public class AutoTracker extends SequentialCommandGroup {
                 intakingpath = PathPlannerPath.fromPathFile(autoSector.intakingPath());
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
-                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
-                       addCommands(Commands.waitSeconds(2).alongWith(L1()));
 
+                addCommands(Commands.print("going to intake [" + coral + "]"));
+                addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
+                addCommands(Commands.waitSeconds(2).alongWith(L1()));
                 addCommands(Intake(IntakingStrategy.ground));
                 addCommands(Commands.print("intake"));
 
-                addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                        .alongWith(L4()));
-                addCommands(Outtake());
                 addCommands((subsystems.driveSubsystem().Commands
                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
                         .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                         .withDeadline(Commands.waitSeconds(1)));
+                        
+                addCommands(score(scoringPath));
+
+
             } catch (Exception e) {
                 e.printStackTrace();
 
@@ -159,14 +176,14 @@ public class AutoTracker extends SequentialCommandGroup {
         }
     }
 
-    //really coolio Code goes here (Ive got a plan)
-    public void addSector(AutoSector sector){
+    // really coolio Code goes here (Ive got a plan)
+    public void addSector(AutoSector sector) {
         try {
             intakingpath = PathPlannerPath.fromPathFile(sector.intakingPath());
             scoringPath = PathPlannerPath.fromPathFile(sector.ShootingPath());
 
             addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
-                   addCommands(Commands.waitSeconds(2).alongWith(L1()));
+            addCommands(Commands.waitSeconds(2).alongWith(L1()));
 
             addCommands(Intake(IntakingStrategy.ground));
             addCommands(Commands.print("intake"));
@@ -183,5 +200,26 @@ public class AutoTracker extends SequentialCommandGroup {
             e.printStackTrace();
 
         }
+    }
+
+    public Command score(PathPlannerPath scoringPath) {
+        return AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                .alongWith(L4())
+                .andThen(Outtake())
+                .andThen((subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                        .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                        .withDeadline(Commands.waitSeconds(1)))
+                .andThen(new ConditionalCommand(Commands.print("Scored Succesfully"),
+                        AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(L4()).andThen(Outtake())
+                                .andThen((subsystems.driveSubsystem().Commands
+                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                                        .withDeadline(Commands.waitSeconds(.75)))
+                                        .andThen(subsystems.driveSubsystem().Commands
+                                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                                        .withDeadline(Commands.waitSeconds(1))),
+                        () -> !SmartDashboard.getBoolean("Has Coral", true)));
+
     }
 }

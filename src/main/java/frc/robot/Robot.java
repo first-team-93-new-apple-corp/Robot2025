@@ -9,16 +9,19 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Utilities.Elastic;
 import frc.robot.subsystems.Auton.WarmupCommand;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
   private final RobotContainer m_robotContainer;
+  private Elastic m_Elastic;
 
 
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    m_Elastic = new Elastic();
     SmartDashboard.putBoolean("Pathfinding Good", false);
     WarmupCommand.warmupCommand().schedule();
   }
@@ -47,7 +50,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
-
+    Elastic.selectTab("Autonomous");
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -65,6 +68,8 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    Elastic.selectTab("Teleoperated");
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

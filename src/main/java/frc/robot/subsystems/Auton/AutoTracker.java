@@ -19,6 +19,7 @@ import edu.wpi.first.units.measure.LinearAcceleration;
 import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -116,30 +117,29 @@ public class AutoTracker extends SequentialCommandGroup {
             // preload
             if (!(preLoad.equals("x"))) {
                 scoringPath = PathPlannerPath.fromPathFile(preLoad);
-               addCommands(score(scoringPath)); 
-                
+                addCommands(score(scoringPath));
 
                 // coral = SmartDashboard.getBoolean("Has Coral", coral);
                 // addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                //         .alongWith(L4()));
+                // .alongWith(L4()));
                 // addCommands(Outtake());
                 // addCommands((subsystems.driveSubsystem().Commands
-                //         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                //         .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
-                //                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                //         .withDeadline(Commands.waitSeconds(1)));
+                // .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                // .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                // .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                // .withDeadline(Commands.waitSeconds(1)));
                 // coral = SmartDashboard.getBoolean("Has Coral", coral);
                 // if (!coral) {
-                //     addCommands(Commands.print("Scored Succesfully"));
+                // addCommands(Commands.print("Scored Succesfully"));
                 // } else {
-                //     addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
-                //             .alongWith(L4()));
-                //     addCommands(Outtake());
-                //     addCommands((subsystems.driveSubsystem().Commands
-                //             .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                //             .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
-                //                     .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                //             .withDeadline(Commands.waitSeconds(1)));
+                // addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
+                // .alongWith(L4()));
+                // addCommands(Outtake());
+                // addCommands((subsystems.driveSubsystem().Commands
+                // .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                // .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                // .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                // .withDeadline(Commands.waitSeconds(1)));
                 // }
 
             }
@@ -153,10 +153,9 @@ public class AutoTracker extends SequentialCommandGroup {
                 intakingpath = PathPlannerPath.fromPathFile(autoSector.intakingPath());
                 scoringPath = PathPlannerPath.fromPathFile(autoSector.ShootingPath());
 
-
                 addCommands(Commands.print("going to intake [" + coral + "]"));
                 addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
-                addCommands(Commands.waitSeconds(2).alongWith(L1()));
+                addCommands(Commands.waitSeconds(0.5).alongWith(L1()));
                 addCommands(Intake(IntakingStrategy.ground));
                 addCommands(Commands.print("intake"));
 
@@ -165,9 +164,8 @@ public class AutoTracker extends SequentialCommandGroup {
                         .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                         .withDeadline(Commands.waitSeconds(1)));
-                        
-                addCommands(score(scoringPath));
 
+                addCommands(score(scoringPath));
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -183,7 +181,7 @@ public class AutoTracker extends SequentialCommandGroup {
             scoringPath = PathPlannerPath.fromPathFile(sector.ShootingPath());
 
             addCommands(AutoBuilder.pathfindThenFollowPath(intakingpath, constraints));
-            addCommands(Commands.waitSeconds(2).alongWith(L1()));
+            addCommands(Commands.waitSeconds(0.5).alongWith(L1()));
 
             addCommands(Intake(IntakingStrategy.ground));
             addCommands(Commands.print("intake"));
@@ -191,11 +189,11 @@ public class AutoTracker extends SequentialCommandGroup {
             addCommands(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints)
                     .alongWith(L4()));
             addCommands(Outtake());
-            addCommands((subsystems.driveSubsystem().Commands
+            addCommands(((subsystems.driveSubsystem().Commands
                     .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
                     .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                             .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                    .withDeadline(Commands.waitSeconds(1)));
+                    .withDeadline(Commands.waitSeconds(1))));
         } catch (Exception e) {
             e.printStackTrace();
 
@@ -212,10 +210,18 @@ public class AutoTracker extends SequentialCommandGroup {
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                         .withDeadline(Commands.waitSeconds(1)))
                 .andThen(new ConditionalCommand(Commands.print("Scored Succesfully"),
-                        AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(L4()).andThen(Outtake())
+
+                        ((subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.6))
+                                .withDeadline(Commands.waitSeconds(1.5)))
+                                .andThen(subsystems.driveSubsystem().Commands
+                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                                .withDeadline(Commands.waitSeconds(1)))
+                                .andThen(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(L4()))
+                                .andThen(Outtake())
                                 .andThen((subsystems.driveSubsystem().Commands
                                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                                        .withDeadline(Commands.waitSeconds(.75)))
+                                        .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
                                         .andThen(subsystems.driveSubsystem().Commands
                                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                                         .withDeadline(Commands.waitSeconds(1))),

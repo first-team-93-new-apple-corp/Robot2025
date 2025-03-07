@@ -164,7 +164,7 @@ public class AutoTracker extends SequentialCommandGroup {
                         .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                         .withDeadline(Commands.waitSeconds(1)));
-
+                
                 addCommands(score(scoringPath));
 
             } catch (Exception e) {

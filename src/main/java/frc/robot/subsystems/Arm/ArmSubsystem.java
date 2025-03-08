@@ -151,7 +151,7 @@ public class ArmSubsystem extends SubsystemBase {
 
         public Command changeSetpointBy(Angle D) {
             return runOnce(() -> {
-                runAngle(lastSetpoint.plus(D));
+                runAngle(getPosition().plus(D));
             });
         }
 

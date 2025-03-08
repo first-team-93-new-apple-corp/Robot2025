@@ -41,6 +41,7 @@ public class AutoDirector {
     Autos.add(RightSide());
     Autos.add(CenterSide());
     Autos.add(CenterSide2());
+    Autos.add(Center3());   
 
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -140,6 +141,15 @@ public class AutoDirector {
     AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.CenterLeft(), "R6A");
     
     return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.CenterLeft());
+  }
+  public Auto Center3() {
+    List<AutoSector> paths = new ArrayList<>();
+    paths.add(new AutoSector("C2", "R6B"));
+    paths.add(new AutoSector("C1", "R8A"));
+
+    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R6A");
+    
+    return new Auto("CenterSide 3 Coral", tracker, PositionConstants.startingPoses.Left());
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

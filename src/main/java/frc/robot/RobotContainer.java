@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.Constants.Inputs.CameraPipeline;
+import frc.robot.Constants.Inputs.Cameras.Camera;
 import frc.robot.commands.intake;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -75,9 +77,9 @@ public class RobotContainer {
         // VISION
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         frontCamera = new CameraFactory().build(PoseSupplier,
-        Constants.Inputs.Cameras.FrontCam);
+                Constants.Inputs.Cameras.FrontCam);
         rearCamera = new CameraFactory().build(PoseSupplier,
-        Constants.Inputs.Cameras.RearCam);
+                Constants.Inputs.Cameras.RearCam);
 
         // AUTON
         m_DriveSubsystem.configureAuto();
@@ -90,7 +92,7 @@ public class RobotContainer {
     private void configureBindings() {
         SignalLogger.setPath("/media/sda1/logs/");
         SignalLogger.start();
-        
+
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())
                 .withVelocityY(Driver.DriveUp())
@@ -109,19 +111,22 @@ public class RobotContainer {
         // Driver.autoAlign().whileTrue(m_DriveSubsystem.Commands.autoAlign());
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
-        
+
         Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));
         Driver.superStructureL3().onTrue(m_ElevatorSubsystem.Commands.L3().alongWith(m_ArmSubsystem.Commands.L3()));
         Driver.superStructureL4().onTrue(m_ElevatorSubsystem.Commands.L4().alongWith(m_ArmSubsystem.Commands.L4()));
 
-        Driver.removeAlgea().and(Driver.superStructureL2()).onTrue(m_ElevatorSubsystem.Commands.Algea1().alongWith(m_ArmSubsystem.Commands.L1()));
-        Driver.removeAlgea().and(Driver.superStructureL3()).onTrue(m_ElevatorSubsystem.Commands.Algea2().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.removeAlgea().and(Driver.superStructureL2())
+                .onTrue(m_ElevatorSubsystem.Commands.Algea1().alongWith(m_ArmSubsystem.Commands.L1()));
+        Driver.removeAlgea().and(Driver.superStructureL3())
+                .onTrue(m_ElevatorSubsystem.Commands.Algea2().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
 
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
-        Driver.bellyPanIntake().whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
+        Driver.bellyPanIntake()
+                .whileTrue(m_ElevatorSubsystem.Commands.intakePrime().alongWith(m_ArmSubsystem.Commands.Intake()));
 
         Driver.climberIn().onTrue(m_ClimberSubsystem.climberCommands.inwardPosition());
         Driver.climberOut().onTrue(m_ClimberSubsystem.climberCommands.outwardPosition());
@@ -134,7 +139,7 @@ public class RobotContainer {
         // Driver.manDownElev().onTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-1)));
         // Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(1)));
         // Driver.manDownArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-1)));
-        
+
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -158,7 +163,6 @@ public class RobotContainer {
         feedVision(frontCamera);
         feedVision(rearCamera);
 
-
     }
 
     public void updateSimValues() {
@@ -169,27 +173,37 @@ public class RobotContainer {
         // return a.getSelected();
         return autoDirector.selection().command();
     }
-    
 
     public void disableLockWheels() {
         m_DriveSubsystem.Commands.applyRequest(() -> brake);
     }
 
     public void feedVision(Vision vision) {
-        var visionEst = vision.getResults();
-        if (visionEst != null) {
-            visionEst.ifPresent(
+        if (vision.getCameraPipeline() == CameraPipeline.AprilTag) {
+            var visionEst = vision.getResults();
+            if (visionEst != null) {
+                visionEst.ifPresent(
+                        est -> {
+                            // Change our trust in the measurement based on the tags we can see
+                            var estStdDevs = vision.getEstimationStdDevs();
+
+                            m_DriveSubsystem.addVisionMeasurement(
+                                    est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
+                                    estStdDevs);
+
+                            // m_DriveSubsystem.addVisionMeasurement(
+                            // est.estimatedPose.toPose2d(), est.timestampSeconds);
+                        });
+            }
+        } else {
+            var visionEst = vision.getCoral();
+            if(visionEst != null) {
+                visionEst.ifPresent(
                     est -> {
-                        // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = vision.getEstimationStdDevs();
-
-                        m_DriveSubsystem.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
-                                estStdDevs);
-
-                        // m_DriveSubsystem.addVisionMeasurement(
-                        // est.estimatedPose.toPose2d(), est.timestampSeconds);
-                    });
+                        logger.publishCoralPose2D(est);
+                    }
+                );
+            }
         }
     }
 }

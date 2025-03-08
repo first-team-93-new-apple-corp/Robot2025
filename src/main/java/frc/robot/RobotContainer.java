@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -175,7 +176,7 @@ public class RobotContainer {
         feedVision(rearCamera);
         SmartDashboard.putBoolean("Has Coral", m_GrabberSubsystem.hasCoral());
         SmartDashboard.putNumber("Comms Disable Count", RobotController.getCommsDisableCount());
-
+        SmartDashboard.putNumberArray("Speeds {X,Y,Theta}", new double[] {m_DriveSubsystem.getState().Speeds.vxMetersPerSecond,m_DriveSubsystem.getState().Speeds.vyMetersPerSecond, m_DriveSubsystem.getState().Speeds.omegaRadiansPerSecond });
     }
 
     public void updateSimValues() {

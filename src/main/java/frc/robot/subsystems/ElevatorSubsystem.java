@@ -64,8 +64,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         outerMMConfig = new MotionMagicConfigs();
         outerMMConfig = outerConfig.MotionMagic;
-        outerMMConfig.MotionMagicCruiseVelocity = 80;
-        outerMMConfig.MotionMagicAcceleration = 160;
+        outerMMConfig.MotionMagicCruiseVelocity = 120;
+        outerMMConfig.MotionMagicAcceleration = 200;
 
         var outerSlot0 = outerConfig.Slot0;
         outerSlot0.kP = 3.5;
@@ -86,8 +86,8 @@ public class ElevatorSubsystem extends SubsystemBase {
         innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         innerMMConfig = new MotionMagicConfigs();
         innerMMConfig = innerConfig.MotionMagic;
-        innerMMConfig.MotionMagicCruiseVelocity = 80;
-        innerMMConfig.MotionMagicAcceleration = 160;
+        innerMMConfig.MotionMagicCruiseVelocity = 120;
+        innerMMConfig.MotionMagicAcceleration = 200;
 
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
@@ -112,7 +112,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
-        setSetpoints(D, ElevatorStrategy.noBias);
+        setSetpoints(D, ElevatorStrategy.carriageBias);
     }
 
     private void setSetpoints(Distance D, ElevatorStrategy Strategy) {

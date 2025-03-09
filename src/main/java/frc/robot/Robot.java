@@ -5,6 +5,8 @@
 package frc.robot;
 
 import com.ctre.phoenix6.SignalLogger;
+
+import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,6 +43,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void disabledPeriodic() {
+    
   }
 
   @Override
@@ -64,6 +67,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousExit() {
+    CommandScheduler.getInstance().clearComposedCommands();
   }
 
   @Override

@@ -2,6 +2,8 @@ package frc.robot.subsystems.Auton;
 
 import java.util.Optional;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+import com.pathplanner.lib.path.PathPoint;
 import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -88,6 +90,11 @@ public class PositionConstants {
             } else {
                 return rightBlue;
             }
+        }
+
+        public static Pose2d poseFromPathEnd(PathPlannerPath path){
+            PathPoint point = path.getAllPathPoints().get(path.getAllPathPoints().size());
+            return new Pose2d(point.position, point.rotationTarget.rotation());
         }
     }
 }

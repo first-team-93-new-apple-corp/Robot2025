@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
@@ -275,6 +276,9 @@ public class Constants {
         public record AutoSector(
                 String intakingPath,
                 String ShootingPath) {
+        }
+
+        public record AutoSectorV2(Pose2d intakingPose, Pose2d ScoringPose) {
         }
 
         static LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed

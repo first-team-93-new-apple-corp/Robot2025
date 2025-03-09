@@ -24,8 +24,11 @@ public class AutoDirector {
   }
 
   public record Auto(String name, Command command, Pose2d initPose) {
+    public Auto(String name, Command command){
+      this(name, command, new Pose2d());
+    }
   }
-
+  
   public Auto selection() {
     return autoChooser.getSelected();
   }
@@ -41,7 +44,7 @@ public class AutoDirector {
     Autos.add(RightSide());
     Autos.add(CenterSide());
     Autos.add(CenterSide2());
-
+    Autos.add(CenterSideV2());
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
     }
@@ -130,6 +133,16 @@ public class AutoDirector {
     AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R8A");
 
     return new Auto("CenterSide 4 Coral", tracker, PositionConstants.startingPoses.Left());
+  }
+
+  public Auto CenterSideV2() {
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.Left());
+    tracker.addPreload("R8A");
+    tracker.addSector(new AutoSector("C1", "R6B"));
+    tracker.addSectorV2(new AutoSector("C2", "R6A"));
+    tracker.addSectorV2(new AutoSector("C3", "R4B"));
+
+    return new Auto("CenterSide 4 Coral V2", tracker);
   }
 
   public Auto CenterSide2() {

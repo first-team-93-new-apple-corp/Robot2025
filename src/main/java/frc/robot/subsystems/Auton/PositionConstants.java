@@ -25,6 +25,17 @@ public class PositionConstants {
     }
 
     public class startingPoses {
+
+        public static final Pose2d AllianceCorrectedPose(Pose2d pose) {
+            Optional<Alliance> ally = DriverStation.getAlliance();
+            if (ally.isPresent()) {
+                if (ally.get() == Alliance.Red) {
+                    return FlippingUtil.flipFieldPose(pose);
+                }
+            }
+            return pose;
+        }
+        
         private static final double startingLineBlue = 7.2;
 
         public static final Pose2d leftBlue = new Pose2d(startingLineBlue, 7.05, towardAlliance);
@@ -35,7 +46,7 @@ public class PositionConstants {
         public static final Pose2d CenterLeftRed = FlippingUtil.flipFieldPose(CenterLeftBlue);
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
-
+        
         public static final Pose2d Left() {
             Optional<Alliance> ally = DriverStation.getAlliance();
             if (ally.isPresent()) {
@@ -98,7 +109,7 @@ public class PositionConstants {
         }
 
         public static Pose2d poseFromPathEnd(PathPlannerPath path){
-            PathPoint point = path.getAllPathPoints().get(path.getAllPathPoints().size());
+            PathPoint point = path.getAllPathPoints().get(path.getAllPathPoints().size()-1);
             return new Pose2d(point.position, point.rotationTarget.rotation());
         }
     }

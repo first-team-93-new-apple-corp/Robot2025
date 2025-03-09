@@ -94,7 +94,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     public void addSector(AutoSectorV2 sector) {
         try {
 
-            addCommands(AutoBuilder.pathfindToPose(sector.intakingPose(), constraints));
+            addCommands(AutoBuilder.pathfindToPoseFlipped(sector.intakingPose(), constraints));
             addCommands(Commands.waitSeconds(0.5).alongWith(L1()));
             addCommands(Intake(IntakingStrategy.ground));
 
@@ -116,7 +116,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         return score(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
     }
     public Command score(Pose2d scoringPose) {
-        return score(AutoBuilder.pathfindToPose(scoringPose, constraints));
+        return score(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints));
     }
 
     public Command score(Command pathFollowing){

@@ -46,6 +46,15 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         }
     }
 
+    public void addPreloadV2(String preload) {
+        try {
+            PathPlannerPath path = PathPlannerPath.fromPathFile(preload);
+            
+            addCommands(score(PositionConstants.startingPoses.poseFromPathEnd(path)));
+        } catch (Exception e) {
+        }
+    }
+
     public void addSector(AutoSector sector) {
         try {
             PathPlannerPath intakingpath = PathPlannerPath.fromPathFile(sector.intakingPath());
@@ -104,33 +113,24 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     }
 
     public Command score(PathPlannerPath scoringPath) {
-        return (new ConditionalCommand(Commands.print("Scored Succesfully"),
-                ((AutoBuilder.pathfindThenFollowPath(scoringPath, constraints).alongWith(L4())))
-                        .andThen(Outtake())
-                        .andThen((subsystems.driveSubsystem().Commands
-                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                                .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
-                                .andThen(subsystems.driveSubsystem().Commands
-                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                                .withDeadline(Commands.waitSeconds(1))),
-                () -> !SmartDashboard.getBoolean("Has Coral", false))
-                .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)));
-
+        return score(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
+    }
+    public Command score(Pose2d scoringPose) {
+        return score(AutoBuilder.pathfindToPose(scoringPose, constraints));
     }
 
-    public Command score(Pose2d scoringPose) {
+    public Command score(Command pathFollowing){
         return (new ConditionalCommand(Commands.print("Scored Succesfully"),
-                ((AutoBuilder.pathfindToPose(scoringPose, constraints).alongWith(L4())))
-                        .andThen(Outtake())
-                        .andThen((subsystems.driveSubsystem().Commands
-                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                                .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
-                                .andThen(subsystems.driveSubsystem().Commands
-                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                                .withDeadline(Commands.waitSeconds(1))),
-                () -> !SmartDashboard.getBoolean("Has Coral", false))
-                .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)));
-
+        ((pathFollowing.alongWith(L4())))
+                .andThen(Outtake())
+                .andThen((subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                        .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
+                        .andThen(subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                        .withDeadline(Commands.waitSeconds(1))),
+        () -> !SmartDashboard.getBoolean("Has Coral", false))
+        .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)));
     }
 
     private Command L2() {

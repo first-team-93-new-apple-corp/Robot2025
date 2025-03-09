@@ -12,11 +12,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public class PositionConstants {
-    private static Rotation2d awayFromAlliance = new Rotation2d();
-    private static Rotation2d towardAlliance = new Rotation2d().rotateBy(Rotation2d.k180deg);
+    private static Rotation2d awayFromAlliance = Rotation2d.kZero;
+    private static Rotation2d towardAlliance = Rotation2d.k180deg;
 
     public class GamePeice {
   
+    }
+    public class Reef {
+        public static final Pose2d BlueR6A = new Pose2d(3.220,  3.840, awayFromAlliance);
+        public static final Pose2d BlueR6B = new Pose2d(3.275,  4.165, awayFromAlliance);
+
     }
 
     public class startingPoses {

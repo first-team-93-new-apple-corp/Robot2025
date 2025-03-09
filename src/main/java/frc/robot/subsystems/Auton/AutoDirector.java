@@ -24,11 +24,11 @@ public class AutoDirector {
   }
 
   public record Auto(String name, Command command, Pose2d initPose) {
-    public Auto(String name, Command command){
+    public Auto(String name, Command command) {
       this(name, command, new Pose2d());
     }
   }
-  
+
   public Auto selection() {
     return autoChooser.getSelected();
   }
@@ -43,9 +43,9 @@ public class AutoDirector {
     Autos.add(Leftside());
     Autos.add(RightSide());
     Autos.add(CenterSide());
-    Autos.add(CenterSide2());
-    Autos.add(Center3());   
+    Autos.add(CenterSide3());
     Autos.add(CenterSideV2());
+    Autos.add(CenterSideV3());
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
     }
@@ -136,33 +136,32 @@ public class AutoDirector {
     return new Auto("CenterSide 4 Coral", tracker, PositionConstants.startingPoses.Left());
   }
 
-  public Auto CenterSideV2() {
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.Left());
-    tracker.addPreload("R8A");
-    tracker.addSector(new AutoSector("C1", "R6B"));
-    tracker.addSectorV2(new AutoSector("C2", "R6A"));
-    tracker.addSectorV2(new AutoSector("C3", "R4B"));
-
-    return new Auto("CenterSide 4 Coral V2", tracker);
-  }
-
-  public Auto CenterSide2() {
+  public Auto CenterSide3() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("C2", "R6B"));
     paths.add(new AutoSector("C1", "R8A"));
 
     AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.CenterLeft(), "R6A");
-    
-    return new Auto("CenterSide 2 Coral", tracker, PositionConstants.startingPoses.CenterLeft());
-  }
-  public Auto Center3() {
-    List<AutoSector> paths = new ArrayList<>();
-    paths.add(new AutoSector("C2", "R6B"));
-    paths.add(new AutoSector("C1", "R8A"));
 
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.Left(), "R6A");
-    
-    return new Auto("CenterSide 3 Coral", tracker, PositionConstants.startingPoses.Left());
+    return new Auto("CenterSide 3 Coral", tracker, PositionConstants.startingPoses.CenterLeft());
+  }
+
+  public Auto CenterSideV2() {
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
+    tracker.addPreload("R8A");
+    tracker.addSector(new AutoSector("C1", "R6B"));
+    tracker.addSector(new AutoSector("C2", "R6A"));
+
+    return new Auto("CenterSide 3 Coral V2 - [new tracker]", tracker);
+  }
+
+  public Auto CenterSideV3() {
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
+    tracker.addPreloadV2("R8A");
+    tracker.addSectorV2(new AutoSector("C1", "R6B"));
+    tracker.addSectorV2(new AutoSector("C2", "R6A"));
+
+    return new Auto("CenterSide 3 Coral V3 - [Pose Pathfinding]", tracker);
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

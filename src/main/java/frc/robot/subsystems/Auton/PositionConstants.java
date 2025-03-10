@@ -21,7 +21,7 @@ public class PositionConstants {
 
     }
     public class Reef {
-        public static final Pose2d BlueR6A = new Pose2d(3.1572,  3.799, awayFromAlliance);
+        public static final Pose2d BlueR6A = new Pose2d(3.21,  3.83, awayFromAlliance);
         public static final Pose2d BlueR6B = new Pose2d(3.233,  4.168, awayFromAlliance);
 
     }

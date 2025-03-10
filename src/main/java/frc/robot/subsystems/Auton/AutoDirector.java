@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants.AutoSector;
+import frc.robot.Constants.AutoConstants.AutoSectorV2;
 import frc.robot.subsystems.Auton.PositionConstants.GamePeice;
 import frc.robot.subsystems.Auton.PositionConstants.Reef;
 import frc.robot.subsystems.Auton.PositionConstants.startingPoses;
@@ -168,9 +169,9 @@ public class AutoDirector {
 
   public Auto CenterSideV3() {
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
-    tracker.addPreloadV2("R6A");
-    // tracker.addSectorV2(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6A));
-    // tracker.addSectorV2(new AutoSector("C2", "R8A"));
+    tracker.addPreload(Reef.BlueR6A);
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6B));
 
     return new Auto("CenterSide 3 Coral V3 - [Pose Pathfinding]", tracker);
   }

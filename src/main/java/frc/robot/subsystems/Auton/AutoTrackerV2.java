@@ -49,8 +49,16 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     public void addPreloadV2(String preload) {
         try {
             PathPlannerPath path = PathPlannerPath.fromPathFile(preload);
-            
-            addCommands(score(PositionConstants.startingPoses.poseFromPathEnd(path)));
+
+            addPreload(PositionConstants.startingPoses.poseFromPathEnd(path));
+        } catch (Exception e) {
+        }
+    }
+
+    public void addPreload(Pose2d preload) {
+        try {
+
+            addCommands(score(preload));
         } catch (Exception e) {
         }
     }
@@ -115,6 +123,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     public Command score(PathPlannerPath scoringPath) {
         return score(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
     }
+
     public Command score(Pose2d scoringPose) {
         System.out.println(scoringPose);
         System.out.println(scoringPose);
@@ -122,18 +131,25 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         return score(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints));
     }
 
-    public Command score(Command pathFollowing){
+    public Command score(Command pathFollowing) {
         return (new ConditionalCommand(Commands.print("Scored Succesfully"),
-        ((pathFollowing.alongWith(L4())))
-                .andThen(Outtake())
+                ((pathFollowing.alongWith(L4())))
+                        .andThen(Commands.waitSeconds(1)) //wait for arm to stop bouncing
+                        .andThen(Outtake())
+                        .andThen((subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
+                                .withDeadline(Commands.waitSeconds(1)))
+                                .andThen(subsystems.driveSubsystem().Commands
+                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                                .withDeadline(Commands.waitSeconds(1.5))),
+                () -> !SmartDashboard.getBoolean("Has Coral", false))
+                .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)))
                 .andThen((subsystems.driveSubsystem().Commands
-                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
-                        .withDeadline(Commands.waitSeconds(1)))
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1.2))
+                        .withDeadline(Commands.waitSeconds(.5)))
                         .andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(1.5))),
-        () -> !SmartDashboard.getBoolean("Has Coral", false))
-        .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)));
+                        .withDeadline(Commands.waitSeconds(1)));
     }
 
     private Command L2() {

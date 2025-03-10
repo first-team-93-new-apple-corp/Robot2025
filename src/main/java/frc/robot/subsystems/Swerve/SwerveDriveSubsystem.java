@@ -126,8 +126,8 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                 // holonomic drive trains
                         // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
                         // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
-                        new PIDConstants(2, 0.0, 0.1), // Translation PID constants AUTO ALIGN
-                        new PIDConstants(2.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
+                        new PIDConstants(3, 0.0, 0.1), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {

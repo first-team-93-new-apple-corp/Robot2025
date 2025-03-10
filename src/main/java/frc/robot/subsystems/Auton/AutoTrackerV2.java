@@ -116,6 +116,9 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         return score(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
     }
     public Command score(Pose2d scoringPose) {
+        System.out.println(scoringPose);
+        System.out.println(scoringPose);
+        System.out.println(scoringPose);
         return score(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints));
     }
 

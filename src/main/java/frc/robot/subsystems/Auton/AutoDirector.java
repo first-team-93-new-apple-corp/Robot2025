@@ -169,8 +169,8 @@ public class AutoDirector {
   public Auto CenterSideV3() {
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
     tracker.addPreloadV2("R6A");
-    tracker.addSectorV2(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6A));
-    tracker.addSectorV2(new AutoSector("C2", "R8A"));
+    // tracker.addSectorV2(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6A));
+    // tracker.addSectorV2(new AutoSector("C2", "R8A"));
 
     return new Auto("CenterSide 3 Coral V3 - [Pose Pathfinding]", tracker);
   }

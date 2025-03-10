@@ -95,7 +95,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         try {
 
             addCommands(AutoBuilder.pathfindToPoseFlipped(sector.intakingPose(), constraints));
-            addCommands(Commands.waitSeconds(0.5).alongWith(L1()));
+            addCommands(Commands.waitSeconds(0.5).andThen(L1()));
             addCommands(Intake(IntakingStrategy.ground));
 
             addCommands((subsystems.driveSubsystem().Commands
@@ -124,11 +124,11 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         ((pathFollowing.alongWith(L4())))
                 .andThen(Outtake())
                 .andThen((subsystems.driveSubsystem().Commands
-                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
-                        .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
+                        .withDeadline(Commands.waitSeconds(1)))
                         .andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(1))),
+                        .withDeadline(Commands.waitSeconds(1.5))),
         () -> !SmartDashboard.getBoolean("Has Coral", false))
         .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)));
     }

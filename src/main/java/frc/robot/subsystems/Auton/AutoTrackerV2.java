@@ -31,6 +31,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     private PathConstraints constraints = AutoConstants.constraints;
 
     public AutoTrackerV2(AutoSubsystems subsystems, Supplier<Pose2d> initalPose) {
+        SmartDashboard.putBoolean("scored", false);
         this.subsystems = subsystems;
         addCommands(Commands.print("Auto Time"));
         addCommands(Commands.runOnce(() -> subsystems.driveSubsystem().resetPose(initalPose.get()),
@@ -125,14 +126,11 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     }
 
     public Command score(Pose2d scoringPose) {
-        System.out.println(scoringPose);
-        System.out.println(scoringPose);
-        System.out.println(scoringPose);
+
         return score(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints));
     }
-
     public Command score(Command pathFollowing) {
-        return (new ConditionalCommand(Commands.print("Scored Succesfully"),
+        return (new ConditionalCommand(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", true)),
                 ((pathFollowing.alongWith(L4())))
                         .andThen(Commands.waitSeconds(1)) //wait for arm to stop bouncing
                         .andThen(Outtake())
@@ -143,13 +141,8 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
                                 .withDeadline(Commands.waitSeconds(1.5))),
                 () -> !SmartDashboard.getBoolean("Has Coral", false))
-                .repeatedly().until(() -> !SmartDashboard.getBoolean("Has Coral", false)))
-                .andThen((subsystems.driveSubsystem().Commands
-                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1.2))
-                        .withDeadline(Commands.waitSeconds(.5)))
-                        .andThen(subsystems.driveSubsystem().Commands
-                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(1)));
+                .repeatedly().until((() -> SmartDashboard.getBoolean("scored", false))))
+                .andThen(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", false)));
     }
 
     private Command L2() {

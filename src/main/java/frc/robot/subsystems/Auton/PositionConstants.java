@@ -112,9 +112,7 @@ public class PositionConstants {
 
         public static Pose2d poseFromPathEnd(PathPlannerPath path){
             PathPoint point = path.getAllPathPoints().get(path.getAllPathPoints().size()-1);
-            System.out.println(point.position);
-            System.out.println(point.position);
-            System.out.println(point.position);
+
             return new Pose2d(point.position, point.rotationTarget.rotation());
         }
     }

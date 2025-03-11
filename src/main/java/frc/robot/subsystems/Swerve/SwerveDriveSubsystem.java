@@ -20,6 +20,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -36,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.AutoConstants;
 import frc.robot.subsystems.Auton.ReefChooser;
 import frc.robot.subsystems.Swerve.TunerConstants.TunerSwerveDrivetrain;
 
@@ -126,7 +128,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                 // holonomic drive trains
                         // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
                         // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
-                        new PIDConstants(3, 0.0, 0.1), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(7, 0.0, 0), // Translation PID constants AUTO ALIGN
                         new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
@@ -177,6 +179,19 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }
+        }
+        public Command autoAlignV2(String ABSupplier) {
+                if (getAlliance().equals(Alliance.Red)) {
+                    if (ABSupplier.equals("A")) {
+                        ABSupplier = "B";
+                    } else{
+                        ABSupplier = "A";
+                    }
+                }
+                Pose2d pose = ReefChooser.ChoosePose(ABSupplier, getState().Pose, getAlliance());
+                PathConstraints constraints = AutoConstants.constraints;
+                return AutoBuilder.pathfindToPose(pose, constraints);
+            
         }
     }
 

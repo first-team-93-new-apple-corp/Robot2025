@@ -64,16 +64,16 @@ public class ReefChooser {
         return "R" + Side + AB;
     }
 
-    public static Pose2d ChoosePose(String LR, Pose2d CurrentPose, Alliance currentAlliance) {
+    public static Pose2d ChoosePose(String AB, Pose2d CurrentPose, Alliance currentAlliance) {
         if (currentAlliance == DriverStation.Alliance.Blue) {
-            if (LR.equals("A")) {
+            if (AB.equals("A")) {
                 return CurrentPose.nearest(PositionConstants.Reef.BlueReefA);
             } else {
                 return CurrentPose.nearest(PositionConstants.Reef.BlueReefB);
             }
             
         } else {
-            if (LR.equals("A")) {
+            if (AB.equals("A")) {
                 return CurrentPose.nearest(PositionConstants.Reef.RedReefA);
             } else {
                 return CurrentPose.nearest(PositionConstants.Reef.RedReefB);

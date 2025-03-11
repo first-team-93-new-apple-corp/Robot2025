@@ -286,7 +286,7 @@ public class Constants {
         static AngularVelocity MaxAngularRate = RotationsPerSecond.of(3 / 4); // 3/4 of a rotation per second
         static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(1.5);
 
-        public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(3),
+        public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(4),
                 MaxAngularRate,
                 MaxAngularAcceleration);
 

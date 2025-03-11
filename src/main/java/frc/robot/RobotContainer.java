@@ -115,9 +115,9 @@ public class RobotContainer {
 
         // Xbox.b().whileTrue(m_DriveSubsystem.Commands.applyRequest(() ->
         Driver.autoAlignLeft().whileTrue(
-                new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlign("B"), Set.of(m_DriveSubsystem)));
+                new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlignV2("B"), Set.of(m_DriveSubsystem)));
         Driver.autoAlignRight().whileTrue(
-                new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlign("A"), Set.of(m_DriveSubsystem)));
+                new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlignV2("A"), Set.of(m_DriveSubsystem)));
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
 

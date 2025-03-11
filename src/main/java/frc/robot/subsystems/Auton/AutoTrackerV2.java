@@ -51,7 +51,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         try {
             PathPlannerPath path = PathPlannerPath.fromPathFile(preload);
 
-            addPreload(PositionConstants.startingPoses.poseFromPathEnd(path));
+            addPreload(PositionConstants.poseFromPathEnd(path));
         } catch (Exception e) {
         }
     }
@@ -92,8 +92,8 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
             PathPlannerPath intakingpath = PathPlannerPath.fromPathFile(sector.intakingPath());
             PathPlannerPath scoringPath = PathPlannerPath.fromPathFile(sector.ShootingPath());
 
-            addSector(new AutoSectorV2(PositionConstants.startingPoses.poseFromPathEnd(intakingpath),
-                    PositionConstants.startingPoses.poseFromPathEnd(scoringPath)));
+            addSector(new AutoSectorV2(PositionConstants.poseFromPathEnd(intakingpath),
+                    PositionConstants.poseFromPathEnd(scoringPath)));
         } catch (Exception e) {
             e.printStackTrace();
 

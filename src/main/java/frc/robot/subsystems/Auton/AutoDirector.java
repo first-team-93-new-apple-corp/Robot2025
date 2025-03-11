@@ -168,7 +168,7 @@ public class AutoDirector {
   }
 
   public Auto CenterSideV3() {
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.Reef.BlueR10A);
     tracker.addPreload(Reef.BlueR6A);
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6B));

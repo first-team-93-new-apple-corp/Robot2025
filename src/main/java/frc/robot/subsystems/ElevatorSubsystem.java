@@ -28,7 +28,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private TalonFX outerElevatorMotor;
     private TalonFX innerElevatorMotor;
-
+    private ElevatorStrategy currentStrategy = ElevatorStrategy.noBias;
+    
     private MotionMagicVoltage outerElevatorMotorMagic = new MotionMagicVoltage(0);
     private MotionMagicVoltage innerElevatorMotorMagic = new MotionMagicVoltage(0);
 
@@ -116,6 +117,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D, ElevatorStrategy Strategy) {
+        currentStrategy = Strategy;
         if (D.gt(Centimeters.of(173))) {
             D = Centimeters.of(173);
         } else if (D.lt((ElevatorConstants.Bottom))) {
@@ -263,7 +265,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command changeSetpointBy(Distance D) {
             return runOnce(() -> {
-                setSetpoints(elevatorSetpoint.plus(D));
+                setSetpoints(elevatorSetpoint.plus(D), currentStrategy);
 
             });
         }

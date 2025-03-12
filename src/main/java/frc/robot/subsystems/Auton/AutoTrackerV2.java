@@ -136,13 +136,19 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                         .andThen(Outtake())
                         .andThen((subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
-                                .withDeadline(Commands.waitSeconds(1)))
+                                .withDeadline(Commands.waitSeconds(.6)))
                                 .andThen(subsystems.driveSubsystem().Commands
                                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                                .withDeadline(Commands.waitSeconds(1.5))),
+                                .withDeadline(Commands.waitSeconds(1))),
                 () -> !SmartDashboard.getBoolean("Has Coral", false))
                 .repeatedly().until((() -> SmartDashboard.getBoolean("scored", false))))
-                .andThen(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", false)));
+                .andThen(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", false)))
+                .andThen((subsystems.driveSubsystem().Commands
+                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(1))
+                .withDeadline(Commands.waitSeconds(.4)))
+                .andThen(subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                .withDeadline(Commands.waitSeconds(.7)));
     }
 
     private Command L2() {

@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.commands.intake;
@@ -149,8 +150,8 @@ public class RobotContainer {
                 .onTrue(m_ElevatorSubsystem.Commands.Bottom().alongWith(m_ArmSubsystem.Commands.VerticalStow()));
         Driver.manUpElev().whileTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(.5)).repeatedly());
         Driver.manDownElev().whileTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-.5)).repeatedly());
-        Driver.manUpArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(3)));
-        Driver.manDownArm().onTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-3)));
+        Driver.manUpArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(3)).repeatedly());
+        Driver.manDownArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-3)).repeatedly());
 
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.

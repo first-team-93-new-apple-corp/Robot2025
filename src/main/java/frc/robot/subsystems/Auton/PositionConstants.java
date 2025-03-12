@@ -19,7 +19,7 @@ public class PositionConstants {
     private static Rotation2d towardAlliance = Rotation2d.k180deg;
 
     public class GamePeice {
-        public static final Pose2d BlueC1 = new Pose2d(2.300, 5.800, towardAlliance);
+        public static final Pose2d BlueC1 = new Pose2d(2.300, 5.9, towardAlliance);
         public static final Pose2d BlueC2 = new Pose2d(2.300, 4.075, towardAlliance);
 
     }

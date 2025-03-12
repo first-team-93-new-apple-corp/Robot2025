@@ -91,7 +91,7 @@ public class RobotContainer {
         // AUTON
         m_DriveSubsystem.configureAuto();
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem, m_ArmSubsystem, m_ElevatorSubsystem,
-                m_GrabberSubsystem, m_Intake));
+                m_GrabberSubsystem, m_Intake,rearCamera));
         configureBindings();
 
     }

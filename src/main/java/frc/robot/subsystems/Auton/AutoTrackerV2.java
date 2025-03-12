@@ -2,6 +2,7 @@ package frc.robot.subsystems.Auton;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
@@ -102,8 +103,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
 
     public void addSector(AutoSectorV2 sector) {
         try {
-
-            addCommands(AutoBuilder.pathfindToPoseFlipped(sector.intakingPose(), constraints));
+            addCommands(Commands.defer(()->AutoBuilder.pathfindToPoseFlipped(subsystems.cam().getCoral().orElse(sector.intakingPose()), constraints), Set.of(subsystems.driveSubsystem())));
             addCommands(Commands.waitSeconds(0.5).andThen(L1()));
             addCommands(Intake(IntakingStrategy.ground));
 

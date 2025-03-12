@@ -25,6 +25,8 @@ import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.Constants.Inputs.CameraPipeline;
+import frc.robot.Constants.Inputs.Cameras.Camera;
 import frc.robot.commands.intake;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -131,6 +133,7 @@ public class RobotContainer {
                 .onTrue(m_ElevatorSubsystem.Commands.Algea1().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.removeAlgea().and(Driver.superStructureL3())
                 .onTrue(m_ElevatorSubsystem.Commands.Algea2().alongWith(m_ArmSubsystem.Commands.L1()));
+        
         Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
 
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
@@ -196,20 +199,31 @@ public class RobotContainer {
     }
 
     public void feedVision(Vision vision) {
-        var visionEst = vision.getResults();
-        if (visionEst != null) {
-            visionEst.ifPresent(
+        if (vision.getCameraPipeline() == CameraPipeline.AprilTag) {
+            var visionEst = vision.getResults();
+            if (visionEst != null) {
+                visionEst.ifPresent(
+                        est -> {
+                            // Change our trust in the measurement based on the tags we can see
+                            var estStdDevs = vision.getEstimationStdDevs();
+
+                            m_DriveSubsystem.addVisionMeasurement(
+                                    est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
+                                    estStdDevs);
+
+                            // m_DriveSubsystem.addVisionMeasurement(
+                            // est.estimatedPose.toPose2d(), est.timestampSeconds);
+                        });
+            }
+        } else {
+            var visionEst = vision.getCoral();
+            if(visionEst != null) {
+                visionEst.ifPresent(
                     est -> {
-                        // Change our trust in the measurement based on the tags we can see
-                        var estStdDevs = vision.getEstimationStdDevs();
-
-                        m_DriveSubsystem.addVisionMeasurement(
-                                est.estimatedPose.toPose2d(), Utils.fpgaToCurrentTime(est.timestampSeconds),
-                                estStdDevs);
-
-                        // m_DriveSubsystem.addVisionMeasurement(
-                        // est.estimatedPose.toPose2d(), est.timestampSeconds);
-                    });
+                        logger.publishCoralPose2D(est);
+                    }
+                );
+            }
         }
     }
 }

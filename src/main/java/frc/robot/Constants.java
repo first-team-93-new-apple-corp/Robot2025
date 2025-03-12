@@ -27,6 +27,11 @@ public class Constants {
                             new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
         }
 
+        public enum CameraPipeline {
+            AprilTag,
+            Coral
+        }
+
     }
 
     public class ArmConstants {

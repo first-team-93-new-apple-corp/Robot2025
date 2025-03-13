@@ -9,8 +9,6 @@ import com.pathplanner.lib.util.FlippingUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
@@ -25,8 +23,8 @@ public class PositionConstants {
     }
 
     public class Reef {
-        public static final Pose2d BlueR6A = new Pose2d(3.21, 3.83, awayFromAlliance);
-        public static final Pose2d BlueR6B = new Pose2d(3.233, 4.168, awayFromAlliance);
+        public static final Pose2d BlueR6A = new Pose2d(3.119, 3.801, awayFromAlliance);
+        public static final Pose2d BlueR6B = new Pose2d(3.177, 4.19, awayFromAlliance);
 
         public static final Pose2d BlueR8A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(-60)).getX()

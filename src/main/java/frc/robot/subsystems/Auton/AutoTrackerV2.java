@@ -104,7 +104,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     public void addSector(AutoSectorV2 sector) {
         try {
             addCommands(Commands.defer(()->AutoBuilder.pathfindToPoseFlipped(subsystems.cam().getCoral().orElse(sector.intakingPose()), constraints), Set.of(subsystems.driveSubsystem())));
-            addCommands(Commands.waitSeconds(0.5).andThen(L1()));
+            addCommands(Commands.waitSeconds(0.5).alongWith(L1()));
             addCommands(Intake(IntakingStrategy.ground));
 
             addCommands((subsystems.driveSubsystem().Commands
@@ -132,7 +132,6 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     public Command score(Command pathFollowing) {
         return (new ConditionalCommand(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", true)),
                 ((pathFollowing.alongWith(L4())))
-                        .andThen(Commands.waitSeconds(1)) //wait for arm to stop bouncing
                         .andThen(Outtake())
                         .andThen((subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
@@ -163,7 +162,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
         } else {
-            return subsystems.armSubsystem().Commands.L3().alongWith(subsystems.elevatorSubsystem().Commands.L3());
+            return subsystems.armSubsystem().Commands.L4().alongWith(subsystems.elevatorSubsystem().Commands.L4());
         }
     }
 

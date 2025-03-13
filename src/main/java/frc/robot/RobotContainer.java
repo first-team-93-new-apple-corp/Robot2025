@@ -153,8 +153,8 @@ public class RobotContainer {
                 .onTrue(m_ElevatorSubsystem.Commands.Bottom().alongWith(m_ArmSubsystem.Commands.VerticalStow()));
         Driver.manUpElev().whileTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(.5)).repeatedly());
         Driver.manDownElev().whileTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-.5)).repeatedly());
-        Driver.manUpArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(3)).repeatedly());
-        Driver.manDownArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-3)).repeatedly());
+        Driver.manUpArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(9)).repeatedly());
+        Driver.manDownArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-6)).repeatedly());
 
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.

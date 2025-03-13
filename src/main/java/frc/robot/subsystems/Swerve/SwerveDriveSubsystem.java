@@ -128,12 +128,12 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                                                 // holonomic drive trains
                         // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
                         // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
-                        new PIDConstants(12, 0.0, 0), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(10, 0.0, 0.1), // Translation PID constants AUTO ALIGN
                         new PIDConstants(4, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // Boolean supplie  r that controls when the path will be mirrored for the red
                     // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE

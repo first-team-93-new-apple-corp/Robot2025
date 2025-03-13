@@ -38,7 +38,7 @@ public class Vision extends SubsystemBase {
     private Transform3d camTransform;
     // Sim
     private VisionSystemSim systemSim;
-    private AprilTagFieldLayout simTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape);
+    private AprilTagFieldLayout simTagLayout = AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded);
     private SimCameraProperties simCameraProperties;
     private PhotonCameraSim cameraSim;
     // End Sim
@@ -56,7 +56,7 @@ public class Vision extends SubsystemBase {
         this.camTransform = camTransform;
         poseSupplier = PoseSupplier;
         Camera = new PhotonCamera(camName);
-        PoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2025Reefscape),
+        PoseEstimator = new PhotonPoseEstimator(AprilTagFieldLayout.loadField(AprilTagFields.k2025ReefscapeWelded),
                 PoseStrategy.MULTI_TAG_PNP_ON_COPROCESSOR, camTransform);
         PoseEstimator.setMultiTagFallbackStrategy(PoseStrategy.LOWEST_AMBIGUITY);
         changePipeline(CameraPipeline.AprilTag);

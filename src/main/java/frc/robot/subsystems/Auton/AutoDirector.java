@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants.AutoSector;
 import frc.robot.Constants.AutoConstants.AutoSectorV2;
 import frc.robot.subsystems.Auton.PositionConstants.GamePeice;
+import frc.robot.subsystems.Auton.PositionConstants.HumanPlayerIntake;
 import frc.robot.subsystems.Auton.PositionConstants.Reef;
 import frc.robot.subsystems.Auton.PositionConstants.startingPoses;
 
@@ -56,6 +57,7 @@ public class AutoDirector {
     Autos.add(CenterSide3());
     Autos.add(CenterSideV2());
     Autos.add(CenterSideV3());
+    Autos.add(testHP());
     Autos.add(dummyAuto());
     setupSmartAuto();
     for (Auto auto : Autos) {
@@ -174,6 +176,11 @@ public class AutoDirector {
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
     return new Auto("CenterSide 3 Coral V3 - [Pose Pathfinding]", tracker);
+  }
+  public Auto testHP(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()->PositionConstants.startingPoses.CenterLeft());
+    tracker.addSector(new AutoSectorV2(HumanPlayerIntake.BlueLeft, Reef.BlueR8A));
+    return new Auto("Testing HP intake", tracker);
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

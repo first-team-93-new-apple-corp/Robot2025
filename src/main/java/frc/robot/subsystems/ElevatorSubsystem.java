@@ -58,6 +58,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0.0);
     MotionMagicConfigs outerMMConfig;
     MotionMagicConfigs innerMMConfig;
+    public boolean atBottom(){
+        return elevatorSetpoint.gt(ElevatorConstants.Bottom.plus(Inches.of(1)));
+    }
 
     public ElevatorSubsystem() {
         outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID, "rio");

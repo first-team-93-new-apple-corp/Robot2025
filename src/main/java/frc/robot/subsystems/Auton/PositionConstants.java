@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Auton;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -11,15 +13,24 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import frc.robot.Constants.AutoConstants.IntakingStrategy;
 
 public class PositionConstants {
     private static Rotation2d awayFromAlliance = Rotation2d.kZero;
     private static Rotation2d towardAlliance = Rotation2d.k180deg;
+    public static Map<Pose2d, IntakingStrategy> intakeToStrat = Map.of(GamePeice.BlueC1, IntakingStrategy.ground,
+            GamePeice.BlueC2, IntakingStrategy.ground, HumanPlayerIntake.BlueLeft, IntakingStrategy.pup,
+            HumanPlayerIntake.BlueRight, IntakingStrategy.pup);
 
     public class GamePeice {
         public static final Pose2d BlueC1 = new Pose2d(2.300, 5.9, towardAlliance);
         public static final Pose2d BlueC2 = new Pose2d(2.300, 4.075, towardAlliance);
 
+    }
+
+    public class HumanPlayerIntake {
+        public static final Pose2d BlueRight = new Pose2d(1.1, 0.9, Rotation2d.fromDegrees(50));
+        public static final Pose2d BlueLeft = new Pose2d(1.1, 7, Rotation2d.fromDegrees(-50));
     }
 
     public class Reef {
@@ -40,7 +51,7 @@ public class PositionConstants {
                         + 4,
                 BlueR6B.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(-60))
                         .getRotation());
-        
+
         public static final Pose2d BlueR4A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(60)).getX()
                         + 4.5,
@@ -70,7 +81,7 @@ public class PositionConstants {
                         + 4,
                 BlueR6B.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(-120))
                         .getRotation());
-        
+
         public static final Pose2d BlueR12A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(180)).getX()
                         + 4.5,
@@ -85,7 +96,7 @@ public class PositionConstants {
                         + 4,
                 BlueR6B.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(180))
                         .getRotation());
-        
+
         public static final Pose2d BlueR2A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(120)).getX()
                         + 4.5,
@@ -100,7 +111,8 @@ public class PositionConstants {
                         + 4,
                 BlueR6B.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(120))
                         .getRotation());
-        public static final List<Pose2d> BlueReef = List.of(BlueR2A, BlueR2B, BlueR4A, BlueR4B, BlueR6A, BlueR6B, BlueR8A, BlueR8B, BlueR10A, BlueR10B, BlueR12A, BlueR12B);
+        public static final List<Pose2d> BlueReef = List.of(BlueR2A, BlueR2B, BlueR4A, BlueR4B, BlueR6A, BlueR6B,
+                BlueR8A, BlueR8B, BlueR10A, BlueR10B, BlueR12A, BlueR12B);
         public static final List<Pose2d> BlueReefA = List.of(BlueR2A, BlueR4A, BlueR6A, BlueR8A, BlueR10A, BlueR12A);
         public static final List<Pose2d> BlueReefB = List.of(BlueR2B, BlueR4B, BlueR6B, BlueR8B, BlueR10B, BlueR12B);
 

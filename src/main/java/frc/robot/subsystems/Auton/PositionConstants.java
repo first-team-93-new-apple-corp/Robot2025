@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.AutoConstants.IntakingStrategy;
 
 public class PositionConstants {
-    private static Rotation2d awayFromAlliance = Rotation2d.kZero;
-    private static Rotation2d towardAlliance = Rotation2d.k180deg;
+    public static Rotation2d awayFromAlliance = Rotation2d.kZero;
+    public static Rotation2d towardAlliance = Rotation2d.k180deg;
     public static Map<Pose2d, IntakingStrategy> intakeToStrat = Map.of(GamePeice.BlueC1, IntakingStrategy.ground,
             GamePeice.BlueC2, IntakingStrategy.ground, HumanPlayerIntake.BlueLeft, IntakingStrategy.pup,
             HumanPlayerIntake.BlueRight, IntakingStrategy.pup);
@@ -34,8 +34,8 @@ public class PositionConstants {
     }
 
     public class Reef {
-        public static final Pose2d BlueR6A = new Pose2d(3.119, 3.801, awayFromAlliance);
-        public static final Pose2d BlueR6B = new Pose2d(3.177, 4.19, awayFromAlliance);
+        public static final Pose2d BlueR6A = new Pose2d(3.08, 3.93, awayFromAlliance);
+        public static final Pose2d BlueR6B = new Pose2d(3.177, 4.22, awayFromAlliance);
 
         public static final Pose2d BlueR8A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(-60)).getX()
@@ -122,16 +122,6 @@ public class PositionConstants {
 
     }
 
-    public static final Pose2d AllianceCorrectedPose(Pose2d pose) {
-        Optional<Alliance> ally = DriverStation.getAlliance();
-        if (ally.isPresent()) {
-            if (ally.get() == Alliance.Red) {
-                return FlippingUtil.flipFieldPose(pose);
-            }
-        }
-        return pose;
-    }
-
     public static Pose2d poseFromPathEnd(PathPlannerPath path) {
         PathPoint point = path.getAllPathPoints().get(path.getAllPathPoints().size() - 1);
 
@@ -150,6 +140,24 @@ public class PositionConstants {
         public static final Pose2d CenterLeftRed = FlippingUtil.flipFieldPose(CenterLeftBlue);
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
+        public static final Pose2d Center = new Pose2d(7.5, 4, towardAlliance);
+
+        public static final Pose2d AllianceCorrectedPose(Pose2d pose) {
+            Optional<Alliance> ally = DriverStation.getAlliance();
+
+            if (ally.isPresent()) {
+                if (ally.get() == Alliance.Red) {
+                    return FlippingUtil.flipFieldPose(pose);
+                }
+                if (ally.get() == Alliance.Blue) {
+                    return pose;
+                } else {
+                    return pose;
+                }
+            } else {
+                return pose;
+            }
+        }
 
         public static final Pose2d Left() {
             Optional<Alliance> ally = DriverStation.getAlliance();
@@ -165,6 +173,14 @@ public class PositionConstants {
             } else {
                 return leftBlue;
             }
+        }
+
+        public static final Pose2d Center() {
+            return AllianceCorrectedPose(Center);
+        }
+
+        public static final Pose2d LeftBargeMiddle() {
+            return AllianceCorrectedPose(new Pose2d(7.242, 6.181, towardAlliance));
         }
 
         public static final Pose2d CeneterCoral() {

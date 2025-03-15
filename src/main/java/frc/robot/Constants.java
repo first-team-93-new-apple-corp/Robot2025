@@ -25,7 +25,10 @@ public class Constants {
             public static Camera RearCam = new Camera("RearCam",
                     new Transform3d(new Translation3d(Inches.of(-12.5), Inches.of(11.125), Inches.of(11.25)),
                             new Rotation3d(Degrees.of(0), Degrees.of(20), Degrees.of(180))));
-        }
+            public static Camera AlgaeCam = new Camera("AlgaeCam",
+                    new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(10.75)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(5), Degrees.of(0))));
+        }   
 
         public enum CameraPipeline {
             AprilTag,
@@ -288,10 +291,10 @@ public class Constants {
 
         static LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
         static LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
-        static AngularVelocity MaxAngularRate = RotationsPerSecond.of(3 / 4); // 3/4 of a rotation per second
-        static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(1.5);
+        static AngularVelocity MaxAngularRate = RotationsPerSecond.of(1/2); // 3/4 of a rotation per second
+        static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(3/4);
 
-        public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(4),
+        public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(6),
                 MaxAngularRate,
                 MaxAngularAcceleration);
 

@@ -1,5 +1,7 @@
 package frc.robot.subsystems.VisionIO;
 
+import static edu.wpi.first.units.Units.Inches;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -100,7 +102,7 @@ public class Vision extends SubsystemBase {
                 Camera.setPipelineIndex(0);
                 break;
             case Coral:
-                Camera.setPipelineIndex(1);
+                // Camera.setPipelineIndex(0);
                 break;
 
         }
@@ -175,14 +177,38 @@ public class Vision extends SubsystemBase {
         }
         return null;
     }
-
+    public Pose2d Coral = new Pose2d();
     public Optional<Pose2d> getCoral() {
         if (currentPipeline == CameraPipeline.Coral) {
-            return Optional.ofNullable((new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                    new Rotation3d(poseSupplier.get().getRotation()))
-                    .plus(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget())).toPose2d());
-        }
-        return Optional.empty();
+            try {
+
+                Coral = Optional.ofNullable(
+                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                            new Rotation3d(poseSupplier.get().getRotation()))
+                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                            new Rotation3d()))))
+                            .toPose2d()).orElse(Coral);
+                return Optional.ofNullable(
+                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                            new Rotation3d(poseSupplier.get().getRotation()))
+                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                            new Rotation3d()))))
+                            .toPose2d());
+
+                // (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                // new Rotation3d(poseSupplier.get().getRotation()))
+                // .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget())
+                // .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(), new
+                // Rotation3d())))
+                // .toPose2d());
+            } catch (Exception e) {
+                // e.printStackTrace();
+            }
+
+        } 
+                return Optional.empty();
     }
 
     public CameraPipeline getCameraPipeline() {

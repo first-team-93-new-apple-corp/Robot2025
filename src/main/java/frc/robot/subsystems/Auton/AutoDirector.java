@@ -37,7 +37,7 @@ public class AutoDirector {
   }
 
   public Auto selection() {
-    
+
     if (autoChooser.getSelected().name == dummyAuto().name) {
       return SmartAuto();
     }
@@ -170,15 +170,17 @@ public class AutoDirector {
   }
 
   public Auto CenterSideV3() {
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
-    tracker.addPreload(Reef.BlueR6A);
-    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6B));
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.Left());
+    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
+    tracker.addPreload(Reef.BlueR6B);
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
     return new Auto("CenterSide 3 Coral V3 - [Pose Pathfinding]", tracker);
   }
-  public Auto testHP(){
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()->PositionConstants.startingPoses.CenterLeft());
+
+  public Auto testHP() {
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
     tracker.addSector(new AutoSectorV2(HumanPlayerIntake.BlueLeft, Reef.BlueR8A));
     return new Auto("Testing HP intake", tracker);
   }
@@ -199,18 +201,18 @@ public class AutoDirector {
     return new Auto(name, tracker, initalPose.get());
   }
 
-  public Auto dummyAuto(){
+  public Auto dummyAuto() {
     return new Auto("SmartDashboard Auto", new InstantCommand());
   }
 
-  private void setupSmartAuto(){
+  private void setupSmartAuto() {
     SendableChooser<Pose2d> startingPose = new SendableChooser<Pose2d>();
     startingPose.setDefaultOption("Left", startingPoses.Left());
     startingPose.addOption("Right", startingPoses.right());
     startingPose.addOption("Center", startingPoses.CeneterCoral());
     startingPose.addOption("Center Left", startingPoses.CenterLeft());
-    SmartDashboard.putData("SmartAuto/Starting Pose",startingPose);
-    
+    SmartDashboard.putData("SmartAuto/Starting Pose", startingPose);
+
     SmartDashboard.putNumber("SmartAuto/Amount to Score", 1);
     SendableChooser<String> preload = new SendableChooser<String>();
     preload.setDefaultOption("R2A", "R2A");
@@ -254,7 +256,7 @@ public class AutoDirector {
     score2.addOption("R10B", "R10B");
     score2.addOption("R12A", "R12A");
     score2.addOption("R12B", "R12B");
-    
+
     SendableChooser<String> score3 = new SendableChooser<>();
     score3.setDefaultOption("R2A", "R2A");
     score3.addOption("R2B", "R2B");
@@ -287,7 +289,7 @@ public class AutoDirector {
     Intake2.addOption("C1", "C1");
     Intake2.addOption("C2", "C2");
     Intake2.addOption("C3", "C3");
-  
+
     SendableChooser<String> Intake3 = new SendableChooser<String>();
     Intake3.setDefaultOption("LHP", "LHP");
     Intake3.addOption("RHP", "RHP");
@@ -295,18 +297,16 @@ public class AutoDirector {
     Intake3.addOption("C2", "C2");
     Intake3.addOption("C3", "C3");
 
-
     SmartDashboard.putData("SmartAuto/Intake2", Intake2);
     SmartDashboard.putData("SmartAuto/Intake3", Intake3);
 
   }
+
   public Auto SmartAuto() {
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
 
-
     tracker.addPreloadV2(SmartDashboard.getString("SmartAuto/preload", "x"));
 
-    
     for (int i = 0; i < SmartDashboard.getNumber("SmartAuto/Amount to Score", 1); i++) {
       tracker.addSectorV2(new AutoSector(SmartDashboard.getString("SmartAuto/Intake" + (i + 1), "LHP"),
           SmartDashboard.getString("SmartAuto/Score" + (i + 1), "R2A")));

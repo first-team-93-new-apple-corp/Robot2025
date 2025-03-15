@@ -72,7 +72,7 @@ public class RobotContainer {
     // private final Vision frontCamera;
 
     private Vision frontCamera;
-    private Vision rearCamera;
+    private Vision algaeCam;
 
     private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
     private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
@@ -85,13 +85,13 @@ public class RobotContainer {
         Supplier<Pose2d> PoseSupplier = () -> m_DriveSubsystem.getState().Pose;
         frontCamera = new CameraFactory().build(PoseSupplier,
                 Constants.Inputs.Cameras.FrontCam);
-        rearCamera = new CameraFactory().build(PoseSupplier,
-                Constants.Inputs.Cameras.RearCam);
-
+        algaeCam = new CameraFactory().build(PoseSupplier,
+                Constants.Inputs.Cameras.AlgaeCam);
+        algaeCam.changePipeline(CameraPipeline.Coral);
         // AUTON
         m_DriveSubsystem.configureAuto();
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem, m_ArmSubsystem, m_ElevatorSubsystem,
-                m_GrabberSubsystem, m_Intake,rearCamera));
+                m_GrabberSubsystem, m_Intake,algaeCam));
         configureBindings();
 
     }
@@ -177,7 +177,7 @@ public class RobotContainer {
 
         // Comment out this line if feild relitive becomes an issue.
         feedVision(frontCamera);
-        // feedVision(rearCamera);
+        feedVision(algaeCam);
         SmartDashboard.putBoolean("Has Coral", m_GrabberSubsystem.hasCoral());
         SmartDashboard.putNumber("Comms Disable Count", RobotController.getCommsDisableCount());
         SmartDashboard.putNumberArray("Speeds {X,Y,Theta}", new double[] {m_DriveSubsystem.getState().Speeds.vxMetersPerSecond,m_DriveSubsystem.getState().Speeds.vyMetersPerSecond, m_DriveSubsystem.getState().Speeds.omegaRadiansPerSecond });

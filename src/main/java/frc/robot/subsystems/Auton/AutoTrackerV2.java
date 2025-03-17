@@ -115,9 +115,11 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         // }
         return constant;
     }
-    public void addPoint(Pose2d point){
+
+    public void addPoint(Pose2d point) {
         addCommands(AutoBuilder.pathfindToPose(point, constraints));
     }
+
     public void addSector(AutoSectorV2 sector) {
         try {
             addCommands(
@@ -152,9 +154,9 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
 
     public Command score(Pose2d scoringPose) {
 
-
         return (new ConditionalCommand(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", true)),
-                ((AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints).alongWith(L4()).alongWith(Commands.print("Going there"))))
+                ((AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints).alongWith(L4())
+                        .alongWith(Commands.print("Going there"))))
                         .andThen(Commands.print("Got there"))
                         .andThen(Outtake())
                         .andThen((subsystems.driveSubsystem().Commands

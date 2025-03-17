@@ -132,7 +132,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         switch (Strategy) {
             case carriageBias:
                 if (elevatorSetpoint.gt(Inches.of(31))) {
-                    inner = Inches.of(31);
+                    inner = Inches.of(30.8);
                     outer = elevatorSetpoint.minus(inner).times(0.98);
                 } else {
                     inner = elevatorSetpoint.times(1);

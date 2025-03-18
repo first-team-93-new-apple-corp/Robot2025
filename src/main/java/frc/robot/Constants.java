@@ -28,6 +28,9 @@ public class Constants {
             public static Camera AlgaeCam = new Camera("AlgaeCam",
                     new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(10.75)),
                             new Rotation3d(Degrees.of(0), Degrees.of(5), Degrees.of(0))));
+            public static Camera AlgaeCam2 = new Camera("AlgaeCam2",
+                    new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(10.75)),
+                            new Rotation3d(Degrees.of(0), Degrees.of(0), Degrees.of(0))));
         }   
 
         public enum CameraPipeline {

@@ -108,11 +108,11 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     }
 
     public Pose2d checkIfCoral(Pose2d suggestion, Pose2d constant) {
-        // Transform2d suggestion.minus(constant);
-        // double Distance =
-        // if (.getMeasureX()) {
-
-        // }
+        Transform2d a = suggestion.minus(constant);
+        double Distance = Math.sqrt((Math.pow(a.getX(), 2))+(Math.pow(a.getY(), 2)));
+        if (Distance < 2) {
+            return suggestion;
+        }
         return constant;
     }
 
@@ -124,7 +124,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         try {
             addCommands(
                     Commands.defer(
-                            () -> AutoBuilder.pathfindToPoseFlipped(sector.intakingPose(), constraints),
+                            () -> AutoBuilder.pathfindToPoseFlipped(checkIfCoral(subsystems.cam().Coral, sector.intakingPose()), constraints),
                             Set.of(subsystems.driveSubsystem())));
             addCommands(
                     new ConditionalCommand(

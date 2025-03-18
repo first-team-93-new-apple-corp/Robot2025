@@ -86,7 +86,7 @@ public class RobotContainer {
         frontCamera = new CameraFactory().build(PoseSupplier,
                 Constants.Inputs.Cameras.FrontCam);
         algaeCam = new CameraFactory().build(PoseSupplier,
-                Constants.Inputs.Cameras.AlgaeCam);
+                Constants.Inputs.Cameras.AlgaeCam2);
         algaeCam.changePipeline(CameraPipeline.Coral);
         // AUTON
         m_DriveSubsystem.configureAuto();

@@ -44,7 +44,8 @@ public interface ControllerSchemeIO {
 
     public Trigger robotRel();
 
-    public Trigger autoAlign();
+    public Trigger autoAlignLeft();
+    public Trigger autoAlignRight();
 
     public Trigger superStructureL1();
 

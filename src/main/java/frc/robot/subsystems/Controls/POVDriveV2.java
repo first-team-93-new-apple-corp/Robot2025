@@ -92,10 +92,5 @@ public class POVDriveV2 extends TwoStickDriveXboxOp {
     public Trigger robotRel() {
         return LeftStick.trigger();
     }
-    @Override
-    public Trigger autoAlign() {
-        return LeftStick.button(3);
-    }
-
 
 }

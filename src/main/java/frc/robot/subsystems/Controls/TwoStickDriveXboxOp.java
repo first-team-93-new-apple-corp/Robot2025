@@ -51,7 +51,7 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger Brake() {
+    public Trigger Brake()  {
         return RightStick.trigger();
     }
 
@@ -60,9 +60,14 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
         return LeftStick.trigger();
     }
 
+
     @Override
-    public Trigger autoAlign() {
+    public Trigger autoAlignLeft() {
         return LeftStick.button(3);
+    }
+    @Override
+    public Trigger autoAlignRight() {
+        return LeftStick.button(4);
     }
 
     @Override
@@ -72,17 +77,20 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
     @Override
     public Trigger superStructureL2() {
-        return operatorController.x();
+                return operatorController.x();
+
     }
 
     @Override
     public Trigger superStructureL3() {
-        return operatorController.b();
+                return operatorController.b();
+
     }
 
     @Override
     public Trigger superStructureL4() {
-        return operatorController.y();
+                return operatorController.y();
+
     }
 
     @Override
@@ -132,14 +140,12 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
     @Override
     public Trigger climberIn() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'climberIn'");
+        return operatorController.leftStick();
     }
 
     @Override
     public Trigger climberOut() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
+        return operatorController.rightStick();
     }
 
 }

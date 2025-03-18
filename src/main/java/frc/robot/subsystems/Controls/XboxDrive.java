@@ -62,13 +62,13 @@ public class XboxDrive implements ControllerSchemeIO {
     }
 
     @Override
-    public Trigger robotRel() {
-        return Xbox.a();
+    public Trigger autoAlignLeft() {
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL1'");
     }
 
     @Override
-    public Trigger autoAlign() {
-        return Xbox.x();
+    public Trigger autoAlignRight() {
+        throw new UnsupportedOperationException("Unimplemented method 'superStructureL1'");
     }
 
     @Override
@@ -158,5 +158,11 @@ public class XboxDrive implements ControllerSchemeIO {
     public Trigger climberOut() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'climberOut'");
+    }
+
+    @Override
+    public Trigger robotRel() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'robotRel'");
     }
 }

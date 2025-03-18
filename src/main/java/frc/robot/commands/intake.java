@@ -2,7 +2,6 @@ package frc.robot.commands;
 
 import static edu.wpi.first.units.Units.Inches;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -16,12 +15,14 @@ public class intake extends SequentialCommandGroup {
     ElevatorSubsystem m_Elev;
     ArmSubsystem m_Arm;
     GrabberSubsystem m_Grab;
-    CommandLimitSwitchDio m_IntakeLimit = new CommandLimitSwitchDio(Constants.GrabberConstants.LimitSwitch);
+    CommandLimitSwitchDio m_IntakeLimit;
+    
 
     public intake(ElevatorSubsystem m_Elev, ArmSubsystem m_Arm, GrabberSubsystem m_Grab) {
         this.m_Elev = m_Elev;
         this.m_Arm = m_Arm;
         this.m_Grab = m_Grab;
+        this.m_IntakeLimit = GrabberSubsystem.limit;
 
         addCommands(m_Elev.Commands.intake().alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
         addCommands(Commands.print("Elevator has ended"));
@@ -29,17 +30,17 @@ public class intake extends SequentialCommandGroup {
         addCommands(m_Arm.Commands.Intake().alongWith(Commands.waitUntil(() -> m_Arm.atSetpoint())));
         addCommands(Commands.print("Arm has ended"));
         addCommands((m_Grab.Commands.intake().withDeadline(Commands.waitSeconds(1)))
-                .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(-4.75), ElevatorStrategy.stageOneBias)
+                .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(-2.5), ElevatorStrategy.stageOneBias)
                         .alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint()))));
         addCommands(Commands.print("Intake has ended"));
 
         addCommands(
                 (m_Grab.Commands.intake()
-                        .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(4.75), ElevatorStrategy.stageOneBias))
+                        .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(4.5), ElevatorStrategy.stageOneBias))
                         .alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())))
                         .until(() -> m_IntakeLimit.triggered()));
 
-        addCommands(m_Elev.Commands.L2().alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
+        addCommands(m_Elev.Commands.L2(ElevatorStrategy.stageOneBias).alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
         addCommands(m_Arm.Commands.L2());
     }
 }

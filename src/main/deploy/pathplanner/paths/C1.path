@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.4792380136986303,
-        "y": 4.002461472602739
+        "x": 2.5,
+        "y": 5.8
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.229239707100066,
-        "y": 4.00338163446357
+        "x": 2.25,
+        "y": 5.8
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.0134417808219176,
-        "y": 4.002461472602739
+        "x": 2.3,
+        "y": 5.8
       },
       "prevControl": {
-        "x": 2.2627708728669753,
-        "y": 3.9841583619385075
+        "x": 2.549328938830059,
+        "y": 5.781694802326206
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,10 +33,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.73,
-    "maxAcceleration": 10.2,
-    "maxAngularVelocity": 560.3527,
-    "maxAngularAcceleration": 1718.0,
+    "maxVelocity": 0.5,
+    "maxAcceleration": 0.5,
+    "maxAngularVelocity": 270.0,
+    "maxAngularAcceleration": 540.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -45,7 +45,7 @@
     "rotation": -179.30853806273095
   },
   "reversed": false,
-  "folder": "Starting Coral",
+  "folder": "Coral Locations",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -179.8548273875142

@@ -9,6 +9,8 @@ import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveModule.SteerRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -16,18 +18,27 @@ import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.hal.AllianceStationID;
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.units.measure.AngularAcceleration;
+import edu.wpi.first.units.measure.AngularVelocity;
+import edu.wpi.first.units.measure.LinearAcceleration;
+import edu.wpi.first.units.measure.LinearVelocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.AutoConstants;
+import frc.robot.subsystems.Auton.ReefChooser;
 import frc.robot.subsystems.Swerve.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -38,8 +49,11 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(0.75).in(RadiansPerSecond); // 3/4 of a rotation per second
+    private LinearVelocity MaxSpeed = TunerConstants.kSpeedAt12Volts; // kSpeedAt12Volts desired top speed
+    private AngularVelocity MaxAngularRate = RadiansPerSecond.of(11.887); // 3/4 of a rotation per second
+    private LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
+    private AngularAcceleration MaxAngularAcceleration = DegreesPerSecondPerSecond.of(1290);
+
     /* Blue alliance sees forward as 0 degrees (toward red alliance wall) */
     private static final Rotation2d kBlueAlliancePerspectiveRotation = Rotation2d.fromDegrees(0);
     /* Red alliance sees forward as 180 degrees (toward blue alliance wall) */
@@ -48,12 +62,15 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     private boolean m_hasAppliedOperatorPerspective = false;
     private SysID sysID = new SysID();
     public SwerveCommands Commands = new SwerveCommands();
-    private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds();
+    private SwerveRequest.ApplyRobotSpeeds autoRequest = new SwerveRequest.ApplyRobotSpeeds().withDriveRequestType(DriveRequestType.Velocity).withSteerRequestType(SteerRequestType.MotionMagicExpo);
+    Alliance CurrentAlliance = Alliance.Blue;
+
     public SwerveDriveSubsystem getSubsystem() {
         return this;
     }
 
-    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants, SwerveModuleConstants<?, ?, ?>... modules) {
+    public SwerveDriveSubsystem(SwerveDrivetrainConstants drivetrainConstants,
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -61,10 +78,9 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
     }
 
     public SwerveDriveSubsystem(
-        SwerveDrivetrainConstants drivetrainConstants,
-        double odometryUpdateFrequency,
-        SwerveModuleConstants<?, ?, ?>... modules
-    ) {
+            SwerveDrivetrainConstants drivetrainConstants,
+            double odometryUpdateFrequency,
+            SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
         if (Utils.isSimulation()) {
             startSimThread();
@@ -86,6 +102,7 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
         RobotConfig config = null;
         try {
             config = RobotConfig.fromGUISettings();
+            
         } catch (Exception e) {
             // Handle exception as needed
             e.printStackTrace();
@@ -97,19 +114,26 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
                 () -> getState().Speeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
                 (speeds, feedforwards) -> setControl(
-                    autoRequest.withSpeeds(speeds)
-                        .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
-                        .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())
-                ),                // RELATIVE ChassisSpeeds. Also optionally outputs
-                // individual module feedforwards11
+                        autoRequest.withSpeeds(speeds)),
+                                // .withWheelForceFeedforwardsX(feedforwards.robotRelativeForcesXNewtons())
+                                // .withWheelForceFeedforwardsY(feedforwards.robotRelativeForcesYNewtons())), // RELATIVE
+                                                                                                           // ChassisSpeeds.
+                                                                                                           // Also
+                                                                                                           // optionally
+                                                                                                           // outputs
+                                                                                                           // individual
+                                                                                                           // module
+                                                                                                           // feedforwards11
                 new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for
                                                 // holonomic drive trains
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(3.0, 0.0, 0.0) // Rotation PID constants
+                        // new PIDConstants(5, 0.0, 0.0), // Translation PID constants AUTO ALIGN
+                        // new PIDConstants(3.5, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
+                        new PIDConstants(10, 0.0, 0.1), // Translation PID constants AUTO ALIGN
+                        new PIDConstants(7, 0.0, 0.0) // Rotation PID constants AUTO ALIGN
                 ),
                 config, // The robot configuration
                 () -> {
-                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // Boolean supplie  r that controls when the path will be mirrored for the red
                     // alliance
                     // This will flip the path being followed to the red side of the field.
                     // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
@@ -138,34 +162,59 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             return sysID.m_sysIdRoutineToApply.dynamic(direction);
         }
 
-        public Command autoAlign() {
-            PathConstraints constraints = new PathConstraints(TunerConstants.kSpeedAt12Volts.in(MetersPerSecond), 10.2, 9, 30);
-            String path;
+        private String Path;
 
+        public Command autoAlign(String ABSupplier) {
             try {
-                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("R6A"),constraints);
+                if (getAlliance().equals(Alliance.Red)) {
+                    if (ABSupplier.equals("A")) {
+                        ABSupplier = "B";
+                    } else{
+                        ABSupplier = "A";
+                    }
+                }
+                PathConstraints constraints = new PathConstraints(MaxSpeed.minus(MetersPerSecond.of(3.5)), MaxAcceleration.minus(MetersPerSecondPerSecond.of(7)), MaxAngularRate, MaxAngularAcceleration);
+                Path = ReefChooser.Choose(ABSupplier, getState().Pose, getAlliance());
+                return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile(Path), constraints);
             } catch (Exception e) {
                 return new PrintCommand("Path planner path does not exist");
             }
+        }
+        public Command autoAlignV2(String ABSupplier) {
+                if (getAlliance().equals(Alliance.Red)) {
+                    if (ABSupplier.equals("A")) {
+                        ABSupplier = "B";
+                    } else{
+                        ABSupplier = "A";
+                    }
+                }
+                Pose2d pose = ReefChooser.ChoosePose(ABSupplier, getState().Pose, getAlliance());
+                PathConstraints constraints = AutoConstants.constraints;
+                return AutoBuilder.pathfindToPose(pose, constraints);
+            
         }
     }
 
     @Override
     public void periodic() {
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
-            if (Utils.isSimulation()) {
-                setOperatorPerspectiveForward(Rotation2d.fromDegrees(90));
-            } else {
-                DriverStation.getAlliance().ifPresent(allianceColor -> {
-                    setOperatorPerspectiveForward(
-                            allianceColor == Alliance.Red
-                                    ? kRedAlliancePerspectiveRotation
-                                    : kBlueAlliancePerspectiveRotation);
-                    m_hasAppliedOperatorPerspective = true;
-                });
-            }
+            DriverStation.getAlliance().ifPresent(allianceColor -> {
+                CurrentAlliance = allianceColor;
+                setOperatorPerspectiveForward(
+                        allianceColor == Alliance.Red
+                                ? kRedAlliancePerspectiveRotation
+                                : kBlueAlliancePerspectiveRotation);
+                m_hasAppliedOperatorPerspective = true;
+                if (Utils.isSimulation()) {
+                    setOperatorPerspectiveForward(Rotation2d.fromDegrees(90));
+                }
+            });
         }
         
+    }
+
+    public DriverStation.Alliance getAlliance() {
+        return CurrentAlliance;
     }
 
     private void startSimThread() {

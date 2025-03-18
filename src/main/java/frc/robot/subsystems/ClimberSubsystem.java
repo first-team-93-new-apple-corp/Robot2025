@@ -2,9 +2,11 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ClimberConstants;
@@ -22,8 +24,8 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public ClimberSubsystem() {
         climber = new TalonFX(ClimberConstants.climberMotorID, "rio");
-        // climberConfig = new TalonFXConfiguration();
-
+        climberConfig = new TalonFXConfiguration();
+        climberConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         m_Encoder = new DutyCycleEncoder(ClimberConstants.climberEncoderID);
 
         // PID configuation just in case
@@ -45,14 +47,18 @@ public class ClimberSubsystem extends SubsystemBase {
         climber.set(
                 controller.calculate((m_Encoder.get() * 360) - ClimberConstants.encoderOffset, angle)*speedMultiplier);
     }
+    @Override
+    public void periodic(){
+        SmartDashboard.putNumber("Climber pos", m_Encoder.get()*360);
+    }
 
     public class ClimberCommands {
         public Command inwardPosition() {
-            return run(() -> runAngle(ClimberConstants.inSetpoint));
+            return startEnd(() -> climber.set(.5), ()-> climber.set(0));
         }
 
         public Command outwardPosition() {
-            return run(() -> runAngle(ClimberConstants.outSetpoint));
+            return startEnd(() -> climber.set(-.5), ()-> climber.set(0));
         }
 
         public Command stop() {

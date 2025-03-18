@@ -73,8 +73,7 @@
   ],
   "spellright.documentTypes": [
     "markdown",
-    "latex",
-    "plaintext"
+    "latex"
   ],
   "wpilib.autoStartRioLog": false,
   "wpilib.selectDefaultSimulateExtension": false,

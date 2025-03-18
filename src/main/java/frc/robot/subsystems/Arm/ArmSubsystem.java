@@ -53,7 +53,7 @@ public class ArmSubsystem extends SubsystemBase {
         slot0.kV = 0.017; // 0.029
         slot0.kP = 0.45;
         slot0.kI = 0.0;
-        slot0.kD = 0.0;
+        slot0.kD = 0.0;    
         slot0.kS = 0.0;
         wristConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         wristConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
@@ -145,9 +145,13 @@ public class ArmSubsystem extends SubsystemBase {
             return runOnce(() -> runAngle(ArmConstants.Setpoints.GroundIntake));
         }
 
+        public Command VerticalStow() {
+            return runOnce(() -> runAngle(ArmConstants.Setpoints.Vertical));
+        }
+
         public Command changeSetpointBy(Angle D) {
             return runOnce(() -> {
-                runAngle(lastSetpoint.plus(D));
+                runAngle(getPosition().plus(D));
             });
         }
 

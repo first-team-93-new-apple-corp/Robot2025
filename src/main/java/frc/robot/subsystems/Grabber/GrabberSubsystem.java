@@ -1,25 +1,37 @@
 package frc.robot.subsystems.Grabber;
 
-import frc.robot.Constants.GrabberConstants;
 
 import com.revrobotics.spark.SparkLowLevel.MotorType;
+
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.spark.SparkMax;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Constants;
+import frc.robot.Constants.GrabberConstants;
+import frc.robot.Utilities.CommandLimitSwitch;
+import frc.robot.Utilities.CommandLimitSwitchDio;
+import frc.robot.commands.intake;
 
 public class GrabberSubsystem implements Subsystem {
     SparkMax motor;
     public GrabberCommands Commands = new GrabberCommands();
+    public static CommandLimitSwitchDio limit;
 
     public GrabberSubsystem() {
         motor = new SparkMax(GrabberConstants.Grabber, MotorType.kBrushless);
-        // GrabberSubsystem Constructor
+        limit = new CommandLimitSwitchDio(Constants.GrabberConstants.LimitSwitch);
     }
 
     @Override
     public void periodic() {
-        // GrabberSubsystem periodic
+        hasCoral();
+    }
+
+    public boolean hasCoral(){
+        return limit.triggered();
     }
 
     public void setSpeed(double speed) {
@@ -39,6 +51,9 @@ public class GrabberSubsystem implements Subsystem {
 
         public Command brake() {
             return runOnce(() -> setSpeed(0));
+        }
+        public BooleanSupplier checkCoral(){
+            return () -> hasCoral();
         }
     }
 

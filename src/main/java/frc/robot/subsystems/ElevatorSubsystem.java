@@ -28,7 +28,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private TalonFX outerElevatorMotor;
     private TalonFX innerElevatorMotor;
-
+    private ElevatorStrategy currentStrategy = ElevatorStrategy.noBias;
+    
     private MotionMagicVoltage outerElevatorMotorMagic = new MotionMagicVoltage(0);
     private MotionMagicVoltage innerElevatorMotorMagic = new MotionMagicVoltage(0);
 
@@ -57,6 +58,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0.0);
     MotionMagicConfigs outerMMConfig;
     MotionMagicConfigs innerMMConfig;
+    public boolean atBottom(){
+        return elevatorSetpoint.gt(ElevatorConstants.Bottom.plus(Inches.of(1)));
+    }
 
     public ElevatorSubsystem() {
         outerElevatorMotor = new TalonFX(ElevatorConstants.outerElevatorMotorID, "rio");
@@ -64,8 +68,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         outerMMConfig = new MotionMagicConfigs();
         outerMMConfig = outerConfig.MotionMagic;
-        outerMMConfig.MotionMagicCruiseVelocity = 80;
-        outerMMConfig.MotionMagicAcceleration = 160;
+        outerMMConfig.MotionMagicCruiseVelocity = 120;
+        outerMMConfig.MotionMagicAcceleration = 200;
 
         var outerSlot0 = outerConfig.Slot0;
         outerSlot0.kP = 3.5;
@@ -86,14 +90,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         innerConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         innerMMConfig = new MotionMagicConfigs();
         innerMMConfig = innerConfig.MotionMagic;
-        innerMMConfig.MotionMagicCruiseVelocity = 80;
-        innerMMConfig.MotionMagicAcceleration = 160;
+        innerMMConfig.MotionMagicCruiseVelocity = 120;
+        innerMMConfig.MotionMagicAcceleration = 200;
 
         outerElevatorMotor.getConfigurator().apply(outerConfig);
         innerElevatorMotor.getConfigurator().apply(innerConfig);
 
-        OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
-        InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
+        // OuterBottomSwitch.Tripped().onTrue(Commands.zeroOuterMotor());
+        // InnerBottomSwitch.Tripped().onTrue(Commands.zeroInnerMotor());
         SmartDashboard.putData("zero carriage", Commands.zeroInnerMotor());
         SmartDashboard.putData("zero ele", Commands.zeroOuterMotor());
         SmartDashboard.putData("Coast carriage", Commands.brakeInnerMotor(false));
@@ -112,10 +116,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     private void setSetpoints(Distance D) {
-        setSetpoints(D, ElevatorStrategy.stageOneBias);
+        setSetpoints(D, ElevatorStrategy.carriageBias);
     }
 
     private void setSetpoints(Distance D, ElevatorStrategy Strategy) {
+        currentStrategy = Strategy;
         if (D.gt(Centimeters.of(173))) {
             D = Centimeters.of(173);
         } else if (D.lt((ElevatorConstants.Bottom))) {
@@ -127,7 +132,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         switch (Strategy) {
             case carriageBias:
                 if (elevatorSetpoint.gt(Inches.of(31))) {
-                    inner = Inches.of(31);
+                    inner = Inches.of(30.8);
                     outer = elevatorSetpoint.minus(inner).times(0.98);
                 } else {
                     inner = elevatorSetpoint.times(1);
@@ -205,6 +210,13 @@ public class ElevatorSubsystem extends SubsystemBase {
             });
         }
 
+        public Command L2(ElevatorStrategy strategy) {
+            return runOnce(() -> {
+                setSetpoints(ElevatorConstants.L2Setpoint, strategy);
+
+            });
+        }
+
         public Command L3() {
             return runOnce(() -> {
                 setSetpoints(ElevatorConstants.L3Setpoint);
@@ -256,7 +268,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command changeSetpointBy(Distance D) {
             return runOnce(() -> {
-                setSetpoints(elevatorSetpoint.plus(D));
+                setSetpoints(elevatorSetpoint.plus(D), currentStrategy);
 
             });
         }
@@ -267,6 +279,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
             });
         }
+
 
         public Command zeroOuterMotor() {
             return runOnce(() -> {

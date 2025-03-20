@@ -181,30 +181,40 @@ public class Vision extends SubsystemBase {
     public Optional<Pose2d> getCoral() {
         if (currentPipeline == CameraPipeline.Coral) {
             try {
+                for (var change : Camera.getAllUnreadResults()) {
+                    Coral = Optional.ofNullable(
+                        (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                                new Rotation3d(poseSupplier.get().getRotation()))
+                                .transformBy(change.targets.get(0).getBestCameraToTarget()
+                                        .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                                new Rotation3d()))))
+                                .toPose2d()).orElse(Coral);
+                    return Optional.ofNullable(
+                        (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                                new Rotation3d(poseSupplier.get().getRotation()))
+                                .transformBy(change.targets.get(0).getBestCameraToTarget()
+                                        .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                                new Rotation3d()))))
+                                .toPose2d());
+                }
+                // Coral = Optional.ofNullable(
+                //     (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                //             new Rotation3d(poseSupplier.get().getRotation()))
+                //             .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                //                     .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                //                             new Rotation3d()))))
+                //             .toPose2d()).orElse(Coral);
+                // return Optional.ofNullable(
+                //     (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                //             new Rotation3d(poseSupplier.get().getRotation()))
+                //             .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                //                     .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                //                             new Rotation3d()))))
+                //             .toPose2d());
 
-                Coral = Optional.ofNullable(
-                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                            new Rotation3d(poseSupplier.get().getRotation()))
-                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
-                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
-                                            new Rotation3d()))))
-                            .toPose2d()).orElse(Coral);
-                return Optional.ofNullable(
-                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                            new Rotation3d(poseSupplier.get().getRotation()))
-                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
-                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
-                                            new Rotation3d()))))
-                            .toPose2d());
-
-                // (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                // new Rotation3d(poseSupplier.get().getRotation()))
-                // .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget())
-                // .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(), new
-                // Rotation3d())))
-                // .toPose2d());
-            } catch (Exception e) {
-                // e.printStackTrace();
+                
+            } catch (IndexOutOfBoundsException e) {
+                // No coral found, throws error 
             }
 
         } 

@@ -7,8 +7,6 @@ import java.util.function.Supplier;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -51,14 +49,15 @@ public class AutoDirector {
     // Autos.add(PathPlannerAuto());
     // Autos.add(HPintake());
     // Autos.add(newAuto());
-    Autos.add(Leftside());
-    Autos.add(RightSide());
-    Autos.add(CenterSide());
-    Autos.add(CenterSide3());
-    Autos.add(CenterSideV2());
-    Autos.add(CenterSideV3());
-    Autos.add(testHP());
-    Autos.add(dummyAuto());
+    // Autos.add(Leftside());
+    // Autos.add(RightSide());
+    // Autos.add(CenterSide());
+    // Autos.add(CenterSide3());
+    // Autos.add(CenterSideV2());
+    // Autos.add(CenterSideV3());
+    // Autos.add(testHP());
+    // Autos.add(dummyAuto());
+    Autos.add(Practice1());
     setupSmartAuto();
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -183,6 +182,16 @@ public class AutoDirector {
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, () -> PositionConstants.startingPoses.CenterLeft());
     tracker.addSector(new AutoSectorV2(HumanPlayerIntake.BlueLeft, Reef.BlueR8A));
     return new Auto("Testing HP intake", tracker);
+  }
+
+  public Auto Practice1(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.RightMidBarge());
+    tracker.addPoint(new Pose2d(1.232, 3.071, PositionConstants.awayFromAlliance));
+    tracker.addPreload(Reef.BlueR4A);
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC3, Reef.BlueR4B));
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
+
+    return new Auto("Practice1", tracker);
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

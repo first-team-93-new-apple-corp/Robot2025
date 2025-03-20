@@ -25,6 +25,7 @@ public class PositionConstants {
     public class GamePeice {
         public static final Pose2d BlueC1 = new Pose2d(2.300, 5.9, towardAlliance);
         public static final Pose2d BlueC2 = new Pose2d(2.300, 4.075, towardAlliance);
+        public static final Pose2d BlueC3 = new Pose2d(2.300, 2.229, towardAlliance);
 
     }
 
@@ -177,6 +178,9 @@ public class PositionConstants {
 
         public static final Pose2d Center() {
             return AllianceCorrectedPose(Center);
+        }
+        public static final Pose2d RightMidBarge() {
+            return AllianceCorrectedPose(new Pose2d(7.1,1.85, towardAlliance));
         }
 
         public static final Pose2d LeftBargeMiddle() {

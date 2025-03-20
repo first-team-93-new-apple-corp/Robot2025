@@ -101,6 +101,7 @@ public class RobotContainer {
     private void configureBindings() {
         SignalLogger.setPath("/media/sda1/logs/");
         SignalLogger.start();
+        SignalLogger.enableAutoLogging(true);
 
         m_DriveSubsystem.setDefaultCommand(m_DriveSubsystem.Commands.applyRequest(() -> drive
                 .withVelocityX(Driver.DriveLeft())

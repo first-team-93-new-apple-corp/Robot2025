@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.Controls.ThrottleableDrive;
+import frc.robot.subsystems.Controls.TwoStickDriveXboxOp;
 import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.Constants.Inputs.CameraPipeline;
 import frc.robot.Constants.Inputs.Cameras.Camera;
@@ -57,7 +58,7 @@ public class RobotContainer {
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
-    private final ControllerSchemeIO Driver = new ThrottleableDrive(0, 1, 2);
+    private final ControllerSchemeIO Driver = new TwoStickDriveXboxOp(0, 1, 2);
 
     // Simulating Elevator
     public ElevatorSubsystem m_ElevatorSubsystem = new ElevatorSubsystem();

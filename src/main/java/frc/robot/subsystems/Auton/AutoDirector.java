@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.AutoConstants.AutoSector;
 import frc.robot.Constants.AutoConstants.AutoSectorV2;
@@ -58,6 +61,7 @@ public class AutoDirector {
     // Autos.add(testHP());
     // Autos.add(dummyAuto());
     Autos.add(Practice1());
+    Autos.add(Practice2());
     setupSmartAuto();
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -66,10 +70,17 @@ public class AutoDirector {
   }
 
   // ------------------------------------------Autos------------------------------------------
+  // public Auto doNothing() {
+  //   return new Auto("doNothing", new InstantCommand(), new Pose2d());
+  // }
   public Auto doNothing() {
-    return new Auto("doNothing", new InstantCommand(), new Pose2d());
+    Command moveXPos = (subsystems.driveSubsystem().Commands.applyRequest(() ->  new SwerveRequest.RobotCentric().withVelocityX(1)));
+    Command speedZero = subsystems.driveSubsystem().Commands.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
+    Command cmd = moveXPos.withDeadline(Commands.waitSeconds(1)).andThen(speedZero);
+    
+    // var cmd = subsystems.driveSubsystem().setControl(subsystems.driveSubsystem().Commands.applyRequest(() ->  new SwerveRequest.RobotCentric().withVelocityX(1)));
+    return new Auto("doNothing", cmd, new Pose2d());
   }
-
   public Auto newAuto() {
     List<AutoSector> paths = new ArrayList<>();
     paths.add(new AutoSector("TSC", "R6B"));
@@ -192,6 +203,16 @@ public class AutoDirector {
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
 
     return new Auto("Practice1", tracker);
+  }
+
+  public Auto Practice2(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
+    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
+    tracker.addPreload(Reef.BlueR6B);
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
+
+    return new Auto("Practice2", tracker);
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

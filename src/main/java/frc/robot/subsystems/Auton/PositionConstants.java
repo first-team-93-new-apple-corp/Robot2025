@@ -37,8 +37,8 @@ public class PositionConstants {
     public class Reef {
         // public static final Pose2d BlueR6A = new Pose2d(3.09, 4.116, awayFromAlliance);
         // public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
-        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.277, 4.225, towardAlliance));
-        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.277, 3.834, towardAlliance));
+        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.563, 4.225, towardAlliance));
+        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.563, 3.784, towardAlliance));
 
 
         public static final Pose2d BlueR8A = new Pose2d(
@@ -144,7 +144,7 @@ public class PositionConstants {
         public static final Pose2d CenterLeftRed = FlippingUtil.flipFieldPose(CenterLeftBlue);
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
-        public static final Pose2d Center = new Pose2d(7.5, 4, towardAlliance);
+        public static final Pose2d Center = new Pose2d(7.2, 4, towardAlliance);
 
         public static final Pose2d AllianceCorrectedPose(Pose2d pose) {
             Optional<Alliance> ally = DriverStation.getAlliance();

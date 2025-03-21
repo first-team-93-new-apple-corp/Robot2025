@@ -46,7 +46,7 @@ public class Vision extends SubsystemBase {
     // End Sim
     private PhotonPoseEstimator PoseEstimator;
     private Matrix<N3, N1> curStdDevs;
-    private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 2);
     private Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     private CameraPipeline currentPipeline;
 

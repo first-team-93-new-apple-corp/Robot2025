@@ -60,8 +60,9 @@ public class AutoDirector {
     // Autos.add(CenterSideV3());
     // Autos.add(testHP());
     // Autos.add(dummyAuto());
-    Autos.add(Practice1());
-    Autos.add(Practice2());
+    Autos.add(LeftSide());
+    Autos.add(RightSide());
+    Autos.add(Middle());
     setupSmartAuto();
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
@@ -77,7 +78,7 @@ public class AutoDirector {
     Command moveXPos = (subsystems.driveSubsystem().Commands.applyRequest(() ->  new SwerveRequest.RobotCentric().withVelocityX(1)));
     Command speedZero = subsystems.driveSubsystem().Commands.applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0));
     Command cmd = moveXPos.withDeadline(Commands.waitSeconds(1)).andThen(speedZero);
-    
+
     // var cmd = subsystems.driveSubsystem().setControl(subsystems.driveSubsystem().Commands.applyRequest(() ->  new SwerveRequest.RobotCentric().withVelocityX(1)));
     return new Auto("doNothing", cmd, new Pose2d());
   }
@@ -138,16 +139,7 @@ public class AutoDirector {
     return new Auto("Leftside 4 Coral", tracker, PositionConstants.startingPoses.Left());
   }
 
-  public Auto RightSide() {
-    List<AutoSector> paths = new ArrayList<>();
-    paths.add(new AutoSector("RHP", "R2A"));
-    paths.add(new AutoSector("RHP", "R2B"));
-    paths.add(new AutoSector("RHP", "R4A"));
-
-    AutoTracker tracker = new AutoTracker(subsystems, paths, () -> PositionConstants.startingPoses.right(), "R12B");
-
-    return new Auto("Rightside 4 Coral", tracker, PositionConstants.startingPoses.right());
-  }
+  
 
   public Auto CenterSide() {
     List<AutoSector> paths = new ArrayList<>();
@@ -195,24 +187,31 @@ public class AutoDirector {
     return new Auto("Testing HP intake", tracker);
   }
 
-  public Auto Practice1(){
+  public Auto LeftSide(){
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.RightMidBarge());
     tracker.addPoint(new Pose2d(1.232, 3.071, PositionConstants.awayFromAlliance));
     tracker.addPreload(Reef.BlueR4A);
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC3, Reef.BlueR4B));
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
 
-    return new Auto("Practice1", tracker);
+    return new Auto("LeftSide", tracker);
   }
 
-  public Auto Practice2(){
+  public Auto RightSide(){
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
     tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
     tracker.addPreload(Reef.BlueR6B);
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
-    return new Auto("Practice2", tracker);
+    return new Auto("RightSide", tracker);
+  }
+
+  public Auto Middle(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.Center());
+    tracker.addPreload(Reef.BlueR12B);
+
+    return new Auto("Middle", tracker);
   }
 
   public Auto auto(String name, List<AutoSector> paths, Supplier<Pose2d> initalPose,

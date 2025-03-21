@@ -43,7 +43,7 @@ public class Constants {
     public class ArmConstants {
 
         // Offset
-        public static final double GearRatio = 121.5;
+        public static final double GearRatio = 108; // Changed to #35 chain, previous was 121.5
         public static final Angle Offset = Degrees.of(178);
 
         // Motor ID

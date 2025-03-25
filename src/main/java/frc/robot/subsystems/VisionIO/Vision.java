@@ -46,7 +46,7 @@ public class Vision extends SubsystemBase {
     // End Sim
     private PhotonPoseEstimator PoseEstimator;
     private Matrix<N3, N1> curStdDevs;
-    private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(4, 4, 8);
+    private Matrix<N3, N1> kSingleTagStdDevs = VecBuilder.fill(1, 1, 2);
     private Matrix<N3, N1> kMultiTagStdDevs = VecBuilder.fill(0.5, 0.5, 1);
     private CameraPipeline currentPipeline;
 
@@ -181,30 +181,40 @@ public class Vision extends SubsystemBase {
     public Optional<Pose2d> getCoral() {
         if (currentPipeline == CameraPipeline.Coral) {
             try {
+                for (var change : Camera.getAllUnreadResults()) {
+                    Coral = Optional.ofNullable(
+                        (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                                new Rotation3d(poseSupplier.get().getRotation()))
+                                .transformBy(change.targets.get(0).getBestCameraToTarget()
+                                        .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                                new Rotation3d()))))
+                                .toPose2d()).orElse(Coral);
+                    return Optional.ofNullable(
+                        (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                                new Rotation3d(poseSupplier.get().getRotation()))
+                                .transformBy(change.targets.get(0).getBestCameraToTarget()
+                                        .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                                                new Rotation3d()))))
+                                .toPose2d());
+                }
+                // Coral = Optional.ofNullable(
+                //     (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                //             new Rotation3d(poseSupplier.get().getRotation()))
+                //             .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                //                     .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                //                             new Rotation3d()))))
+                //             .toPose2d()).orElse(Coral);
+                // return Optional.ofNullable(
+                //     (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
+                //             new Rotation3d(poseSupplier.get().getRotation()))
+                //             .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
+                //                     .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
+                //                             new Rotation3d()))))
+                //             .toPose2d());
 
-                Coral = Optional.ofNullable(
-                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                            new Rotation3d(poseSupplier.get().getRotation()))
-                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
-                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
-                                            new Rotation3d()))))
-                            .toPose2d()).orElse(Coral);
-                return Optional.ofNullable(
-                    (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                            new Rotation3d(poseSupplier.get().getRotation()))
-                            .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget()
-                                    .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
-                                            new Rotation3d()))))
-                            .toPose2d());
-
-                // (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                // new Rotation3d(poseSupplier.get().getRotation()))
-                // .transformBy(Camera.getAllUnreadResults().get(0).targets.get(0).getBestCameraToTarget())
-                // .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(), new
-                // Rotation3d())))
-                // .toPose2d());
-            } catch (Exception e) {
-                // e.printStackTrace();
+                
+            } catch (IndexOutOfBoundsException e) {
+                // No coral found, throws error 
             }
 
         } 

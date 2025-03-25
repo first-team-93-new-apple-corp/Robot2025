@@ -29,7 +29,7 @@ public class Constants {
                     new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(10.75)),
                             new Rotation3d(Degrees.of(0), Degrees.of(5), Degrees.of(0))));
             public static Camera AlgaeCam2 = new Camera("AlgaeCam2",
-                    new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(10.75)),
+                    new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(9.5)),
                             new Rotation3d(Degrees.of(0), Degrees.of(0), Degrees.of(0))));
         }   
 
@@ -43,7 +43,7 @@ public class Constants {
     public class ArmConstants {
 
         // Offset
-        public static final double GearRatio = 121.5;
+        public static final double GearRatio = 108; // Changed to #35 chain, previous was 121.5
         public static final Angle Offset = Degrees.of(178);
 
         // Motor ID

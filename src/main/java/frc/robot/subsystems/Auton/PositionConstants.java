@@ -25,6 +25,7 @@ public class PositionConstants {
     public class GamePeice {
         public static final Pose2d BlueC1 = new Pose2d(2.300, 5.9, towardAlliance);
         public static final Pose2d BlueC2 = new Pose2d(2.300, 4.075, towardAlliance);
+        public static final Pose2d BlueC3 = new Pose2d(2.300, 2.229, towardAlliance);
 
     }
 
@@ -34,8 +35,11 @@ public class PositionConstants {
     }
 
     public class Reef {
-        public static final Pose2d BlueR6A = new Pose2d(3.08, 3.93, awayFromAlliance);
-        public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
+        // public static final Pose2d BlueR6A = new Pose2d(3.09, 4.116, awayFromAlliance);
+        // public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
+        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.404, 4.225, towardAlliance));
+        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.404, 3.784, towardAlliance));
+
 
         public static final Pose2d BlueR8A = new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(-60)).getX()
@@ -140,7 +144,7 @@ public class PositionConstants {
         public static final Pose2d CenterLeftRed = FlippingUtil.flipFieldPose(CenterLeftBlue);
         public static final Pose2d leftRed = FlippingUtil.flipFieldPose(leftBlue);
         public static final Pose2d rightRed = FlippingUtil.flipFieldPose(rightBlue);
-        public static final Pose2d Center = new Pose2d(7.5, 4, towardAlliance);
+        public static final Pose2d Center = new Pose2d(7.2, 4, towardAlliance);
 
         public static final Pose2d AllianceCorrectedPose(Pose2d pose) {
             Optional<Alliance> ally = DriverStation.getAlliance();
@@ -178,9 +182,12 @@ public class PositionConstants {
         public static final Pose2d Center() {
             return AllianceCorrectedPose(Center);
         }
+        public static final Pose2d RightMidBarge() {
+            return AllianceCorrectedPose(new Pose2d(7.1,1.85, towardAlliance));
+        }
 
         public static final Pose2d LeftBargeMiddle() {
-            return AllianceCorrectedPose(new Pose2d(7.242, 6.181, towardAlliance));
+            return AllianceCorrectedPose(new Pose2d(7.2, 6.2, towardAlliance));
         }
 
         public static final Pose2d CeneterCoral() {

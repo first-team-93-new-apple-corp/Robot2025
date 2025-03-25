@@ -23,7 +23,7 @@ public class ClimberSubsystem extends SubsystemBase {
     double speedMultiplier = 0.5; // Set the value between 0 and 1. Controls the speed of the motor.
 
     public ClimberSubsystem() {
-        climber = new TalonFX(ClimberConstants.climberMotorID, "rio");
+        climber = new TalonFX(ClimberConstants.climberMotorID, "DriveTrain");
         climberConfig = new TalonFXConfiguration();
         climberConfig.MotorOutput.NeutralMode = NeutralModeValue.Brake;
         m_Encoder = new DutyCycleEncoder(ClimberConstants.climberEncoderID);

@@ -117,7 +117,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
     }
 
     public void addPoint(Pose2d point) {
-        addCommands(AutoBuilder.pathfindToPose(point, constraints));
+        addCommands(AutoBuilder.pathfindToPoseFlipped(point, constraints));
     }
 
     public void addSector(AutoSectorV2 sector) {

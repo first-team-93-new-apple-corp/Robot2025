@@ -34,8 +34,7 @@ public class ClimberSubsystem extends SubsystemBase {
         // slot0.kG = 0.0;
         // slot0.kV = 0.0;
         // slot0.kP = 0.0;
-        // slot0.kI = 0.0;
-        // slot0.kD = 0.0;
+        // slot0.kI = 0.0;.kD = 0.0;
         // slot0.kS = 0.0;
 
         climber.getConfigurator().apply(climberConfig);
@@ -54,11 +53,11 @@ public class ClimberSubsystem extends SubsystemBase {
 
     public class ClimberCommands {
         public Command inwardPosition() {
-            return startEnd(() -> climber.set(.5), ()-> climber.set(0));
+            return startEnd(() -> climber.set(.7), ()-> climber.set(0));
         }
 
         public Command outwardPosition() {
-            return startEnd(() -> climber.set(-.5), ()-> climber.set(0));
+            return startEnd(() -> climber.set(-.7), ()-> climber.set(0));
         }
 
         public Command stop() {

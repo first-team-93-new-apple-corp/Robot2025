@@ -38,7 +38,7 @@ public class PositionConstants {
         // public static final Pose2d BlueR6A = new Pose2d(3.09, 4.116, awayFromAlliance);
         // public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
         public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.404, 4.225, towardAlliance));
-        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.404, 3.784, towardAlliance));
+        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.404, 3.934, towardAlliance));
 
 
         public static final Pose2d BlueR8A = new Pose2d(

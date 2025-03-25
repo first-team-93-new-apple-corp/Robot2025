@@ -185,3 +185,9 @@ compile_commands.json
 
 # Eclipse generated file for annotation processors
 .factorypath
+
+# Team 93
+
+!/PhotonConfig/frontCameraExport(1).zip
+!/PhotonConfig/frontCameraExport(2).zip
+!/PhotonConfig/frontCameraExport.zip

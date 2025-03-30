@@ -26,6 +26,7 @@ import frc.robot.Constants.AutoConstants.AutoSector;
 import frc.robot.Constants.AutoConstants.AutoSectorV2;
 import frc.robot.Constants.AutoConstants.IntakingStrategy;
 import frc.robot.commands.intake;
+import frc.robot.subsystems.Auton.AutoDirector.Auto;
 
 public class AutoTrackerV2 extends SequentialCommandGroup {
 
@@ -63,6 +64,14 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         try {
 
             addCommands(score(preload));
+        } catch (Exception e) {
+        }
+    }
+
+    public void addPreloadAdvanced(Pose2d preload) {
+        try {
+
+            addCommands(advancedScore(PositionConstants.Reef.poseToPreAlign(preload), preload));
         } catch (Exception e) {
         }
     }
@@ -148,6 +157,34 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         }
     }
 
+    public void addSectorAdvanced(AutoSectorV2 sector) {
+        try {
+            addCommands(
+                    Commands.defer(
+                            () -> AutoBuilder.pathfindToPoseFlipped(checkIfCoral(subsystems.cam().Coral, sector.intakingPose()), constraints),
+                            Set.of(subsystems.driveSubsystem())));
+            addCommands(
+                    new ConditionalCommand(
+                            subsystems.elevatorSubsystem().Commands.Bottom()
+                                    .alongWith(subsystems.armSubsystem().Commands.GroundIntake()
+                                            .alongWith(Commands.waitSeconds(.5))),
+                            Commands.print("Yeah were there"), () -> subsystems.elevatorSubsystem().atBottom()));
+            addCommands(Intake(PositionConstants.intakeToStrat.get(sector.intakingPose())));
+
+            addCommands((subsystems.driveSubsystem().Commands
+                    .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
+                    .withDeadline(Commands.waitSeconds(.75))).andThen(subsystems.driveSubsystem().Commands
+                            .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                    .withDeadline(Commands.waitSeconds(1)));
+
+            addCommands(advancedScore(PositionConstants.Reef.poseToPreAlign(sector.ScoringPose()), sector.ScoringPose()));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }
+
     public Command score(PathPlannerPath scoringPath) {
         return score(AutoBuilder.pathfindThenFollowPath(scoringPath, constraints));
     }
@@ -198,6 +235,30 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                         .withDeadline(Commands.waitSeconds(.7)));
     }
 
+    public Command advancedScore(Pose2d preScoringPose, Pose2d scoringPose) {
+        return new ConditionalCommand(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", true)),
+                ((AutoBuilder.pathfindToPoseFlipped(preScoringPose, AutoConstants.EleDownConstraints))
+                        .alongWith(Commands.print("Going there")))
+                        .andThen(L4())
+                        .andThen(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints))
+                        .andThen(Outtake())
+                        .andThen((subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-1))
+                                .withDeadline(Commands.waitSeconds(.6)))
+                                .andThen(subsystems.driveSubsystem().Commands
+                                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0))
+                                .withDeadline(Commands.waitSeconds(1)))),
+                () -> !SmartDashboard.getBoolean("Has Coral", false))
+                .repeatedly().until((() -> SmartDashboard.getBoolean("scored", false)))
+                .andThen(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", false)))
+                .andThen((subsystems.driveSubsystem().Commands
+                        .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(1))
+                        .withDeadline(Commands.waitSeconds(.4)))
+                        .andThen(subsystems.driveSubsystem().Commands
+                                .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
+                        .withDeadline(Commands.waitSeconds(.6)));
+    }
+
     private Command L2() {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
@@ -210,7 +271,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         if (Utils.isSimulation()) {
             return Commands.print("to L4");
         } else {
-            return subsystems.armSubsystem().Commands.L4().alongWith(subsystems.elevatorSubsystem().Commands.L4());
+            return subsystems.armSubsystem().Commands.L4().alongWith(subsystems.elevatorSubsystem().Commands.L4()).alongWith(Commands.waitSeconds(1));
         }
     }
 

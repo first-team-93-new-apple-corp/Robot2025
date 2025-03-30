@@ -301,5 +301,9 @@ public class Constants {
                 MaxAngularRate,
                 MaxAngularAcceleration);
 
+        public static PathConstraints EleDownConstraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(2),
+                MaxAngularRate,
+                MaxAngularAcceleration);
+
     }
 }

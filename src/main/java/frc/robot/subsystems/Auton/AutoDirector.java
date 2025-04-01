@@ -207,7 +207,7 @@ public class AutoDirector {
     return new Auto("RightSide", tracker);
   }
   public Auto RightSideV2(){
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.Center());
     tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
     tracker.addPreloadAdvanced(Reef.BlueR6B);
     tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));

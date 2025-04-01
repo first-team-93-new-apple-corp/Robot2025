@@ -301,9 +301,15 @@ public class Constants {
                 MaxAngularRate,
                 MaxAngularAcceleration);
 
-        public static PathConstraints EleDownConstraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(2),
+        public static PathConstraints EleDownConstraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(1.5),
                 MaxAngularRate,
                 MaxAngularAcceleration);
-
+        public static PathConstraints getHeightAdjustedConstraints(Distance height){
+            if (height.gt(Inches.of(4))) {
+                return constraints;
+            } else {
+                return EleDownConstraints;
+            }
+        }
     }
 }

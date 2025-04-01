@@ -237,8 +237,8 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
 
     public Command advancedScore(Pose2d preScoringPose, Pose2d scoringPose) {
         return new ConditionalCommand(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", true)),
-                ((AutoBuilder.pathfindToPoseFlipped(preScoringPose, AutoConstants.EleDownConstraints))
-                        .alongWith(Commands.print("Going there")))
+                (Commands.defer(() -> AutoBuilder.pathfindToPoseFlipped(preScoringPose, AutoConstants.getHeightAdjustedConstraints(subsystems.elevatorSubsystem().armPivotHeight())), Set.of(subsystems.driveSubsystem())))
+                        .alongWith(Commands.print("Going there"))
                         .andThen(L4())
                         .andThen(AutoBuilder.pathfindToPoseFlipped(scoringPose, constraints))
                         .andThen(Outtake())

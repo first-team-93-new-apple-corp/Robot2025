@@ -334,7 +334,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         public Command CoralStuck(){
             return runOnce(()-> {
-                setSetpoints(Inches.of(6), ElevatorStrategy.stageOneBias);
+                setSetpoints(Inches.of(10), ElevatorStrategy.stageOneBias);
             });
         }
 

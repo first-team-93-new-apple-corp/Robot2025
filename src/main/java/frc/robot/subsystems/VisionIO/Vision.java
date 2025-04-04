@@ -184,14 +184,14 @@ public class Vision extends SubsystemBase {
                 for (var change : Camera.getAllUnreadResults()) {
                     Coral = Optional.ofNullable(
                         (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                                new Rotation3d(poseSupplier.get().getRotation()))
+                                new Rotation3d(poseSupplier.get().getRotation())).transformBy(camTransform)
                                 .transformBy(change.targets.get(0).getBestCameraToTarget()
                                         .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
                                                 new Rotation3d()))))
                                 .toPose2d()).orElse(Coral);
                     return Optional.ofNullable(
                         (new Pose3d(poseSupplier.get().getX(), poseSupplier.get().getY(), 0.0,
-                                new Rotation3d(poseSupplier.get().getRotation()))
+                                new Rotation3d(poseSupplier.get().getRotation())).transformBy(camTransform)
                                 .transformBy(change.targets.get(0).getBestCameraToTarget()
                                         .plus(new Transform3d(Inches.of(-24), Inches.zero(), Inches.zero(),
                                                 new Rotation3d()))))

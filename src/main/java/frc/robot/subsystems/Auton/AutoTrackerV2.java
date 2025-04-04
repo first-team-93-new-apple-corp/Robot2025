@@ -26,6 +26,7 @@ import frc.robot.Constants.AutoConstants.AutoSector;
 import frc.robot.Constants.AutoConstants.AutoSectorV2;
 import frc.robot.Constants.AutoConstants.IntakingStrategy;
 import frc.robot.commands.intake;
+import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector.Auto;
 
 public class AutoTrackerV2 extends SequentialCommandGroup {
@@ -251,12 +252,15 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                 () -> !SmartDashboard.getBoolean("Has Coral", false))
                 .repeatedly().until((() -> SmartDashboard.getBoolean("scored", false)))
                 .andThen(Commands.runOnce(() -> SmartDashboard.putBoolean("scored", false)))
-                .andThen((subsystems.driveSubsystem().Commands
+                .andThen(((subsystems.driveSubsystem().Commands
                         .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(1))
                         .withDeadline(Commands.waitSeconds(.4)))
                         .andThen(subsystems.driveSubsystem().Commands
                                 .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0)))
-                        .withDeadline(Commands.waitSeconds(.6)));
+                        .withDeadline(Commands.waitSeconds(.6)))
+                .alongWith((subsystems.armSubsystem().Commands.VerticalStow())
+                .alongWith(Commands.waitUntil(() -> subsystems.armSubsystem().atSetpoint()))
+                .andThen(subsystems.elevatorSubsystem().Commands.Bottom())));
     }
 
     private Command L2() {

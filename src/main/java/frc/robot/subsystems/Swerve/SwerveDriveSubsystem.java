@@ -181,13 +181,13 @@ public class SwerveDriveSubsystem extends TunerSwerveDrivetrain implements Subsy
             }
         }
         public Command autoAlignV2(String ABSupplier) {
-                if (getAlliance().equals(Alliance.Red)) {
-                    if (ABSupplier.equals("A")) {
-                        ABSupplier = "B";
-                    } else{
-                        ABSupplier = "A";
-                    }
-                }
+                // if (getAlliance().equals(Alliance.Red)) {
+                //     if (ABSupplier.equals("A")) {
+                //         ABSupplier = "B";
+                //     } else{
+                //         ABSupplier = "A";
+                //     }
+                // }
                 Pose2d pose = ReefChooser.ChoosePose(ABSupplier, getState().Pose, getAlliance());
                 PathConstraints constraints = AutoConstants.constraints;
                 return AutoBuilder.pathfindToPose(pose, constraints);

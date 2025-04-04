@@ -61,7 +61,7 @@ public class AutoDirector {
     // Autos.add(testHP());
     // Autos.add(dummyAuto());
     Autos.add(LeftSide());
-    Autos.add(RightSide());
+    Autos.add(RightSideV2());
     Autos.add(Middle());
     setupSmartAuto();
     for (Auto auto : Autos) {
@@ -205,6 +205,15 @@ public class AutoDirector {
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
     return new Auto("RightSide", tracker);
+  }
+  public Auto RightSideV2(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.Center());
+    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
+    tracker.addPreloadAdvanced(Reef.BlueR6B);
+    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
+    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
+
+    return new Auto("RightSideV2 - [PreAligns for Faster Autos]", tracker);
   }
 
   public Auto Middle(){

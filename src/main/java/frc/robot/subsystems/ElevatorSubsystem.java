@@ -12,6 +12,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.units.PerUnit;
 import edu.wpi.first.units.measure.Distance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -108,7 +109,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         // InnerTopSwitch.Tripped().onTrue(Commands.maxInnerMotor());
     }
 
-    private Distance armPivotHeight() {
+    public Distance armPivotHeight() {
         return Inches
                 .of(outerElevatorMotor.getPosition().getValue().timesRatio(ElevatorConstants.OuterRotationsToInches)
                         .in(Inches))

@@ -162,7 +162,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
         try {
             addCommands(
                     Commands.defer(
-                            () -> AutoBuilder.pathfindToPoseFlipped(checkIfCoral(subsystems.cam().Coral, sector.intakingPose()), constraints),
+                            () -> AutoBuilder.pathfindToPoseFlipped(checkIfCoral(subsystems.cam().Coral, sector.intakingPose()), AutoConstants.EleDownConstraints),
                             Set.of(subsystems.driveSubsystem())));
             addCommands(
                     new ConditionalCommand(
@@ -325,7 +325,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                             .withDeadline(Commands.waitUntil(() -> SmartDashboard.getBoolean("Has Coral", true))))
                             .andThen(subsystems.driveSubsystem().Commands
                                     .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(0))))
-                    .withDeadline(Commands.waitSeconds(1.6)))
+                    .withDeadline(Commands.waitSeconds(1.9)))
                     .andThen((subsystems.driveSubsystem().Commands
                             .applyRequest(() -> new SwerveRequest.RobotCentric().withVelocityX(-.5))
                             .withDeadline(Commands.waitSeconds(.5))).andThen(subsystems.driveSubsystem().Commands

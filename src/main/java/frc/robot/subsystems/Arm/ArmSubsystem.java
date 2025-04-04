@@ -167,5 +167,9 @@ public class ArmSubsystem extends SubsystemBase {
 
             }).ignoringDisable(true);
         }
+
+        public Command CoralStuck(){
+            return VerticalStow();
+        }
     }
 }

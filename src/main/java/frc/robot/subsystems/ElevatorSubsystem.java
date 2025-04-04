@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
+import frc.robot.Constants.AutoConstants.IntakingStrategy;
 import frc.robot.Constants.ElevatorConstants.ElevatorStrategy;
 import frc.robot.Utilities.CommandLimitSwitch;
 import frc.robot.Utilities.CommandLimitSwitchDio;
@@ -329,6 +330,12 @@ public class ElevatorSubsystem extends SubsystemBase {
                     outerElevatorMotor.getConfigurator().apply(outerConfig);
                 }
             }).ignoringDisable(true);
+        }
+
+        public Command CoralStuck(){
+            return runOnce(()-> {
+                setSetpoints(Inches.of(6), ElevatorStrategy.stageOneBias);
+            });
         }
 
     }

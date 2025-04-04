@@ -157,7 +157,7 @@ public class RobotContainer {
         Driver.manDownElev().whileTrue(m_ElevatorSubsystem.Commands.changeSetpointBy(Inches.of(-.5)).repeatedly());
         Driver.manUpArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(12)).repeatedly());
         Driver.manDownArm().whileTrue(m_ArmSubsystem.Commands.changeSetpointBy(Degrees.of(-12)).repeatedly());
-
+        SmartDashboard.putData("Coral In the Bot", m_ElevatorSubsystem.Commands.CoralStuck().alongWith(m_ArmSubsystem.Commands.CoralStuck()));
         // SYSID ROUTINES
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.

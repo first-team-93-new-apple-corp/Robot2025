@@ -24,10 +24,10 @@ public class intake extends SequentialCommandGroup {
         this.m_Grab = m_Grab;
         this.m_IntakeLimit = GrabberSubsystem.limit;
 
-        addCommands(m_Elev.Commands.intake().alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint())));
+        addCommands(m_Elev.Commands.intake().andThen(Commands.waitUntil(() -> m_Elev.atSetpoint())));
         addCommands(Commands.print("Elevator has ended"));
 
-        addCommands(m_Arm.Commands.Intake().alongWith(Commands.waitUntil(() -> m_Arm.atSetpoint())));
+        addCommands(m_Arm.Commands.Intake().andThen(Commands.waitUntil(() -> m_Arm.atSetpoint())));
         addCommands(Commands.print("Arm has ended"));
         addCommands((m_Grab.Commands.intake().withDeadline(Commands.waitSeconds(0.7)))
                 .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(-2.5), ElevatorStrategy.stageOneBias)

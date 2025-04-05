@@ -66,7 +66,6 @@ public class ArmSubsystem extends SubsystemBase {
         wrist.setPosition(getAngle());
         SmartDashboard.putData("Brake Arm", Commands.brakeMotor(true));
         SmartDashboard.putData("Coast Arm", Commands.brakeMotor(false));
-        wrist.setPosition(getAngle());
     }
 
     /**
@@ -103,9 +102,9 @@ public class ArmSubsystem extends SubsystemBase {
         // wrist.setPosition(getPosition());
 
         // This should result in less stuttering when we set a new angle
-        //if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(2))) {
-        //    wrist.setPosition(getAngle());
-        //}
+        if (!wrist.getPosition().getValue().isNear(getAngle(), Rotations.of(2))) {
+            wrist.setPosition(getAngle());
+        }
         // 108 -> 19:30 = 170.5:1
         SmartDashboard.putNumber("WristAngleMotor", wrist.getPosition().getValueAsDouble());
         SmartDashboard.putNumber("WristAngleEncoder", getAngle().in(Rotations));

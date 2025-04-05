@@ -125,6 +125,9 @@ public class RobotContainer {
                 new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlignV2("A"), Set.of(m_DriveSubsystem)));
         Driver.outTake()
                 .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
+        Driver.outTake()
+                .and(m_GrabberSubsystem.Commands.checkCoralReversed())
+                .onTrue(Commands.runOnce(() -> SignalLogger.writeString("Scored Coral Pose", m_DriveSubsystem.getState().Pose.toString())));
 
         Driver.superStructureL1().onTrue(m_ElevatorSubsystem.Commands.L1().alongWith(m_ArmSubsystem.Commands.L1()));
         Driver.superStructureL2().onTrue(m_ElevatorSubsystem.Commands.L2().alongWith(m_ArmSubsystem.Commands.L2()));

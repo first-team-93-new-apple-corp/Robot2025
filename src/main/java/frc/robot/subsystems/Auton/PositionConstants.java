@@ -42,8 +42,8 @@ public class PositionConstants {
         // public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
         // public static final Pose2d BlueR6A = new Pose2d(3.087,3.910, awayFromAlliance); //MKE
         // public static final Pose2d BlueR6B = new Pose2d(3.0773, 4.236786, awayFromAlliance);
-        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.354, 4.225, towardAlliance)); // la crosse
-        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.354, 4.034, towardAlliance));
+        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.374, 4.225, towardAlliance)); // la crosse
+        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.374, 4.034, towardAlliance));
         public static final Pose2d PreBlueR6A = FlippingUtil.flipFieldPose(new Pose2d(15.404, 4.225, towardAlliance));
         public static final Pose2d PreBlueR6B = FlippingUtil.flipFieldPose(new Pose2d(15.404, 3.784, towardAlliance));
 
@@ -108,7 +108,9 @@ public class PositionConstants {
                 BlueR6B.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(180))
                         .getRotation());
 
-        public static final Pose2d BlueR2A = new Pose2d(
+        public static final Pose2d BlueR2A = 
+        // FlippingUtil.flipFieldPose(new Pose2d(12.110,5.1,Rotation2d.fromDegrees(-60)));
+        new Pose2d(
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(120)).getX()
                         + 4.5,
                 BlueR6A.relativeTo(new Pose2d(4.5, 4, new Rotation2d())).rotateBy(Rotation2d.fromDegrees(120)).getY()

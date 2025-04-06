@@ -42,8 +42,8 @@ public class PositionConstants {
         // public static final Pose2d BlueR6B = new Pose2d(3.09, 3.889, awayFromAlliance);
         // public static final Pose2d BlueR6A = new Pose2d(3.087,3.910, awayFromAlliance); //MKE
         // public static final Pose2d BlueR6B = new Pose2d(3.0773, 4.236786, awayFromAlliance);
-        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.374, 4.225, towardAlliance)); // la crosse
-        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.374, 4.034, towardAlliance));
+        public static final Pose2d BlueR6A = FlippingUtil.flipFieldPose(new Pose2d(14.404, 4.225, towardAlliance)); // la crosse
+        public static final Pose2d BlueR6B = FlippingUtil.flipFieldPose(new Pose2d(14.404, 4.034, towardAlliance));
         public static final Pose2d PreBlueR6A = FlippingUtil.flipFieldPose(new Pose2d(15.404, 4.225, towardAlliance));
         public static final Pose2d PreBlueR6B = FlippingUtil.flipFieldPose(new Pose2d(15.404, 3.784, towardAlliance));
 

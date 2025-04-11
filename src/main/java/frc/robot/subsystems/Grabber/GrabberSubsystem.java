@@ -55,6 +55,10 @@ public class GrabberSubsystem implements Subsystem {
         public BooleanSupplier checkCoral(){
             return () -> hasCoral();
         }
+        
+        public BooleanSupplier checkCoralReversed(){
+            return () -> !hasCoral();
+        }
     }
 
 }

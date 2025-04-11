@@ -60,10 +60,11 @@ public class AutoDirector {
     // Autos.add(CenterSideV3());
     // Autos.add(testHP());
     // Autos.add(dummyAuto());
-    Autos.add(LeftSide());
+
+    Autos.add(LeftSideV2());
     Autos.add(RightSideV2());
     Autos.add(Middle());
-    setupSmartAuto();
+    // setupSmartAuto();
     for (Auto auto : Autos) {
       autoChooser.addOption(auto.name, auto);
     }
@@ -187,33 +188,44 @@ public class AutoDirector {
     return new Auto("Testing HP intake", tracker);
   }
 
-  public Auto LeftSide(){
+  public Auto RightSide(){
     AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.RightMidBarge());
     tracker.addPoint(new Pose2d(1.232, 3.071, PositionConstants.awayFromAlliance));
     tracker.addPreload(Reef.BlueR4A);
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC3, Reef.BlueR4B));
     tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
 
+    return new Auto("RightSIde", tracker);
+  }
+
+  public Auto LeftSide(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
+    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
+    tracker.addPreload(Reef.BlueR8A);
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6B));
+    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR8A));
+
     return new Auto("LeftSide", tracker);
   }
 
-  public Auto RightSide(){
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
-    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
-    tracker.addPreload(Reef.BlueR6B);
-    tracker.addSector(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
-    tracker.addSector(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
-    return new Auto("RightSide", tracker);
-  }
   public Auto RightSideV2(){
-    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.Center());
-    tracker.addPoint(new Pose2d(1.848, 4.934, PositionConstants.awayFromAlliance));
-    tracker.addPreloadAdvanced(Reef.BlueR6B);
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.RightMidBarge());
+    // tracker.addPoint(new Pose2d(1.232, 3.071, PositionConstants.awayFromAlliance));
+    tracker.addPreloadAdvanced(Reef.BlueR4A);
+    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC3, Reef.BlueR4B));
     tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR6A));
-    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR8A));
 
     return new Auto("RightSideV2 - [PreAligns for Faster Autos]", tracker);
+  }
+  public Auto LeftSideV2(){
+    AutoTrackerV2 tracker = new AutoTrackerV2(subsystems, ()-> PositionConstants.startingPoses.LeftBargeMiddle());
+    // tracker.addPoint(new Pose2d(1.232, 3.071, PositionConstants.awayFromAlliance));
+    tracker.addPreloadAdvanced(Reef.BlueR8A);
+    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC1, Reef.BlueR6B));
+    tracker.addSectorAdvanced(new AutoSectorV2(GamePeice.BlueC2, Reef.BlueR8A));
+
+    return new Auto("LeftSideV2 - [PreAligns for Faster Autos]", tracker);
   }
 
   public Auto Middle(){

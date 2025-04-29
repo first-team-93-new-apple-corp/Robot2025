@@ -62,7 +62,7 @@ public class AutoDirector {
     // Autos.add(dummyAuto());
 
     Autos.add(LeftSide());
-    Autos.add(RightSideV2()),
+    Autos.add(RightSideV2());
     Autos.add(Middle());
     setupSmartAuto();
     for (Auto auto : Autos) {

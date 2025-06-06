@@ -90,7 +90,7 @@ public class RobotContainer {
         // AUTON
         m_DriveSubsystem.configureAuto();
         autoDirector = new AutoDirector(new AutoSubsystems(m_DriveSubsystem, m_ArmSubsystem, m_ElevatorSubsystem,
-                m_GrabberSubsystem, m_Intake,algaeCam));
+                m_GrabberSubsystem, m_Intake,algaeCam, m_IntakeSubsystem));
         configureBindings();
 
     }
@@ -143,7 +143,8 @@ public class RobotContainer {
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));
         Driver.bellyPanIntake()
                 .whileTrue((m_ElevatorSubsystem.Commands.intakePrime().andThen(Commands.waitUntil(() -> m_ElevatorSubsystem.atSetpoint())))
-                        .andThen(m_ArmSubsystem.Commands.Intake()));
+                        .andThen(m_ArmSubsystem.Commands.Intake()).alongWith(m_IntakeSubsystem.Commands.intake()));
+        Driver.bellyPanIntake().onFalse(m_IntakeSubsystem.Commands.stop());
 
         Driver.climberIn().onTrue(m_ClimberSubsystem.climberCommands.inwardPosition());
         Driver.climberOut().onTrue(m_ClimberSubsystem.climberCommands.outwardPosition());

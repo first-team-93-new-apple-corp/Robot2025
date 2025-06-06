@@ -4,38 +4,35 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
-
 import java.util.Set;
-
 import java.util.function.Supplier;
 
-import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Inches;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.DeferredCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import frc.robot.subsystems.Controls.ThrottleableDrive;
-import frc.robot.subsystems.Controls.TwoStickDriveXboxOp;
-import frc.robot.subsystems.Grabber.GrabberSubsystem;
 import frc.robot.Constants.Inputs.CameraPipeline;
-import frc.robot.Constants.Inputs.Cameras.Camera;
 import frc.robot.commands.intake;
-import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.Arm.ArmSubsystem;
 import frc.robot.subsystems.Auton.AutoDirector;
 import frc.robot.subsystems.Auton.AutoSubsystems;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.Controls.ControllerSchemeIO;
-// import frc.robot.subsystems.Controls.XboxDrive;
+import frc.robot.subsystems.Controls.TwoStickDriveXboxOp;
+import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.Grabber.GrabberSubsystem;
+import frc.robot.subsystems.Intake.IntakeSubsystem;
 import frc.robot.subsystems.Swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.Swerve.Telemetry;
 import frc.robot.subsystems.Swerve.TunerConstants;
@@ -76,7 +73,8 @@ public class RobotContainer {
     private Vision algaeCam;
 
     private GrabberSubsystem m_GrabberSubsystem = new GrabberSubsystem();
-    private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem);
+    private IntakeSubsystem m_IntakeSubsystem = new IntakeSubsystem();
+    private intake m_Intake = new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem, m_IntakeSubsystem);
 
     private ClimberSubsystem m_ClimberSubsystem = new ClimberSubsystem();
 
@@ -152,7 +150,7 @@ public class RobotContainer {
 
         Driver.climberIn().onFalse(m_ClimberSubsystem.climberCommands.stop());
         Driver.climberOut().onFalse(m_ClimberSubsystem.climberCommands.stop());
-        Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem));
+        Driver.bellyPanIntake().and(Driver.Prime()).whileTrue(new intake(m_ElevatorSubsystem, m_ArmSubsystem, m_GrabberSubsystem, m_IntakeSubsystem));
 
         Driver.verticalCoralIntake().and(Driver.Prime())
                 .onTrue(m_ElevatorSubsystem.Commands.Bottom().alongWith(m_ArmSubsystem.Commands.VerticalStow()));

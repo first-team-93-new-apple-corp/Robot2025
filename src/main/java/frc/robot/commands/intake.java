@@ -31,11 +31,11 @@ public class intake extends SequentialCommandGroup {
         addCommands(m_Arm.Commands.Intake().andThen(Commands.waitUntil(() -> m_Arm.atSetpoint())));
         addCommands(Commands.print("Arm has ended"));
 
-        
+        // addCommands(m_Intake.Commands.intake());
 
         addCommands((m_Grab.Commands.intake().withDeadline(Commands.waitSeconds(0.7)))
                 .alongWith(m_Elev.Commands.changeSetpointBy(Inches.of(-2.5), ElevatorStrategy.stageOneBias)
-                        .alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint()))).alongWith(m_Intake.Commands.stop().withDeadline(Commands.waitSeconds(1))));
+                        .alongWith(Commands.waitUntil(() -> m_Elev.atSetpoint()))));
         addCommands(Commands.print("Intake has ended"));
 
         addCommands(

@@ -8,14 +8,14 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class IntakeSubsystem extends SubsystemBase{
 
-    private SparkMax motor;
+    private SparkMax intakeMotor;
     public IntakeCommands Commands = new IntakeCommands();
     public IntakeSubsystem() {
-        motor = new SparkMax(61, MotorType.kBrushless);
+        intakeMotor = new SparkMax(61, MotorType.kBrushless);
     }
 
     public void setSpeed(double speed) {
-        motor.set(speed);
+        intakeMotor.set(speed);
     }
 
     public class IntakeCommands {
@@ -28,11 +28,11 @@ public class IntakeSubsystem extends SubsystemBase{
         }
 
         public Command outtake() {
-            return runOnce(() -> setSpeed(0.4));
+            return runOnce(() -> setSpeed(0.6));
         }
 
-        public Command setSpeed(double speed) {
-            return runOnce(() -> setSpeed(-speed));
-        }
+        // public Command setSpeed(double speed) {
+        //     return runOnce(() -> setSpeed(-speed));
+        // }
     }
 }

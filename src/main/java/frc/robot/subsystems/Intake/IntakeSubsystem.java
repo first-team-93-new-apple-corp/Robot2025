@@ -26,5 +26,13 @@ public class IntakeSubsystem extends SubsystemBase{
         public Command intake() {
             return runOnce(() -> setSpeed(-0.4));
         }
+
+        public Command outtake() {
+            return runOnce(() -> setSpeed(0.4));
+        }
+
+        public Command setSpeed(double speed) {
+            return runOnce(() -> setSpeed(-speed));
+        }
     }
 }

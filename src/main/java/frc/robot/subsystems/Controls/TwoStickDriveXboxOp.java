@@ -105,12 +105,16 @@ public class TwoStickDriveXboxOp implements ControllerSchemeIO {
 
     @Override
     public Trigger removeAlgea() {
-        return operatorController.start();
+        return operatorController.start().and(operatorController.back().negate());
     }
 
     @Override
     public Trigger bellyPanIntake() {
-        return operatorController.back();
+        return operatorController.back().and(operatorController.start().negate());
+    }
+    @Override
+    public Trigger reverseIntake() {
+        return operatorController.back().and(operatorController.start());
     }
 
     @Override

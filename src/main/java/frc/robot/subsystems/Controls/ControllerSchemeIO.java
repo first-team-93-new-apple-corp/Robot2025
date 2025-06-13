@@ -59,6 +59,8 @@ public interface ControllerSchemeIO {
 
     public Trigger bellyPanIntake();
 
+    public Trigger reverseIntake();
+
     public Trigger outTake();
 
     public Trigger removeAlgea();

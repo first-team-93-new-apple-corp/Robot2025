@@ -144,10 +144,10 @@ public class RobotContainer {
         Driver.bellyPanIntake()
                 .whileTrue((m_ElevatorSubsystem.Commands.intakePrime().andThen(Commands.waitUntil(() -> m_ElevatorSubsystem.atSetpoint())))
                         .andThen(m_ArmSubsystem.Commands.Intake())
-                        .andThen(m_IntakeSubsystem.Commands.intake())
-                        );
+                        .andThen(m_IntakeSubsystem.Commands.intake()));
         Driver.bellyPanIntake().onFalse(m_IntakeSubsystem.Commands.stop());
-
+        Driver.reverseIntake().onTrue(m_IntakeSubsystem.Commands.outtake());
+        
         Driver.climberIn().onTrue(m_ClimberSubsystem.climberCommands.inwardPosition());
         Driver.climberOut().onTrue(m_ClimberSubsystem.climberCommands.outwardPosition());
 

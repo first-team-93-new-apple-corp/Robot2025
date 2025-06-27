@@ -8,10 +8,16 @@ import static edu.wpi.first.units.Units.*;
 
 import com.pathplanner.lib.path.PathConstraints;
 
+import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 
 public class Constants {
     public class Inputs {
@@ -31,13 +37,21 @@ public class Constants {
             public static Camera AlgaeCam2 = new Camera("AlgaeCam2",
                     new Transform3d(new Translation3d(Inches.of(13), Inches.of(9.5), Inches.of(9.5)),
                             new Rotation3d(Degrees.of(0), Degrees.of(0), Degrees.of(0))));
-        }   
+        }
 
         public enum CameraPipeline {
             AprilTag,
             Coral
         }
 
+        public class Quest {
+            public static final Transform2d Robot_To_Quest = new Transform2d(0, 0, new Rotation2d(Degrees.of(0))); //TODO: Change to actual
+            public static final Matrix<N3, N1> QUESTNAV_STD_DEVS = VecBuilder.fill(
+                    0.02, // Trust down to 2cm in X direction
+                    0.02, // Trust down to 2cm in Y direction
+                    0.035 // Trust down to 2 degrees rotational
+            );
+        }
     }
 
     public class ArmConstants {
@@ -294,17 +308,19 @@ public class Constants {
 
         static LinearVelocity MaxSpeed = MetersPerSecond.of(4.73);// kSpeedAt12Volts desired top speed
         static LinearAcceleration MaxAcceleration = MetersPerSecondPerSecond.of(9.8);
-        static AngularVelocity MaxAngularRate = RotationsPerSecond.of(1/2); // 3/4 of a rotation per second
-        static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(3/4);
+        static AngularVelocity MaxAngularRate = RotationsPerSecond.of(1 / 2); // 3/4 of a rotation per second
+        static AngularAcceleration MaxAngularAcceleration = RotationsPerSecondPerSecond.of(3 / 4);
 
         public static PathConstraints constraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(6),
                 MaxAngularRate,
                 MaxAngularAcceleration);
 
-        public static PathConstraints EleDownConstraints = new PathConstraints(MaxSpeed.div(1.5), MaxAcceleration.div(1.5),
+        public static PathConstraints EleDownConstraints = new PathConstraints(MaxSpeed.div(1.5),
+                MaxAcceleration.div(1.5),
                 MaxAngularRate,
                 MaxAngularAcceleration);
-        public static PathConstraints getHeightAdjustedConstraints(Distance height){
+
+        public static PathConstraints getHeightAdjustedConstraints(Distance height) {
             if (height.gt(Inches.of(4))) {
                 return constraints;
             } else {

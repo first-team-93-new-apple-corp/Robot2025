@@ -305,7 +305,7 @@ public class AutoTrackerV2 extends SequentialCommandGroup {
                 return subsystems.elevatorSubsystem().Commands.intake().andThen(Commands.waitSeconds(0.3))
                         .andThen((subsystems.armSubsystem().Commands.Intake())).andThen(Commands.waitSeconds(2))
                         .andThen(new intake(subsystems.elevatorSubsystem(), subsystems.armSubsystem(),
-                                subsystems.grabberSubsystem()));
+                                subsystems.grabberSubsystem(), subsystems.intakeSubsystem()));
 
                 // cmd.addCommands(subsystems.driveSubsystem().Commands.applyRequest(
                 // () -> new SwerveRequest.RobotCentric()

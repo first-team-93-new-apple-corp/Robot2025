@@ -165,4 +165,10 @@ public class XboxDrive implements ControllerSchemeIO {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'robotRel'");
     }
+
+    @Override
+    public Trigger reverseIntake() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'reverseIntake'");
+    }
 }

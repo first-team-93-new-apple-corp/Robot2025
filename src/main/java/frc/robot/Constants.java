@@ -44,7 +44,7 @@ public class Constants {
 
         // Offset
         public static final double GearRatio = 108; // Changed to #35 chain, previous was 121.5
-        public static final Angle Offset = Degrees.of(125);
+        public static final Angle Offset = Degrees.of(125+38+79);
 
         // Motor ID
         public class IDs {

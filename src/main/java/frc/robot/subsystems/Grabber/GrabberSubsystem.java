@@ -5,7 +5,10 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import java.util.function.BooleanSupplier;
 
+import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.config.SparkMaxConfig;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -22,6 +25,9 @@ public class GrabberSubsystem implements Subsystem {
 
     public GrabberSubsystem() {
         motor = new SparkMax(GrabberConstants.Grabber, MotorType.kBrushless);
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.inverted(true);
+        motor.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
         limit = new CommandLimitSwitchDio(Constants.GrabberConstants.LimitSwitch);
     }
 

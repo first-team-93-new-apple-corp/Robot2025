@@ -122,7 +122,7 @@ public class RobotContainer {
         Driver.autoAlignRight().whileTrue(
                 new DeferredCommand(() -> m_DriveSubsystem.Commands.autoAlignV2("A"), Set.of(m_DriveSubsystem)));
         Driver.outTake()
-                .whileTrue(m_GrabberSubsystem.Commands.outtake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
+                .whileTrue(m_GrabberSubsystem.Commands.scoreOuttake().alongWith(m_ElevatorSubsystem.Commands.outtake()));
         Driver.outTake()
                 .and(m_GrabberSubsystem.Commands.checkCoralReversed())
                 .onTrue(Commands.runOnce(() -> SignalLogger.writeString("Scored Coral Pose", m_DriveSubsystem.getState().Pose.toString())));
@@ -137,7 +137,7 @@ public class RobotContainer {
         Driver.removeAlgea().and(Driver.superStructureL3())
                 .onTrue(m_ElevatorSubsystem.Commands.Algea2().alongWith(m_ArmSubsystem.Commands.L1()));
         
-        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.outtake());
+        Driver.removeAlgea().whileTrue(m_GrabberSubsystem.Commands.deAlgeaOuttake());
 
         Driver.verticalCoralIntake().whileTrue(m_GrabberSubsystem.Commands.intake()
                 .alongWith(m_ArmSubsystem.Commands.GroundIntake()).alongWith(m_ElevatorSubsystem.Commands.Bottom()));

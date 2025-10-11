@@ -44,7 +44,7 @@ public class Constants {
 
         // Offset
         public static final double GearRatio = 108; // Changed to #35 chain, previous was 121.5
-        public static final Angle Offset = Degrees.of(247);
+        public static final Angle Offset = Degrees.of(274.32).minus(Degrees.of(27.1));
 
         // Motor ID
         public class IDs {
@@ -63,7 +63,7 @@ public class Constants {
             public static final Angle L2 = Degrees.of(60);
             public static final Angle L3 = L2;
             public static final Angle L4 = Degrees.of(38.5);
-            public static final Angle Intake = Degrees.of(-92); // -90 degree from ground
+            public static final Angle Intake = Degrees.of(-96); // -90 degree from ground P.S. It cant go lower than -96 cause of limit in arm subsystem
         }
     }
 
@@ -74,7 +74,8 @@ public class Constants {
         public static final int LimitSwitch = 8;
         // Speed constants
         public static final double intakeSpeed = -.7;
-        public static final double outakeSpeed = 1;
+        public static final double deAlgeafySpeed = 1.0;
+        public static final double scoringOutakeSpeed = 0.1;
     }
 
     public class ElevatorConstants {
@@ -94,7 +95,7 @@ public class Constants {
         public static final Distance L4Setpoint = Centimeters.of(173);
         public static final Distance Algea1 = Centimeters.of(80);
         public static final Distance Algea2 = Centimeters.of(130);
-        public static final Distance Intake = L2Setpoint.minus(Inches.of(4));
+        public static final Distance Intake = Inches.of(22);
         public static final double SprocketRadiusInches = 1.37 / 2;
 
         public static final Per<DistanceUnit, AngleUnit> OuterRotationsToInches = Inches

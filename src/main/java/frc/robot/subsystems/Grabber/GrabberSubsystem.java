@@ -51,8 +51,12 @@ public class GrabberSubsystem implements Subsystem {
             return startEnd(() -> setSpeed(GrabberConstants.intakeSpeed), () -> setSpeed(0));
         }
 
-        public Command outtake() {
-            return startEnd(() -> setSpeed(GrabberConstants.outakeSpeed), () -> setSpeed(0));
+        public Command scoreOuttake() {
+            return startEnd(() -> setSpeed(GrabberConstants.scoringOutakeSpeed), () -> setSpeed(0));
+        }
+
+        public Command deAlgeaOuttake(){
+            return startEnd(() -> setSpeed(GrabberConstants.deAlgeafySpeed), () -> setSpeed(0));
         }
 
         public Command brake() {

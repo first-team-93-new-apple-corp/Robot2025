@@ -88,8 +88,8 @@ public class ArmSubsystem extends SubsystemBase {
 
     public void runAngle(Angle angle) {
         // angle is in output degrees
-        if (angle.lt(Degrees.of(-90))) {
-            angle = Degrees.of(-90);
+        if (angle.lt(Degrees.of(-96))) {
+            angle = Degrees.of(-96);
         } else if (angle.gt(Degrees.of(90))) {
             angle = Degrees.of(90);
         }

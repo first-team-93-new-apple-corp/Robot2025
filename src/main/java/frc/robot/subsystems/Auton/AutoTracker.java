@@ -92,7 +92,7 @@ public class AutoTracker extends SequentialCommandGroup {
 
         } else {
             return (subsystems.elevatorSubsystem().Commands.outtake().alongWith(Commands.waitSeconds(1)))
-                    .alongWith(subsystems.grabberSubsystem().Commands.outtake().withDeadline(Commands.waitSeconds(1)));
+                    .alongWith(subsystems.grabberSubsystem().Commands.scoreOuttake().withDeadline(Commands.waitSeconds(1)));
         }
     }
 

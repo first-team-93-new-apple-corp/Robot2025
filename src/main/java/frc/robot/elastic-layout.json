@@ -1,0 +1,583 @@
+{
+  "version": 1.0,
+  "grid_size": 64,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "List Layout",
+            "x": 1664.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 320.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Elevator Top",
+                "x": 1664.0,
+                "y": 512.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Elevator Top",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Carraige Top",
+                "x": 1792.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Carraige Top",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Carraige Bottom",
+                "x": 1792.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Carraige Bottom",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              },
+              {
+                "title": "Elevator Bottom",
+                "x": 1792.0,
+                "y": 640.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Boolean Box",
+                "properties": {
+                  "topic": "/SmartDashboard/Elevator Bottom",
+                  "period": 0.06,
+                  "data_type": "boolean",
+                  "true_color": 4283215696,
+                  "false_color": 4294198070,
+                  "true_icon": "None",
+                  "false_icon": "None"
+                }
+              }
+            ]
+          },
+          {
+            "title": "Coast",
+            "x": 1408.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 320.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Coast Arm",
+                "x": 1152.0,
+                "y": 704.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Coast Arm",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Coast carriage",
+                "x": 1152.0,
+                "y": 704.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Coast carriage",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Elevator",
+                "x": 1216.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Coast ele",
+                  "period": 0.06,
+                  "show_type": false
+                }
+              }
+            ]
+          },
+          {
+            "title": "List Layout",
+            "x": 1152.0,
+            "y": 512.0,
+            "width": 256.0,
+            "height": 320.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "Brake carriage",
+                "x": 1088.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Brake carriage",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Brake ele",
+                "x": 1152.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Brake ele",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              },
+              {
+                "title": "Brake Arm",
+                "x": 1088.0,
+                "y": 640.0,
+                "width": 256.0,
+                "height": 128.0,
+                "type": "Command",
+                "properties": {
+                  "topic": "/SmartDashboard/Brake Arm",
+                  "period": 0.06,
+                  "show_type": true
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "AutoChooser",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 128.0,
+            "type": "ComboBox Chooser",
+            "properties": {
+              "topic": "/SmartDashboard/AutoChooser",
+              "period": 0.06,
+              "sort_options": false
+            }
+          },
+          {
+            "title": "Pose",
+            "x": 640.0,
+            "y": 0.0,
+            "width": 1024.0,
+            "height": 512.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/Pose",
+              "period": 0.06,
+              "field_game": "Reefscape",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          },
+          {
+            "title": "Elevtor Height",
+            "x": 0.0,
+            "y": 128.0,
+            "width": 128.0,
+            "height": 448.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/SmartDashboard/Elevtor Height",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 70.0,
+              "divisions": 8,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "zero ele",
+            "x": 1664.0,
+            "y": 448.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/zero ele",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "WristAngleOutput",
+            "x": 128.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 448.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/SmartDashboard/WristAngleOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": 180.0,
+              "end_angle": 0.0,
+              "min_value": -90.0,
+              "max_value": 90.0,
+              "number_of_labels": 4,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": false
+            }
+          },
+          {
+            "title": "Robot",
+            "x": 0.0,
+            "y": 576.0,
+            "width": 512.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/Pose/Robot",
+              "period": 0.06,
+              "data_type": "double[]",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Coral In the Bot",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/Coral In the Bot",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "WristAngleMotor",
+            "x": 704.0,
+            "y": 512.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/WristAngleMotor",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "WristAngleOutput",
+            "x": 384.0,
+            "y": 128.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/WristAngleOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "zero carriage",
+            "x": 1664.0,
+            "y": 320.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Command",
+            "properties": {
+              "topic": "/SmartDashboard/zero carriage",
+              "period": 0.06,
+              "show_type": true
+            }
+          },
+          {
+            "title": "Has Coral",
+            "x": 384.0,
+            "y": 256.0,
+            "width": 256.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Has Coral",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Autonomous",
+      "grid_layout": {
+        "layouts": [
+          {
+            "title": "HotReload",
+            "x": 1536.0,
+            "y": 0.0,
+            "width": 384.0,
+            "height": 320.0,
+            "type": "List Layout",
+            "properties": {
+              "label_position": "TOP"
+            },
+            "children": [
+              {
+                "title": "hotReloadAuto",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/PathPlanner/HotReload/hotReloadAuto",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              },
+              {
+                "title": "hotReloadPath",
+                "x": 0.0,
+                "y": 0.0,
+                "width": 128.0,
+                "height": 128.0,
+                "type": "Text Display",
+                "properties": {
+                  "topic": "/PathPlanner/HotReload/hotReloadPath",
+                  "period": 0.06,
+                  "data_type": "string",
+                  "show_submit_button": false
+                }
+              }
+            ]
+          }
+        ],
+        "containers": [
+          {
+            "title": "Has Coral",
+            "x": 0.0,
+            "y": 448.0,
+            "width": 192.0,
+            "height": 192.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Has Coral",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Elevtor Height",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 128.0,
+            "height": 448.0,
+            "type": "Number Bar",
+            "properties": {
+              "topic": "/SmartDashboard/Elevtor Height",
+              "period": 0.06,
+              "data_type": "double",
+              "min_value": 0.0,
+              "max_value": 70.0,
+              "divisions": 8,
+              "inverted": false,
+              "orientation": "vertical"
+            }
+          },
+          {
+            "title": "WristAngleOutput",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 256.0,
+            "height": 448.0,
+            "type": "Radial Gauge",
+            "properties": {
+              "topic": "/SmartDashboard/WristAngleOutput",
+              "period": 0.06,
+              "data_type": "double",
+              "start_angle": 180.0,
+              "end_angle": 0.0,
+              "min_value": -90.0,
+              "max_value": 90.0,
+              "number_of_labels": 4,
+              "wrap_value": false,
+              "show_pointer": true,
+              "show_ticks": false
+            }
+          },
+          {
+            "title": "Pose",
+            "x": 384.0,
+            "y": 0.0,
+            "width": 1088.0,
+            "height": 576.0,
+            "type": "Field",
+            "properties": {
+              "topic": "/Pose",
+              "period": 0.06,
+              "field_game": "Reefscape",
+              "robot_width": 0.85,
+              "robot_length": 0.85,
+              "show_other_objects": true,
+              "show_trajectories": true,
+              "field_rotation": 0.0,
+              "robot_color": 4294198070,
+              "trajectory_color": 4294967295
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Tab 3",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Has Compressor?",
+            "x": 0.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Has Compressor?",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Limit Switch",
+            "x": 1600.0,
+            "y": 384.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Limit Switch",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          },
+          {
+            "title": "Volt. Bus Wind Up Motor",
+            "x": 1600.0,
+            "y": 0.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Volt. Bus Wind Up Motor",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Current Out Wind up Motor",
+            "x": 1600.0,
+            "y": 128.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Current Out Wind up Motor",
+              "period": 0.06,
+              "data_type": "double",
+              "show_submit_button": false
+            }
+          },
+          {
+            "title": "Over Current? Wind Motor",
+            "x": 1600.0,
+            "y": 256.0,
+            "width": 320.0,
+            "height": 128.0,
+            "type": "Boolean Box",
+            "properties": {
+              "topic": "/SmartDashboard/Over Current? Wind Motor",
+              "period": 0.06,
+              "data_type": "boolean",
+              "true_color": 4283215696,
+              "false_color": 4294198070,
+              "true_icon": "None",
+              "false_icon": "None"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

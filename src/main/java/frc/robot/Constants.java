@@ -63,7 +63,7 @@ public class Constants {
             public static final Angle L2 = Degrees.of(60);
             public static final Angle L3 = L2;
             public static final Angle L4 = Degrees.of(38.5);
-            public static final Angle Intake = Degrees.of(-90); // -90 degree from ground
+            public static final Angle Intake = Degrees.of(-92); // -90 degree from ground
         }
     }
 
